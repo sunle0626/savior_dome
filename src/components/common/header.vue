@@ -1,0 +1,99 @@
+<template>
+    <div class="header">
+        <div class="header_logo">
+            <img src="../../../static/images/com_images/logo.png" alt="">
+            <div class="tit">
+                <p>大救星救援平台</p>
+                <p>DajJiuing Rescue Platform</p>
+            </div>
+        </div>
+        <div class="header_user">
+            <div class="header_idbox">
+                登录ID：{{userid}}
+            </div>
+            <div class="header_userbox">
+                身份：{{usertype}}
+            </div>
+            <div class="header_namebox">
+                名称：{{username}}
+            </div>
+        </div>
+        <div class="header_set">
+            <div class="language_box">
+                中文
+                <i class="bottom-arrow"></i>
+            </div>
+            <div class="set_box">
+                个人设置
+            </div>
+            <div class="logout_box">
+                注销
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      userid: 0,
+      usertype: "救援机构",
+      username: "平安财险"
+    };
+  }
+};
+</script>
+
+<style scoped>
+.header {
+  width: 100%;
+  height: 65px;
+  border-bottom: 1px solid #ccc;
+}
+.header_logo {
+  width: 40%;
+  float: left;
+  margin-left: 200px;
+}
+.header_logo img,
+.header_logo .tit {
+  margin-top: 12px;
+  float: left;
+}
+.header_logo img {
+  height: 42px;
+  width: auto;
+}
+.header_logo .tit {
+  margin-left: 15px;
+}
+.header_user,
+.header_set {
+  height: 100%;
+  line-height: 65px;
+  float: left;
+}
+.header_user div,
+.header_set div {
+  float: left;
+  margin-left: 35px;
+}
+.header_user div {
+  color: #666666;
+}
+.header_set div {
+  color: #00abfa;
+}
+.bottom-arrow:before {
+  content: "";
+  border: 7px solid #00abfa;
+  border-bottom: none;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  position: relative;
+  top: -50px;
+  left: 26px;
+  border-radius: 2px;
+}
+</style>
