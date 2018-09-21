@@ -5,6 +5,8 @@ import Fac from '@/components/Fac'
 import FacIndex from '../components/fac/Index.vue'
 import Caseindex from '../components/fac/Caseindex.vue'
 import Await from '../components/fac/template/await.vue'
+import Offer from '../components/fac/template/Offer.vue'
+import Rescue from '../components/fac/template/rescue.vue'
 import Par from '../components/fac/template/Par.vue'
 import Parcase from '../components/fac/template/Parcase.vue'
 import Parinf from '../components/fac/template/Parinf.vue'
@@ -28,9 +30,9 @@ export default new Router({
                     component: FacIndex,
                 },
                 {
-                    path:'caseindex',
-                    name:'Caseindex',
-                    component:Caseindex,
+                    path: 'caseindex',
+                    name: 'Caseindex',
+                    component: Caseindex,
                     children: [
                         {
                             path: 'await',
@@ -38,18 +40,28 @@ export default new Router({
                             component: Await,
                         },
                         {
+                            path: 'offer',
+                            name: 'Offer',
+                            component: Offer,
+                        },
+                        {
+                            path: 'rescue',
+                            name: 'Rescue',
+                            component: Rescue,
+                        },
+                        {
                             path: 'par',
                             name: 'Par',
                             component: Par,
-                            children:[
+                            children: [
                                 {
-                                    path:'parcase',
-                                    name:'parcase',
-                                    component:Parcase
-                                },{
-                                    path:'parinf',
-                                    name:'parinf',
-                                    component:Parinf
+                                    path: 'parcase',
+                                    name: 'parcase',
+                                    component: Parcase
+                                }, {
+                                    path: 'parinf',
+                                    name: 'parinf',
+                                    component: Parinf
                                 }
                             ]
                         }

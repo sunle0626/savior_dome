@@ -14,10 +14,10 @@
         <el-menu-item index="/fac/caseindex/await">
             <span slot="title">等待授权启动救援案件</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="/fac/caseindex/offer">
             <span slot="title">授权等待报价案件</span>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="/fac/caseindex/rescue">
             <span slot="title">救援中案件管理</span>
         </el-menu-item>
         </el-menu>

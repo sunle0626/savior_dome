@@ -1,6 +1,8 @@
 <template>
     <div class="par_wrap">
-        <p class="back_box" @click="back()">返回上一页</p>
+        <p class="back_box" @click="back()">
+          <img src="../../../../static/images/back.png" alt="">
+          返回上一页</p>
         <div class="box">
             <h2>查看并操作</h2>
             <div class="case_box">
