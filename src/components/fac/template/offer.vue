@@ -89,7 +89,7 @@
                 label="操作"
                 width="100">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small">查看报价详情</el-button>
+                    <el-button  type="text" size="small" @click="topar()">查看报价详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -136,6 +136,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    topar() {
+      this.$router.push("lookinf");
+    }
   }
 };
 </script>

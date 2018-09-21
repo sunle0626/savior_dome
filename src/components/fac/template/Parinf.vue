@@ -76,7 +76,7 @@
                    </li>
                </ul>
                <div class="upbtn_box">
-                   <el-button type="primary">回复报价及方案</el-button>
+                   <el-button type="primary" @click="toinf">回复报价及方案</el-button>
                </div>
            </div>
         </div>
@@ -119,6 +119,11 @@ export default {
       ],
       checkList: []
     };
+  },
+  methods: {
+    toinf() {
+      this.$router.push("/fac/caseindex/inf");
+    }
   },
   mounted() {
     console.log(document.querySelector(".tj"));
@@ -198,9 +203,9 @@ a {
   box-sizing: border-box;
   padding: 0 20px;
 }
-.rescue_box>p{
-    line-height: 40px;
-    font-size: 14px;
+.rescue_box > p {
+  line-height: 40px;
+  font-size: 14px;
 }
 .res_div {
   position: relative;
@@ -238,7 +243,7 @@ a {
   color: #ff7200;
   margin-left: 8px;
 }
-.upbtn_box{
-    text-align: center;
+.upbtn_box {
+  text-align: center;
 }
 </style>

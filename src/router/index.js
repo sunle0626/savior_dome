@@ -8,6 +8,9 @@ import Await from '../components/fac/template/await.vue'
 import Offer from '../components/fac/template/Offer.vue'
 import Rescue from '../components/fac/template/rescue.vue'
 import Par from '../components/fac/template/Par.vue'
+import Inf from '../components/fac/template/inf.vue'
+import Lookinf from '../components/fac/template/Lookinf.vue'
+import Alter from '../components/fac/template/alter.vue'
 import Parcase from '../components/fac/template/Parcase.vue'
 import Parinf from '../components/fac/template/Parinf.vue'
 
@@ -48,6 +51,21 @@ export default new Router({
                             path: 'rescue',
                             name: 'Rescue',
                             component: Rescue,
+                        },
+                        {
+                            path: 'inf',
+                            name: 'Inf',
+                            component: Inf,
+                        },
+                        {
+                            path: 'lookinf',
+                            name: 'lookinf',
+                            component: Lookinf,
+                        },
+                        {
+                            path:'alter',
+                            name:'alter',
+                            component:Alter
                         },
                         {
                             path: 'par',
