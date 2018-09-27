@@ -71,7 +71,7 @@
                 label="操作"
                 width="100">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar()">查看并操作</el-button>
+                    <el-button  type="text" size="small" @click="topar(scope.$index)">查看并操作</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -80,31 +80,86 @@
 
 <script>
 export default {
-    data(){
-        return{
-            tableData:[{
-                number:1,
-                casenumber:'AJ200101',
-                address:'美国纽约 第五大道',
-                username:'网易 黄博士',
-                phone:'+98 139 000000',
-                papers:'身份证 829743 297432',
-                sex:'男',
-                time:'2018年 6月5日  18:00',
-                par:'保险详情/无',
-                plan:'等待保险 公司授权',
-                node:'等待 授权',
-                get_time:'2018年 8月24日  20:00 耗时： 00:56 ',
-                op:'查看并操作'
-
-            }]
+  props: ["token"],
+  data() {
+    return {
+      tableData: [],
+      obj: [],
+      victimList: []
+    };
+  },
+  methods: {
+    topar(index) {
+      let that = this;
+      this.$router.push({
+        path: "par",
+        name: "Par",
+        params: {
+          token: that.token,
+          obj: that.obj,
+          victimList: that.victimList,
+          index
         }
+      });
     },
-    methods:{
-        topar(){
-           this.$router.push('par')
-        }
+    time(str) {
+      var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "年";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "月";
+      var D = date.getDate() + "日";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
     }
+  },
+  mounted() {
+    let that = this;
+    let n = 0;
+    let sex = "";
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/list_case", {
+      method: "POST",
+      body: `token=${this.token}&typeId=1&status=140`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        console.log(data.obj);
+        data.obj.map(v => {
+        console.log(v.obj)
+          n = n + 1;
+          if (v.victimList[0].gender == 1) {
+            sex = "男";
+          } else {
+            sex = "女";
+          }
+          that.tableData.push({
+            number: n, //序号
+            casenumber: v.obj.caseNo, //案件编号
+            address: v.obj.locId, //地址
+            username: v.victimList[0].obj.name, //姓名
+            phone: v.victimList[0].obj.contact, //联系方式
+            papers: v.victimList[0].obj.idNo, //身份证号
+            sex: sex, //性别
+            time: that.time(v.obj.incidentTs), //出险时间
+            par: "等待保险 公司授权", //状态
+            plan: "等待保险 公司授权",
+            node: "等待 授权",
+            get_time: that.time(v.obj.incidentTs),
+            op: "查看并操作"
+          });
+          that.obj.push(v.obj);
+          that.victimList.push(v.victimList[0]);
+        });
+      });
+  }
 };
 </script>
 

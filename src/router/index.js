@@ -11,6 +11,7 @@ import Par from '../components/fac/template/Par.vue'
 import Inf from '../components/fac/template/inf.vue'
 import Lookinf from '../components/fac/template/Lookinf.vue'
 import Alter from '../components/fac/template/alter.vue'
+import Resstep from '../components/fac/template/resstep.vue'
 import Parcase from '../components/fac/template/Parcase.vue'
 import Parinf from '../components/fac/template/Parinf.vue'
 
@@ -66,6 +67,11 @@ export default new Router({
                             path:'alter',
                             name:'alter',
                             component:Alter
+                        },
+                        {
+                            path:'resstep',
+                            name:'resstep',
+                            component:Resstep
                         },
                         {
                             path: 'par',

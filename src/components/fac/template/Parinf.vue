@@ -7,8 +7,7 @@
                 </li>
                 <li>
                     <span>事故经过：</span>
-                    <textarea name="pass" id="passnode" cols="30" rows="10">
-                        
+                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def">
                     </textarea>
                 </li>
             </ul>
@@ -20,8 +19,8 @@
                    <li>
                        <b>A、已申请报价服务机构</b>
                        <div class="org_box">
-                            <p>A、意大利------救援公司------安联救援意大利分公司</p>
-                            <p>B、意大利------救援公司------安联救援意大利分公司</p>
+                            <p v-for="(v,ind) in bid" :key="ind">
+                             {{v.instiCountry}} ------{{v.insti.category}}------{{v.insti.name}}</p>
                        </div>
                    </li>
                    <li>
@@ -32,37 +31,37 @@
                                <li v-for="(v,ind) in acc_list" :key="ind">
                                    <img :src="v.url" alt="">
                                    <p>{{v.txt}}</p>
-                                   <a :href="v.dow">下载</a>
+                                   <a :href="v.dow" :download="v.dow">下载</a>
                                </li>
                            </ul>
                        </div>
                        <div class="rescue_box">
-                           <p>1、医疗救援</p>
+                           <p>1、{{obj[0].dict.name}}</p>
                             <el-checkbox-group v-model="checkList">
                                 <el-checkbox label="医疗机构推介" disabled checked>
-                                    <span class="res_div">医疗机构推介</span>
+                                    <span class="res_div">{{obj[1].dict.name}}</span>
                                     <br/>
-                                    <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                                    <span class="res_box">说明：{{obj[1].obj.description}}</span>
                                 </el-checkbox>
                                 <el-checkbox label="门诊与住院预约" disabled checked>
-                                    <span class="res_div">门诊与住院预约</span>
+                                    <span class="res_div">{{obj[2].dict.name}}</span>
                                     <br/>
-                                    <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                                    <span class="res_box">说明：{{obj[2].obj.description}}</span>
                                 </el-checkbox>
                                 <el-checkbox label="出诊服务" disabled checked>
-                                    <span class="res_div">出诊服务</span>
+                                    <span class="res_div">{{obj[3].dict.name}}</span>
                                     <br/>
-                                    <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                                    <span class="res_box">说明：{{obj[3].obj.description}}</span>
                                 </el-checkbox>
                                 <el-checkbox label="医疗报告的索取与翻译" disabled checked>
-                                    <span class="res_div">医疗报告的索取与翻译</span>
+                                    <span class="res_div">{{obj[4].dict.name}}</span>
                                     <br/>
-                                    <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                                    <span class="res_box">说明：{{obj[4].obj.description}}</span>
                                 </el-checkbox>
                                 <el-checkbox label="遗体转运" disabled checked>
-                                    <span class="res_div">遗体转运</span>
+                                    <span class="res_div">{{obj[5].dict.name}}</span>
                                     <br/>
-                                    <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                                    <span class="res_box">说明：{{obj[5].obj.description}}</span>
                                 </el-checkbox>
                             </el-checkbox-group>
                             <p>2、费用担保</p>
@@ -86,47 +85,108 @@
 <script>
 export default {
   data() {
+    let that = this;
     return {
+      objId: null,
+      token: this.$route.params.token,
+      init: this.$route.params.init,
+      caseId: this.$route.params.caseId,
+      obj: this.$route.params.obj,
       objdata: {
-        add: "出险地：中国北京市门头沟平安路江泰保险大厦 ",
+        add: "出险地:",
         type: "事故类型：风险灾害 ",
         no: "是否团险：是",
         part: "受伤部位：腿部 ",
         weather: "天气灾害：气象灾害 "
       },
-      acc_list: [
-        {
-          url:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
-          txt: "指挥中心上传的文件",
-          dow:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg"
-        },
-        {
-          url:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
-          txt: "指挥中心上传的文件",
-          dow:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg"
-        },
-        {
-          url:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
-          txt: "指挥中心上传的文件",
-          dow:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg"
-        }
-      ],
-      checkList: []
+      acc_list: [],
+      checkList: [],
+      def: "",
+      bid: [],
+      inf: null
     };
   },
   methods: {
     toinf() {
-      this.$router.push("/fac/caseindex/inf");
+      this.$router.push({
+        path: "/fac/caseindex/inf",
+        name: "Inf",
+        params: {
+          token: this.token,
+          obj: this.inf
+        }
+      });
+    },
+    upload() {
+      let that = this;
+      console.log(this.objId);
+      fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
+        method: "POST",
+        body: `token=${this.token}&objType=1&objId=${this.objId}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      })
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          console.log(data);
+          data.obj.map(function(v) {
+            that.acc_list.push({
+              url:
+                "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
+              txt: v.description,
+              dow: v.url
+            });
+          });
+        });
     }
   },
   mounted() {
-    console.log(document.querySelector(".tj"));
+    console.log(this.obj);
+    let that = this;
+    this.objdata = {
+      add:
+        "出险地:" +
+        that.init.caseCountry +
+        that.init.caseCity +
+        that.init.generalLocation.addr,
+      type: "事故类型：" + that.init.obj.incidentType,
+      no: "是否团险：" + that.init.obj.caseInsured,
+      part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
+      weather: "天气灾害：" + that.init.obj.weatherTag
+    };
+    this.def = that.init.obj.incidentDesc;
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bidders", {
+      method: "POST",
+      body: `token=${this.token}&caseId=${this.caseId}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        that.bid = data.obj;
+      });
+    fetch(
+      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_case_solution",
+      {
+        method: "POST",
+        body: `token=${this.token}&caseId=${this.caseId}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        that.inf = data.obj;
+        that.objId = data.obj.id;
+        console.log(data);
+        that.upload();
+      });
   }
 };
 </script>

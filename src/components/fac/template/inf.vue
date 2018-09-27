@@ -21,19 +21,19 @@
             </div>
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="整体报价:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="totalFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="医疗垫付:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="medicFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="案件费用:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="caseFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="救援费用:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="rescueFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     </el-form>
@@ -128,7 +128,12 @@ export default {
         region: ""
       },
       checkList: [],
-      flag:false
+      flag:false,
+      totalFee:this.$route.params.obj.totalFee,
+      medicFee:this.$route.params.obj.medicFee,
+      caseFee:this.$route.params.obj.caseFee,
+      rescueFee:this.$route.params.obj.rescueFee
+
     };
   },
   methods: {
@@ -138,7 +143,10 @@ export default {
     tooffer(){
       this.$router.push("/fac/caseindex/offer");
     }
-  }
+  },
+  mounted() {
+    console.log(this.$route.params)
+  },
 };
 </script>
 

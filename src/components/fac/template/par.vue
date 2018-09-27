@@ -21,7 +21,7 @@
             <div class="swi_box">
                 <div class="top_box">
                     <p>
-                        <router-link to="/fac/caseindex/par/parinf">出险信息</router-link>
+                        <router-link :to="{name:'parinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
                         <router-link to="/fac/caseindex/par/parcase" >案件进展</router-link>
                     </p>
                 </div>
@@ -37,35 +37,84 @@
 export default {
   data() {
     return {
+      token: this.$route.params.token,
+      obj: this.$route.params.obj[this.$route.params.index],
+      victimList: this.$route.params.victimList[this.$route.params.index],
       casenumber: "AJ200101",
-      inf: {
-        time: "报案时间：2018 09.09 9:00",
-        user: "报案客户：朱老板",
+      inf: null,
+      init: null,
+      obj2:null
+    };
+  },
+  methods: {
+    timestampToTime(timestamp) {
+      var date = new Date(timestamp);
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate() + " ";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    back() {
+      let that = this;
+      console.log(that.token);
+      this.$router.push({
+        path: "/fac/caseindex/await",
+        name: "Await",
+        params: {
+          token: that.token
+        }
+      });
+    },
+    up(v) {
+      console.log(v);
+    },
+    setdata() {
+      console.log(this.obj)
+      let that = this;
+      this.inf = {
+        time: "报案时间" + that.timestampToTime(that.obj.reportTs),
+        user: "报案客户：" + that.obj.reportUser,
         sex: "性别：男",
-        phone: "报案电话：+861987927197212",
-        instime: "出险时间：2018 09.09 9:00",
+        phone: "报案电话：" + that.victimList.obj.contact,
+        instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
         null: "-",
-        card: "证件号码：32984329849832",
-        number: "保单号码：32984329849832",
+        card: "证件号码：" + that.victimList.obj.idNo,
+        number: "保单号码：" + that.victimList.obj.insurancePolicyNo,
         pardata: {
           flag: true,
           data: "保单详情"
         },
-        belong: "所属保险公司：泰康在线",
-        source: "案件信息来源：一键救命",
-        exp: "来源说明：一键救命线下创立案件"
-      }
-    };
-  },
-  methods: {
-    back() {
-      this.$router.push("/fac/caseindex/await");
-    },
-    up(v){
-        console.log(v)
+        belong: "所属保险公司：" + that.init.obj.caseSrc,
+        source: "案件信息来源：" + that.obj.caseSrc,
+        exp: "来源说明：" + that.obj.caseSrcDesc
+      };
     }
   },
   mounted() {
+    console.log(this.victimList);
+    this.casenumber = this.obj.caseNo;
+    let that = this;
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/detail_case", {
+      method: "POST",
+      body: `token=${this.token}&caseId=${that.victimList.obj.caseId}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        that.init = data.obj;
+        that.obj2 = data.obj2;
+        that.setdata();
+      });
+    console.log(this.$route.params);
   }
 };
 </script>
@@ -147,7 +196,8 @@ a {
   line-height: 30px;
   text-align: center;
 }
-.router-link-exact-activem,.router-link-active {
+.router-link-exact-activem,
+.router-link-active {
   color: #00abfa;
   background: #fff;
 }

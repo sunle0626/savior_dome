@@ -5,7 +5,7 @@
         <el-aside width="200px">
         <el-menu
         default-active="/fac/index" router>
-        <el-menu-item index="/fac/index">
+        <el-menu-item index="/fac/index" @click="back">
             <span slot="title">返回首页</span>
         </el-menu-item>
         <el-menu-item class="case_box" index="/fac/caseindex/await">
@@ -30,7 +30,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+    methods:{
+        back(){}
+    }
+};
 </script>
 
 <style scoped>

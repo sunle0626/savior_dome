@@ -24,11 +24,9 @@ export default {};
 }
 .con_box {
   width: 78%;
-  height: 45px;
-  margin-top: 40px;
+  padding:  20px 40px;
   margin-left: 11%;
   margin-right: 11%;
-  padding-bottom: 40px;
   float: left;
   border-bottom: 1px solid #ccc;
 }

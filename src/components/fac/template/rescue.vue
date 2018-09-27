@@ -89,7 +89,7 @@
                 label="操作"
                 width="100">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small">开始救援</el-button>
+                    <el-button  type="text" size="small" @click="tores()">开始救援</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -122,6 +122,11 @@ export default {
         }
       ]
     };
+  },
+  methods:{
+      tores(){
+          this.$router.push('/fac/caseindex/resstep')
+      }
   }
 };
 </script>

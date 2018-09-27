@@ -9,13 +9,13 @@
         </div>
         <div class="header_user">
             <div class="header_idbox">
-                登录ID：{{userid}}
+                登录ID：{{insti.id||userid}}
             </div>
             <div class="header_userbox">
-                身份：{{usertype}}
+                身份：{{insti.category||usertype}}
             </div>
             <div class="header_namebox">
-                名称：{{username}}
+                名称：{{insti.name||username}}
             </div>
         </div>
         <div class="header_set">
@@ -35,6 +35,7 @@
 
 <script>
 export default {
+  props:['insti'],
   data() {
     return {
       userid: 0,
@@ -52,7 +53,7 @@ export default {
   border-bottom: 1px solid #ccc;
 }
 .header_logo {
-  width: 40%;
+  width: 30%;
   float: left;
   margin-left: 200px;
 }

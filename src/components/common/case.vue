@@ -2,7 +2,7 @@
     <div class="case_box">
         <div class="top_box">
             <div class="wel_box">
-                尊敬的{{username}}，欢迎登录
+                尊敬的{{insti.name||username}}，欢迎登录
             </div>
             <div class="view_box">
                 <span>进行中案件:<b>{{casename}}</b><b>({{casenum}})</b></span>
@@ -34,6 +34,7 @@
 
 <script>
 export default {
+  props: ["insti", "token"],
   data() {
     return {
       username: "XXX",
@@ -43,7 +44,7 @@ export default {
         {
           txt: "医疗救援",
           tit: "包含门急诊就医、住院安排医疗转运全流程",
-          num: 1,
+          num: "",
           id: 0,
           icon: "../../../static/images/com_images/icon_01.png"
         },
@@ -78,10 +79,42 @@ export default {
       ]
     };
   },
-  methods:{
-      tocase(){
-          this.$router.push('/fac/caseindex/await')
-      }
+  methods: {
+    tocase() {
+      let token = this.token;
+      console.log(token)
+      this.$router.push({
+        path: "/fac/caseindex/await",
+        name:'Await',
+        params: {
+          token:token
+        }
+      });
+    }
+  },
+  mounted() {
+    console.log(this.token);
+    let that = this;
+    let arr = [1, 2, 3, 4, 5];
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/batch_case_count", {
+      method: "POST",
+      body: `token=${this.token}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        arr.map(function(v) {
+          console.log(that.case_list[v]);
+          if (data.obj[v]) {
+            that.case_list[v].num = data.obj[v];
+          }
+          console.log(data.obj[v]);
+        });
+      });
   }
 };
 </script>
@@ -127,35 +160,35 @@ export default {
   background: #ff8e32;
   font-size: 14px;
 }
-.bottom_box{
-    width: 100%;
+.bottom_box {
+  width: 100%;
 }
-.bottom_ul{
-    width: 76%;
-    height: 270px;
-    margin-left: 12%;
-    margin-right: 12%
+.bottom_ul {
+  width: 76%;
+  height: 270px;
+  margin-left: 12%;
+  margin-right: 12%;
 }
-.bottom_ul li{
-    width: 20%;
-    float: left;
+.bottom_ul li {
+  width: 20%;
+  float: left;
 }
-.bottom_ul li h3{
-    font-size: 18px;
-    margin-top: 10px;
-    font-weight: 500;
-    color: #333;
+.bottom_ul li h3 {
+  font-size: 18px;
+  margin-top: 10px;
+  font-weight: 500;
+  color: #333;
 }
-.bottom_ul li p{
-    box-sizing: border-box;
-    margin-top: 10px;
-    height: 50px;
-    padding: 0 15px;
-    color: #999;
+.bottom_ul li p {
+  box-sizing: border-box;
+  margin-top: 10px;
+  height: 50px;
+  padding: 0 15px;
+  color: #999;
 }
-.bottom_ul li b{
-    color: #ff7200;
-    font-size: 16px;
-    text-decoration: underline;
+.bottom_ul li b {
+  color: #ff7200;
+  font-size: 16px;
+  text-decoration: underline;
 }
 </style>

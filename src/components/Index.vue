@@ -231,8 +231,8 @@
         <div class="login_box">
         <h2>登录</h2>
         <form class="login_div">
-            <p><label for="id_box">登录ID&nbsp;: <input type="text" id="id_box"></label></p>
-            <p><label for="pwd_box">密&nbsp;&nbsp;&nbsp;码&nbsp;: <input type="text" id="pwd_box"></label></p>
+            <p><label for="id_box">登录ID&nbsp;: <input type="text" id="id_box" v-model="user"></label></p>
+            <p><label for="pwd_box">密&nbsp;&nbsp;&nbsp;码&nbsp;: <input type="text" id="pwd_box" v-model="pwd"></label></p>
             <span class="btn_cancel div_btn" @click="tobtn('cancel')">取消</span>
             <span class="btn_login div_btn" @click="tobtn('login')">登录</span>
         </form>
@@ -245,7 +245,9 @@ export default {
   data() {
     return {
       flag: true,
-      usertype: ""
+      usertype: "",
+      user: "",
+      pwd: ""
     };
   },
   methods: {
@@ -265,20 +267,49 @@ export default {
       this.usertype = v;
     },
     tobtn(v) {
+      let that = this;
       if (v === "cancel") {
         let login_box = document.querySelector(".login_box");
         login_box.style.display = "none";
-      }else{
-        this.$router.push('/'+this.usertype)
+      } else {
+        // 请求 判断角色
+        // 0 救援机构 fac
+        // 1 指挥中心
+        // 2 监管机构
+        fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/user/login", {
+          method: "POST",
+          body: `username=${this.user}&pwd=${this.pwd}`,
+          mode: "cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+          .then(function(res) {
+            return res.json();
+          })
+          .then(function(data) {
+              let token = data.obj.token;
+              console.log(token)
+            if (data.code === 0) {
+              if (data.obj.user.type === 0) {
+                that.$router.push({
+                  path: "/fac",
+                  name:'Fac',
+                  params: {
+                    token: data.obj.token,
+                    insti:data.obj.user.insti
+                  }
+                });
+              }
+            } else {
+              alert("登录失败");
+            }
+            console.log(data);
+          });
       }
-      console.log(this.usertype);
     }
-  }
+  },
+  mounted() {}
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 @import "../css/index.css";
 </style>
-
