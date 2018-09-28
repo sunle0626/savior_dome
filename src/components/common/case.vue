@@ -93,7 +93,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.token);
+    // console.log(this.token);
     let that = this;
     let arr = [1, 2, 3, 4, 5];
     fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/batch_case_count", {

@@ -33,7 +33,10 @@
 export default {
     methods:{
         back(){}
-    }
+    },
+    mounted() {
+        console.log(this.$route.params.token)
+    },
 };
 </script>
 

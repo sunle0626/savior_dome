@@ -15,6 +15,18 @@
                             <img :src="v.url" alt="">
                             <p>{{v.txt}}</p>
                             <a :href="v.dow">上传附件</a>
+                            <el-upload
+                              class="upload-demo"
+                              action="https://jsonplaceholder.typicode.com/posts/"
+                              :on-preview="handlePreview"
+                              :on-remove="handleRemove"
+                              :before-remove="beforeRemove"
+                              multiple
+                              :limit="3"
+                              :on-exceed="handleExceed"
+                              :file-list="fileList">
+                              <el-button size="small" type="primary">点击上传</el-button>
+                            </el-upload>
                         </li>
                     </ul>
                 </div>
@@ -38,57 +50,67 @@
                     </el-form-item>
                     </el-form>
                 <div class="rescue_box">
-                    <p>1、医疗救援</p>
+                    <p>1、{{data[0].dict.name}}</p>
                     <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="医疗机构推介" disabled checked>
-                            <span class="res_div">医疗机构推介</span>
+                        <el-checkbox label="" disabled checked>
+                            <span class="res_div">{{data[1].dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">说明：{{data[1].obj.description}}</span>
                             <br/>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
+                            v-model="txt1"
+                            @input="txtdata"
                             ></el-input>
                         </el-checkbox>
-                        <el-checkbox label="门诊与住院预约" disabled checked>
-                            <span class="res_div">门诊与住院预约</span>
+                        <el-checkbox label="" disabled checked>
+                            <span class="res_div">{{data[2].dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">说明：{{data[2].obj.description}}</span>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
+                            v-model="txt2"
+                            @input="txtdata"
                             ></el-input>
                         </el-checkbox>
-                        <el-checkbox label="出诊服务" disabled checked>
-                            <span class="res_div">出诊服务</span>
+                        <el-checkbox label="" disabled checked>
+                            <span class="res_div">{{data[3].dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">说明：{{data[3].obj.description}}</span>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
+                            v-model="txt3"
+                            @input="txtdata"
                             ></el-input>
                         </el-checkbox>
-                        <el-checkbox label="医疗报告的索取与翻译" disabled checked>
-                            <span class="res_div">医疗报告的索取与翻译</span>
+                        <el-checkbox label="" disabled checked>
+                            <span class="res_div">{{data[4].dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">{{data[4].obj.description}}</span>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
+                            v-model="txt4"
+                            @input="txtdata"
                             ></el-input>
                         </el-checkbox>
-                        <el-checkbox label="遗体转运" disabled checked>
-                            <span class="res_div">遗体转运</span>
+                        <el-checkbox label="" disabled checked>
+                            <span class="res_div">{{data[5].dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">说明：{{data[5].obj.description}}</span>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
+                            v-model="txt5"
+                            @input="txtdata"
                             ></el-input>
                         </el-checkbox>
                     </el-checkbox-group>
@@ -113,9 +135,12 @@
 </template>
 
 <script>
+import qs from "qs";
 export default {
   data() {
     return {
+      data: this.$route.params.data,
+      fileList: [],
       acc_list: [
         {
           url:
@@ -128,25 +153,103 @@ export default {
         region: ""
       },
       checkList: [],
-      flag:false,
-      totalFee:this.$route.params.obj.totalFee,
-      medicFee:this.$route.params.obj.medicFee,
-      caseFee:this.$route.params.obj.caseFee,
-      rescueFee:this.$route.params.obj.rescueFee
-
+      flag: false,
+      totalFee: this.$route.params.obj.totalFee,
+      medicFee: this.$route.params.obj.medicFee,
+      caseFee: this.$route.params.obj.caseFee,
+      rescueFee: this.$route.params.obj.rescueFee,
+      txt1: "",
+      txt2: "",
+      txt3: "",
+      txt4: "",
+      txt5: ""
     };
   },
   methods: {
+    txtdata() {
+      console.log(this.txt1, this.txt2, this.txt3, this.txt4, this.txt5);
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 3 个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
     back() {
       this.$router.push("/fac/caseindex/par/parinf");
     },
-    tooffer(){
-      this.$router.push("/fac/caseindex/offer");
+    tooffer() {
+      let that = this;
+      console.log(this.$route.params.data);
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bid_bill",
+          qs.stringify({
+            token: this.$route.params.token,
+            caseId: this.$route.params.obj.caseId,
+            totalFee: this.totalFee,
+            medicFee: this.medicFee,
+            caseFee: this.caseFee,
+            rescueFee: this.rescueFee,
+            services: JSON.stringify([
+              {
+                serviceId: that.data[0].obj.serviceId,
+                description: that.data[0].obj.description,
+                reply: that.txt1
+              },
+              {
+                serviceId: that.data[1].obj.serviceId,
+                description: that.data[1].obj.description,
+                reply: that.txt2
+              },
+              {
+                serviceId: that.data[2].obj.serviceId,
+                description: that.data[2].obj.description,
+                reply: that.txt2
+              },
+              {
+                serviceId: that.data[3].obj.serviceId,
+                description: that.data[3].obj.description,
+                reply: that.txt2
+              },
+              {
+                serviceId: that.data[4].obj.serviceId,
+                description: that.data[4].obj.description,
+                reply: that.txt2
+              },
+              {
+                serviceId: that.data[5].obj.serviceId,
+                description: that.data[5].obj.description,
+                reply: that.txt2
+              }
+            ])
+          })
+        )
+        .then(data => {
+          console.log(data);
+          that.$router.push({
+            path:"/fac/caseindex/offer",
+            name:"Offer",
+            params:{
+              token:this.$route.params.token,
+              caseId:this.$route.params.obj.caseId,
+            }
+          });
+        });
     }
   },
   mounted() {
-    console.log(this.$route.params)
-  },
+  }
 };
 </script>
 
@@ -286,8 +389,8 @@ span {
 .upbtn_box {
   text-align: center;
 }
-.upbtn_box span{
-    color: #00abfa;
-    margin-left: 5px;
+.upbtn_box span {
+  color: #00abfa;
+  margin-left: 5px;
 }
 </style>

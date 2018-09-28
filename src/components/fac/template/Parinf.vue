@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import qs from "qs";
 export default {
   data() {
     let that = this;
@@ -108,14 +109,29 @@ export default {
   },
   methods: {
     toinf() {
-      this.$router.push({
-        path: "/fac/caseindex/inf",
-        name: "Inf",
-        params: {
-          token: this.token,
-          obj: this.inf
-        }
-      });
+      let that = this;
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+          qs.stringify({
+            token: this.token,
+            caseId: this.caseId
+          })
+        )
+        .then(res => {
+          console.log(res.data);
+          if (res.data.code === 101006) {
+            that.$router.push({
+              path: "/fac/caseindex/inf",
+              name: "Inf",
+              params: {
+                token: this.token,
+                obj: this.inf,
+                data: this.obj
+              }
+            });
+          }
+        });
     },
     upload() {
       let that = this;

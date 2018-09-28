@@ -99,12 +99,15 @@
 
 <script>
 import formVue from "../../common/form.vue";
+import qs from "qs";
 export default {
   components: {
     formVue
   },
   data() {
     return {
+      token: this.$route.params.token,
+      caseId: this.$route.params.caseId,
       tableData: [
         {
           number: 1,
@@ -141,6 +144,19 @@ export default {
     topar() {
       this.$router.push("lookinf");
     }
+  },
+  mounted() {
+    this.axios
+      .post(
+        "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+        qs.stringify({
+          token: this.token,
+          caseId: this.caseId
+        })
+      )
+      .then(res => {
+        console.log(res);
+      });
   }
 };
 </script>

@@ -72,7 +72,6 @@ export default {
     formVue
   },
   mounted() {
-    console.log(this.$route.params);
   }
 };
 </script>

@@ -108,7 +108,7 @@ export default {
       var M =
         (date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月";
+          : date.getMonth() + 1) + "月"; 
       var D = date.getDate() + "日";
       var h = date.getHours() + ":";
       var m = date.getMinutes() + ":";
