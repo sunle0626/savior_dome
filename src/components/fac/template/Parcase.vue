@@ -62,7 +62,6 @@
             <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </el-dialog>
-        
          <div class="upbtn_box">
             <el-button type="primary" @click="close()">关闭详情</el-button>
         </div>
@@ -70,66 +69,11 @@
 </template>
 
 <script>
+import qs from "qs";
 export default {
   data() {
     return {
       tableData: [
-        {
-          date: "2018.09.2   20:22",
-          node: "创立案件",
-          det: "",
-          field: "指挥中心 登录账号：298398213",
-          cost: "$10000",
-          corr: [
-            {
-              url:
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537504208349&di=3957b799989d9bd5cb97480b65ace9f6&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3Dbfde6b1571f40ad101e9cfa03f457baa%2F63d9f2d3572c11df1c49e30e692762d0f703c207.jpg",
-              txt: "就诊单据"
-            }
-          ]
-        },
-        {
-          date: "2018.09.2   20:22",
-          node: "启动救援",
-          det: "发送服务清单： 1、奋达科技发打卡就； 2、什么什么",
-          field: "指挥中心 登录账号：298398213",
-          cost: "$10000",
-          corr: [
-            {
-              url:
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537504208349&di=3957b799989d9bd5cb97480b65ace9f6&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3Dbfde6b1571f40ad101e9cfa03f457baa%2F63d9f2d3572c11df1c49e30e692762d0f703c207.jpg",
-              txt: "就诊单据"
-            }
-          ]
-        },
-        {
-          date: "2018.09.2   20:22",
-          node: "申请授权通过",
-          det: "",
-          field: "指挥中心 登录账号：298398213",
-          cost: "$10000",
-          corr: [
-            {
-              url:
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537504208349&di=3957b799989d9bd5cb97480b65ace9f6&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3Dbfde6b1571f40ad101e9cfa03f457baa%2F63d9f2d3572c11df1c49e30e692762d0f703c207.jpg",
-              txt: "就诊单据"
-            }
-          ]
-        },
-        {
-          date: "2018.09.2   20:22",
-          node: "授权通过",
-          det: "",
-          field: "指挥中心 登录账号：298398213",
-          cost: "$10000",
-          corr: [
-            {
-              url:
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537504208349&di=3957b799989d9bd5cb97480b65ace9f6&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3Dbfde6b1571f40ad101e9cfa03f457baa%2F63d9f2d3572c11df1c49e30e692762d0f703c207.jpg",
-              txt: "就诊单据"
-            }
-          ]
-        }
       ],
       imageUrl: "",
       centerDialogVisible: false
@@ -146,12 +90,59 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    // dialogImageUrl(){
-
-    // },
-    // dialogVisible(){
-      
-    // }
+    dialogImageUrl() {},
+    dialogVisible() {},
+    
+    time(str) {
+      var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "年";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "月";
+      var D = date.getDate() + "日";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
+    }
+  },
+  mounted() {
+    let that = this;
+    this.axios
+      .post(
+        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/case_progress",
+        qs.stringify({
+          token: this.$route.params.token,
+          caseId: this.$route.params.caseId
+        })
+      )
+      .then(data => {
+        data.data.obj.map((v, i) => {
+          console.log(v.obj.operatorType);
+          let type = "";
+          if (v.obj.operatorType === 0) {
+            type = "供应商";
+          } else if (v.obj.operatorType === 1) {
+            type = "指挥中心";
+          } else if (v.obj.operatorType === 2) {
+            type = "监管机构";
+          }
+          that.tableData.push({
+            date: that.time(v.obj.updateAt),
+            node: v.obj.opStateText,
+            det: "",
+            field: type + "",
+            cost: "",
+            corr: [
+              {
+                url: null,
+                txt: ""
+              }
+            ]
+          });
+        });
+      });
   }
 };
 </script>
@@ -164,7 +155,7 @@ export default {
 .box {
   text-align: center;
 }
-.el-upload--picture-card{
+.el-upload--picture-card {
   width: 260px;
   height: 260px;
 }

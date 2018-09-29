@@ -3,7 +3,7 @@
         <div class="data_wrap">
             <ul>
                 <li v-for="(v,ind) in objdata" :key="ind">
-                    {{v}}
+                    {{v||''}}
                 </li>
                 <li>
                     <span>事故经过：</span>
@@ -36,34 +36,19 @@
                            </ul>
                        </div>
                        <div class="rescue_box">
-                           <p>1、{{obj[0].dict.name}}</p>
-                            <el-checkbox-group v-model="checkList">
-                                <el-checkbox label="医疗机构推介" disabled checked>
-                                    <span class="res_div">{{obj[1].dict.name}}</span>
+                         <div class="box" v-for="(v,ind) in obj" :key="ind">
+                          <p v-if="v.dict.parentId===0">{{v.dict.name}}</p>
+                         </div>
+                         <div class="box">
+                           <el-checkbox-group v-model="checkList">
+                              <el-checkbox label="医疗机构推介" disabled checked v-for="(v,ind) in obj" :key="ind" v-if="ind>0">
+                                    <span class="res_div">{{v.dict.name}}</span>
                                     <br/>
-                                    <span class="res_box">说明：{{obj[1].obj.description}}</span>
-                                </el-checkbox>
-                                <el-checkbox label="门诊与住院预约" disabled checked>
-                                    <span class="res_div">{{obj[2].dict.name}}</span>
-                                    <br/>
-                                    <span class="res_box">说明：{{obj[2].obj.description}}</span>
-                                </el-checkbox>
-                                <el-checkbox label="出诊服务" disabled checked>
-                                    <span class="res_div">{{obj[3].dict.name}}</span>
-                                    <br/>
-                                    <span class="res_box">说明：{{obj[3].obj.description}}</span>
-                                </el-checkbox>
-                                <el-checkbox label="医疗报告的索取与翻译" disabled checked>
-                                    <span class="res_div">{{obj[4].dict.name}}</span>
-                                    <br/>
-                                    <span class="res_box">说明：{{obj[4].obj.description}}</span>
-                                </el-checkbox>
-                                <el-checkbox label="遗体转运" disabled checked>
-                                    <span class="res_div">{{obj[5].dict.name}}</span>
-                                    <br/>
-                                    <span class="res_box">说明：{{obj[5].obj.description}}</span>
+                                    <span class="res_box">说明：{{v.obj.description}}</span>
                                 </el-checkbox>
                             </el-checkbox-group>
+                         </div>
+                           <p></p>
                             <p>2、费用担保</p>
                             <el-checkbox-group v-model="checkList">
                                 <el-checkbox label="医疗机构推介" disabled checked>
@@ -120,22 +105,21 @@ export default {
         )
         .then(res => {
           console.log(res.data);
-          if (res.data.code === 101006) {
-            that.$router.push({
-              path: "/fac/caseindex/inf",
-              name: "Inf",
-              params: {
-                token: this.token,
-                obj: this.inf,
-                data: this.obj
-              }
-            });
-          }
+          // if (res.data.code === 101006) {
+          that.$router.push({
+            path: "/fac/caseindex/inf",
+            name: "Inf",
+            params: {
+              token: this.token,
+              obj: this.inf,
+              data: this.obj
+            }
+          });
+          // }
         });
     },
     upload() {
       let that = this;
-      console.log(this.objId);
       fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
         method: "POST",
         body: `token=${this.token}&objType=1&objId=${this.objId}`,
@@ -161,12 +145,12 @@ export default {
   mounted() {
     console.log(this.obj);
     let that = this;
+    let addr = "";
+    if (that.init.generalLocation) {
+      addr = that.init.generalLocation.addr;
+    }
     this.objdata = {
-      add:
-        "出险地:" +
-        that.init.caseCountry +
-        that.init.caseCity +
-        that.init.generalLocation.addr,
+      add: "出险地:" + that.init.caseCountry + that.init.caseCity + addr,
       type: "事故类型：" + that.init.obj.incidentType,
       no: "是否团险：" + that.init.obj.caseInsured,
       part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
@@ -200,6 +184,9 @@ export default {
       .then(function(data) {
         that.inf = data.obj;
         that.objId = data.obj.id;
+        if (that.obj.length <= 0) {
+          that.obj = data.obj2;
+        }
         console.log(data);
         that.upload();
       });

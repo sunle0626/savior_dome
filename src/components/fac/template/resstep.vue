@@ -15,34 +15,317 @@
             </el-steps>
             <p>救援服务清单</p>
             <div class="det_box">
-            <p>1、医疗救援</p>
+            <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
+                {{v.dict.name}}
+            </p>
             <el-steps direction="vertical" :active="1" class="box">
-                <el-step title="A、医疗机构推荐"></el-step>
-                <el-step title="B、出诊服务"></el-step>
-                <el-step title="C、医疗报告的索取和翻译"></el-step>
+                <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
+                </el-step>
             </el-steps>
+            <p class="p"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
+            <div class="f_box f_box_1" ref="fb">
+              <span @click="st(0)">开始操作</span>
+              <span>其他</span>
+            </div>
+            <div class="f_box f_box_2" ref="fb">
+              <span @click="st(1)">开始操作</span>
+              <span>其他</span>
+            </div>
+            <div class="f_box f_box_3" ref="fb">
+              <span @click="st(2)">开始操作</span>
+              <span>其他</span>
+            </div>
             </div>
         </div>
+      <el-dialog
+        title="案件操作"
+        :visible.sync="centerDialogVisible"
+        width="50%"
+        center>
+        <div class="c_box">
+          <p>添加操作说明</p>
+           <el-input
+            rows="3"
+            type="textarea"
+            placeholder="操作进展"
+            v-model="txt"
+            @input="txtdata"
+            ></el-input>
+        </div>
+        <div class="i_box">
+          <p>相关单据上传</p>
+          <ul>
+            <li v-for="(img,i) in urllist" :key="i">
+              <img class="imgbox"  :src="img.url" alt="">
+              <p>{{img.txt}}</p>
+            </li>
+            <li>
+              <div class="up_box">
+                <span for="upimg" @click="upimg()">+</span>   
+              </div>
+              <P>添加</P>
+            </li>
+          </ul>
+        </div>
+         <p class="p"><el-button center type="button" size="small" @click="ok()">完成该操作</el-button></p>
+      </el-dialog>
+      <el-dialog
+        title="案件操作"
+        :visible.sync="imgVisible"
+        width="50%"
+        center>
+        <p><span>图片名称</span><el-input
+            type="text"
+            placeholder="医疗单据"
+            v-model="txts"
+            @input="txtsdata"
+            ></el-input></p>
+            <p>
+              <span>
+                图片地址
+              </span>
+              <input type="file" name="file" id="filebox" @change="fliedata($event)">
+            </p>
+            <p class="p"><el-button center type="button" size="small" @click="up()">确定</el-button></p>
+      </el-dialog>
+      <el-dialog
+        title="完成救援案件"
+        :visible.sync="isacc"
+        width="50%"
+        center>
+        <p>A、报价   
+        <span>整体报价 <small>{{ztfee}}</small></span>
+        <span>医疗垫付 <small>{{ztfee}}</small></span>
+        <span>案件费用 <small>{{ztfee}}</small></span>
+        <span>救援费用 <small>{{ztfee}}</small></span>
+        </p>
+        <div class="p_box">
+          <p>B、实际费用</p>
+          <label for="zt">整体报价<input type="text" name="zt" id="zt" v-model="zttxt"></label>
+          <label for="yl">医疗垫付<input type="text" name="yl" id="yl" v-model="yltxt"></label>
+          <label for="aj">案件费用<input type="text" name="aj" id="aj" v-model="ajtxt"></label>
+          <label for="jy">救援费用<input type="text" name="jy" id="jy" v-model="jytxt"></label>
+          <label for="qt">其他费用<input type="text" name="qt" id="qt" v-model="qttxt"></label>
+          <el-input
+            rows="3"
+            type="textarea"
+            placeholder="其他费用说明"
+            v-model="qt"
+            @input="setqt"
+            ></el-input>
+            <p class="p"><el-button center type="button" size="small" @click="accup()">确认提交</el-button></p>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
 <script>
-    export default {
-        
+import qs from "qs";
+export default {
+  data() {
+    return {
+      zttxt:'',
+      yltxt:'',
+      ajtxt:'',
+      jytxt:'',
+      qttxt:'',
+      qt:'',
+      ztfee: "$10000",
+      token: this.$route.params.token,
+      caseId: this.$route.params.caseId,
+      stepdata: [],
+      urllist: [],
+      txt: "",
+      txts: "",
+      file: "",
+      fileurl: "",
+      centerDialogVisible: false,
+      imgVisible: false,
+      id: 0,
+      num: 0,
+      isacc: false
+    };
+  },
+  methods: {
+    accup(){
+
+    },
+    setqt(){
+
+    },
+    getdata() {
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+          qs.stringify({
+            token: this.token,
+            caseId: this.caseId
+          })
+        )
+        .then(res => {
+          console.log(res.data);
+        });
+    },
+    acc() {
+      this.isacc = true;
+    },
+    ok() {
+      let tUploadCnts = [];
+      let obj = {};
+      console.log(this.urllist);
+      this.urllist.map(v => {
+        tUploadCnts.push({
+          objType: 3,
+          url: v.url,
+          objId: this.id
+        });
+      });
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/case/create_upload_cnt",
+          qs.stringify({
+            token: this.$route.params.token,
+            tUploadCnts: JSON.stringify(tUploadCnts)
+          })
+        )
+        .then(obj => {
+          console.log(obj);
+        });
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/case/conclude_phase",
+          qs.stringify(...obj, {
+            ...this.stepdata[this.num].obj,
+            ...{ description: this.txt, token: this.$route.params.token }
+          })
+        )
+        .then(obj => {
+          this.centerDialogVisible = false;
+          this.getdata();
+        });
+    },
+    up() {
+      this.urllist.push({
+        url: this.fileurl,
+        txt: this.txts
+      });
+      this.imgVisible = false;
+      this.centerDialogVisible = true;
+      console.log(this.urllist);
+    },
+    txtdata() {},
+    txtsdata() {},
+    fliedata(e) {
+      let that = this;
+      this.file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      let formdata = new FormData();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      formdata.append("token", this.$route.params.token);
+      reader.onload = function(e) {
+        formdata.append("file", that.file);
+        that.axios
+          .post(
+            "http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_file",
+            formdata,
+            config
+          )
+          .then(res => {
+            that.fileurl = res.data.obj;
+          });
+      };
+    },
+    upimg() {
+      this.imgVisible = true;
+      this.centerDialogVisible = false;
+    },
+    hendnode(e) {
+      console.log(e.target);
+    },
+    handleGetFile(e) {
+      let that = this;
+      this.file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      reader.onload = function(e) {
+        that.urllist.push(this.result);
+      };
+    },
+    dialogImageUrl() {},
+    dialogVisible() {},
+    st(i) {
+      this.num = i;
+      this.txt = this.stepdata[i].obj.description;
+      this.id = this.stepdata[i].obj.id;
+      this.centerDialogVisible = true;
     }
+  },
+  mounted() {
+    this.axios
+      .post(
+        "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+        qs.stringify({
+          token: this.token,
+          caseId: this.caseId
+        })
+      )
+      .then(res => {
+        console.log(res.data);
+        this.stepdata = res.data.obj2;
+      });
+  }
+};
 </script>
 
 <style scoped>
-.res_box{
-    text-align: left;
+.p {
+  text-align: center;
 }
-p{
-    line-height: 25px;
+.a-upload {
+  padding: 4px 10px;
+  height: 20px;
+  line-height: 20px;
+  position: relative;
+  cursor: pointer;
+  color: #888;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
 }
-.det_box{
-    height: 350px;
-    box-sizing: border-box;
-    padding: 10px 15px;
+.a-upload input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer;
+}
+.a-upload:hover {
+  color: #444;
+  background: #eee;
+  border-color: #ccc;
+  text-decoration: none;
+}
+.res_box {
+  text-align: left;
+}
+p {
+  line-height: 25px;
+}
+.det_box {
+  height: 350px;
+  box-sizing: border-box;
+  padding: 10px 15px;
 }
 .back_box {
   text-align: left;
@@ -57,8 +340,62 @@ p{
   font-weight: 600;
   line-height: 45px;
 }
-.box{
-    margin-left: 100px;
-    margin-top: -20px;
+.box {
+  margin-left: 100px;
+  margin-top: -20px;
+}
+.f_box {
+  position: relative;
+  width: 300px;
+  left: 280px;
+  top: -260px;
+}
+.f_box_2 {
+  position: relative;
+  width: 300px;
+  left: 280px;
+  top: -120px;
+}
+.f_box_3 {
+  position: relative;
+  width: 300px;
+  left: 280px;
+  top: -20px;
+}
+.f_box input {
+  display: block;
+}
+.imgbox {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  display: block;
+}
+.f_box > span {
+  color: #00abfa;
+  margin-left: 18px;
+}
+ul {
+  height: 150px;
+}
+ul > li {
+  width: 80px;
+  text-align: center;
+  float: left;
+  margin-left: 10px;
+}
+ul > li p {
+  width: 100%;
+  text-align: center;
+}
+.up_box {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  display: block;
+  font-size: 64px;
+  color: #ccc;
+  text-align: center;
+  line-height: 80px;
 }
 </style>

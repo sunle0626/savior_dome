@@ -12,65 +12,33 @@
                     <p>附件({{acc_list.length}})</p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
-                            <img :src="v.url" alt="">
-                            <p>{{v.txt}}</p>
-                            <a :href="v.dow">下载</a>
+                            <img src="" alt="">
+                            <p>指挥中心上传的文件</p>
+                            <a :href="v.url" download="指挥中心上传的文件">下载</a>
                         </li>
                     </ul>
                 </div>
             </div>
-                <div class="rescue_box">
-                    <p>1、医疗救援</p>
-                    <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="医疗机构推介" disabled checked>
-                            <span class="res_div">医疗机构推介</span>
+                <div class="rescue_box"  v-for="(item,ind) in checkList" :key="ind">
+                    <p>{{item.name}}</p>
+                    <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
+                        <el-checkbox checked="checked" disabled>
+                            <span class="res_div">{{v.dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">说明：{{v.obj.description}}</span>
                             <br/>
-                            <span class="res_box">回复：我们建议三级甲等医院，有牛逼的专家，稍微贵一些，还在保险条款之内</span>
+                            <span class="res_box">回复：{{v.obj.reply}}</span>
+                            <br/>
+                            <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span>
                         </el-checkbox>
-                        <el-checkbox label="门诊与住院预约" disabled checked>
-                            <span class="res_div">门诊与住院预约</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <br/>
-                            <span class="res_box">回复：我们建议三级甲等医院，有牛逼的专家，稍微贵一些，还在保险条款之内</span>
-                        </el-checkbox>
-                        <el-checkbox label="出诊服务" disabled checked>
-                            <span class="res_div">出诊服务</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <br/>
-                            <span class="res_box">回复：我们建议三级甲等医院，有牛逼的专家，稍微贵一些，还在保险条款之内</span>
-                        </el-checkbox>
-                        <el-checkbox label="医疗报告的索取与翻译" disabled checked>
-                            <span class="res_div">医疗报告的索取与翻译</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <br/>
-                            <span class="res_box">回复：我们建议三级甲等医院，有牛逼的专家，稍微贵一些，还在保险条款之内</span>
-                        </el-checkbox>
-                        <el-checkbox label="遗体转运" disabled checked>
-                            <span class="res_div">遗体转运</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <br/>
-                            <span class="res_box">回复：无</span>
-                        </el-checkbox>
+                        
                     </el-checkbox-group>
-                    <p>2、费用担保</p>
-                    <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="医疗机构推介" disabled checked>
-                            <span class="db_div">医疗费用担保或非医疗费用担保</span>
-                            <span class="db_box">限额<b>$10000</b></span>
-                            <p>说明：无</p>
-                        </el-checkbox>
-                    </el-checkbox-group>
+                </div>
                         <div class="upbtn_box">
                         <el-button type="primary" @click="flag=true;back()">关闭详情</el-button>
                         <span @click="toalter">修改报价</span>
                         </div>
-                </div>
+                
            </div>
     </div>
 </template>
@@ -79,28 +47,78 @@
 export default {
   data() {
     return {
-      acc_list: [
-        {
-          url:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
-          txt: "指挥中心上传的文件"
-        }
-      ],
+      token: this.$route.params.token,
+      caseid: this.$route.params.caseid,
+      acc_list: [],
       formInline: {
         user: "",
         region: ""
       },
       checkList: [],
-      flag:false
+      parentObj: [],
+      flag: false
     };
   },
   methods: {
     back() {
       this.$router.push("/fac/caseindex/offer");
     },
-    toalter(){
+    toalter() {
       this.$router.push("/fac/caseindex/alter");
     }
+  },
+  mounted() {
+    let that = this;
+    let n = 0;
+    fetch(
+      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+      {
+        method: "POST",
+        body: `token=${this.token}&caseId=${this.caseid}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(function(res) {
+        //console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        //console.log(data.obj2);
+        data.obj2.map(v => {
+          if (v.dict.parentId == "0") {
+            var obj = {};
+            obj.id = v.dict.parentId;
+            obj.childId = v.dict.id;
+            obj.name = v.dict.name;
+            obj.list = [];
+            that.checkList.push(obj);
+          } else {
+            that.checkList.map(o => {
+              if (v.dict.parentId == o.childId) {
+                //console.log(v.dict.parentId)
+                o.list.push(v);
+              }
+            });
+          }
+        });
+        //获取救援方案
+        fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
+          method: "POST",
+          body: `token=${that.token}&objId=${data.obj.id}&objType=2`,
+          mode: "cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+          .then(function(res) {
+            //console.log(res);
+            return res.json();
+          })
+          .then(function(data) {
+            data.obj.map(v => {
+              that.acc_list.push(v);
+            });
+          });
+      });
   }
 };
 </script>
@@ -240,10 +258,10 @@ span {
 }
 .upbtn_box {
   text-align: center;
-      margin-top: 15px;
+  margin-top: 15px;
 }
-.upbtn_box span{
-    color: #00abfa;
-    margin-left: 5px;
+.upbtn_box span {
+  color: #00abfa;
+  margin-left: 5px;
 }
 </style>

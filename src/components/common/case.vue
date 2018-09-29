@@ -82,12 +82,14 @@ export default {
   methods: {
     tocase() {
       let token = this.token;
+      let insti = this.insti;
       console.log(token)
       this.$router.push({
         path: "/fac/caseindex/await",
         name:'Await',
         params: {
-          token:token
+          token:token,
+          insti:insti
         }
       });
     }

@@ -15,18 +15,7 @@
                             <img :src="v.url" alt="">
                             <p>{{v.txt}}</p>
                             <a :href="v.dow">上传附件</a>
-                            <el-upload
-                              class="upload-demo"
-                              action="https://jsonplaceholder.typicode.com/posts/"
-                              :on-preview="handlePreview"
-                              :on-remove="handleRemove"
-                              :before-remove="beforeRemove"
-                              multiple
-                              :limit="3"
-                              :on-exceed="handleExceed"
-                              :file-list="fileList">
-                              <el-button size="small" type="primary">点击上传</el-button>
-                            </el-upload>
+                            <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
                         </li>
                     </ul>
                 </div>
@@ -52,64 +41,16 @@
                 <div class="rescue_box">
                     <p>1、{{data[0].dict.name}}</p>
                     <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="" disabled checked>
-                            <span class="res_div">{{data[1].dict.name}}</span>
+                        <el-checkbox label="" disabled checked v-for="(v,ind) in data" :key="ind" v-if="ind>0">
+                            <span class="res_div">{{v.dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：{{data[1].obj.description}}</span>
+                            <span class="res_box">说明：{{v.obj.description}}</span>
                             <br/>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
-                            v-model="txt1"
-                            @input="txtdata"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="" disabled checked>
-                            <span class="res_div">{{data[2].dict.name}}</span>
-                            <br/>
-                            <span class="res_box">说明：{{data[2].obj.description}}</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            v-model="txt2"
-                            @input="txtdata"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="" disabled checked>
-                            <span class="res_div">{{data[3].dict.name}}</span>
-                            <br/>
-                            <span class="res_box">说明：{{data[3].obj.description}}</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            v-model="txt3"
-                            @input="txtdata"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="" disabled checked>
-                            <span class="res_div">{{data[4].dict.name}}</span>
-                            <br/>
-                            <span class="res_box">{{data[4].obj.description}}</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            v-model="txt4"
-                            @input="txtdata"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="" disabled checked>
-                            <span class="res_div">{{data[5].dict.name}}</span>
-                            <br/>
-                            <span class="res_box">说明：{{data[5].obj.description}}</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            v-model="txt5"
+                            v-model="txt[ind-1]"
                             @input="txtdata"
                             ></el-input>
                         </el-checkbox>
@@ -158,17 +99,42 @@ export default {
       medicFee: this.$route.params.obj.medicFee,
       caseFee: this.$route.params.obj.caseFee,
       rescueFee: this.$route.params.obj.rescueFee,
-      txt1: "",
-      txt2: "",
-      txt3: "",
-      txt4: "",
-      txt5: ""
+      txt: [],
+      file: null,
+      avatar: null,
+      url: ""
     };
   },
   methods: {
-    txtdata() {
-      console.log(this.txt1, this.txt2, this.txt3, this.txt4, this.txt5);
+    handleGetFile(e) {
+      let that = this;
+      this.file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      let formdata = new FormData();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      formdata.append("token", this.$route.params.token);
+      reader.onload = function(e) {
+        that.avatar = this.result;
+        formdata.append("file", that.file);
+        that.axios
+          .post(
+            "http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_file",
+            formdata,
+            config
+          )
+          .then(res => {
+            that.acc_list[0].url = res.data.obj;
+            that.url = res.data.obj;
+          });
+      };
+      // console.log(that.avatar);
     },
+    txtdata() {},
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
@@ -191,6 +157,16 @@ export default {
     tooffer() {
       let that = this;
       console.log(this.$route.params.data);
+      let services = [];
+      let tUploadCnts= [];
+      that.txt.map((v, i) => {
+        services.push({
+          serviceId: that.data[i].obj.serviceId,
+          description: that.data[i].obj.description,
+          reply: v
+        });
+      });
+      console.log(services);
       this.axios
         .post(
           "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bid_bill",
@@ -201,55 +177,40 @@ export default {
             medicFee: this.medicFee,
             caseFee: this.caseFee,
             rescueFee: this.rescueFee,
-            services: JSON.stringify([
-              {
-                serviceId: that.data[0].obj.serviceId,
-                description: that.data[0].obj.description,
-                reply: that.txt1
-              },
-              {
-                serviceId: that.data[1].obj.serviceId,
-                description: that.data[1].obj.description,
-                reply: that.txt2
-              },
-              {
-                serviceId: that.data[2].obj.serviceId,
-                description: that.data[2].obj.description,
-                reply: that.txt2
-              },
-              {
-                serviceId: that.data[3].obj.serviceId,
-                description: that.data[3].obj.description,
-                reply: that.txt2
-              },
-              {
-                serviceId: that.data[4].obj.serviceId,
-                description: that.data[4].obj.description,
-                reply: that.txt2
-              },
-              {
-                serviceId: that.data[5].obj.serviceId,
-                description: that.data[5].obj.description,
-                reply: that.txt2
-              }
-            ])
+            services: JSON.stringify(services)
           })
         )
         .then(data => {
-          console.log(data);
-          that.$router.push({
-            path:"/fac/caseindex/offer",
-            name:"Offer",
-            params:{
-              token:this.$route.params.token,
-              caseId:this.$route.params.obj.caseId,
-            }
-          });
+          console.log(data.data);
+          tUploadCnts.push({
+            objType: 2,
+            url: this.url,
+            objId: data.data.obj
+          })
+          console.log(tUploadCnts)
+          this.axios
+            .post(
+              "http://api.test.dajiuxing.com.cn/1.0/rescue/case/create_upload_cnt",
+              qs.stringify({
+                token: this.$route.params.token,
+                tUploadCnts: JSON.stringify(tUploadCnts)
+              })
+            )
+            .then(obj => {
+              console.log(obj);
+            });
+          // that.$router.push({
+          //   path: "/fac/caseindex/offer",
+          //   name: "Offer",
+          //   params: {
+          //     token: this.$route.params.token,
+          //     caseId: this.$route.params.obj.caseId
+          //   }
+          // });
         });
     }
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>
 

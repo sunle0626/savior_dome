@@ -22,7 +22,7 @@
                 <div class="top_box">
                     <p>
                         <router-link :to="{name:'parinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
-                        <router-link to="/fac/caseindex/par/parcase" >案件进展</router-link>
+                        <router-link :to="{name :'parcase',params:{token:token,caseId:obj.id}}">案件进展</router-link>
                     </p>
                 </div>
                 <div class="bottom_box">
@@ -43,22 +43,26 @@ export default {
       casenumber: "AJ200101",
       inf: null,
       init: null,
-      obj2:null
+      obj2: null
     };
   },
   methods: {
     timestampToTime(timestamp) {
-      var date = new Date(timestamp);
-      var Y = date.getFullYear() + "-";
-      var M =
-        (date.getMonth() + 1 < 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "-";
-      var D = date.getDate() + " ";
-      var h = date.getHours() + ":";
-      var m = date.getMinutes() + ":";
-      var s = date.getSeconds();
-      return Y + M + D + h + m + s;
+      if (timestamp) {
+        var date = new Date(timestamp);
+        var Y = date.getFullYear() + "-";
+        var M =
+          (date.getMonth() + 1 < 10
+            ? "0" + (date.getMonth() + 1)
+            : date.getMonth() + 1) + "-";
+        var D = date.getDate() + " ";
+        var h = date.getHours() + ":";
+        var m = date.getMinutes() + ":";
+        var s = date.getSeconds();
+        return Y + M + D + h + m + s;
+      } else {
+        return "";
+      }
     },
     back() {
       let that = this;
@@ -75,24 +79,24 @@ export default {
       console.log(v);
     },
     setdata() {
-      console.log(this.obj)
+      console.log(this.$route.params.obj);
       let that = this;
       this.inf = {
         time: "报案时间" + that.timestampToTime(that.obj.reportTs),
-        user: "报案客户：" + that.obj.reportUser,
+        user: "报案客户：" + that.obj.reportUser || "",
         sex: "性别：男",
-        phone: "报案电话：" + that.victimList.obj.contact,
+        phone: "报案电话：" + that.victimList.obj.contact || "",
         instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
         null: "-",
-        card: "证件号码：" + that.victimList.obj.idNo,
-        number: "保单号码：" + that.victimList.obj.insurancePolicyNo,
+        card: "证件号码：" + that.victimList.obj.idNo || "",
+        number: "保单号码：" + that.victimList.obj.insurancePolicyNo || "",
         pardata: {
           flag: true,
           data: "保单详情"
         },
-        belong: "所属保险公司：" + that.init.obj.caseSrc,
-        source: "案件信息来源：" + that.obj.caseSrc,
-        exp: "来源说明：" + that.obj.caseSrcDesc
+        belong: "所属保险公司：" + that.init.obj.caseSrc || "",
+        source: "案件信息来源：" + that.obj.caseSrc || "",
+        exp: "来源说明：" + that.obj.caseSrcDesc || ""
       };
     }
   },

@@ -3,17 +3,25 @@
         <div class="top_box">
             <h2>等待救援中</h2>
             <div class="time_box">
-                <div class="st_box">
+                 <div class="block st_box">
                     起始时间
-                    <span>
-                        就只有天数，没有小时
-                    </span>
+                    <el-date-picker
+                    v-model="st_time"
+                    align="right"
+                    type="date"
+                    placeholder="起始时间"
+                    :picker-options="pickerOptions1">
+                    </el-date-picker>
                 </div>
-                <div class="en_box">
-                    起始时间
-                    <span>
-                        就只有天数，没有小时
-                    </span>
+                <div class="block en_box">
+                    结束时间
+                    <el-date-picker
+                    v-model="en_time"
+                    align="right"
+                    type="date"
+                    placeholder="结束时间"
+                    :picker-options="pickerOptions1">
+                    </el-date-picker>
                 </div>
             </div>
         </div>
@@ -66,7 +74,8 @@
                 label="用户保险详情"
                 width="90">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small">保险详情/无</el-button>
+                    <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
+                    <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button>                   
                 </template>
             </el-table-column>
             <el-table-column
@@ -89,7 +98,7 @@
                 label="操作"
                 width="100">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar()">查看报价详情</el-button>
+                    <el-button  type="text" size="small" @click="topar(scope)">查看报价详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -101,61 +110,128 @@
 import formVue from "../../common/form.vue";
 import qs from "qs";
 export default {
-  components: {
-    formVue
-  },
   data() {
     return {
+      tableData: [],
+      obj: [],
+      victimList: [],
       token: this.$route.params.token,
-      caseId: this.$route.params.caseId,
-      tableData: [
+      shortcuts: [
         {
-          number: 1,
-          casenumber: "AJ200101",
-          address: "美国纽约 第五大道",
-          username: "网易 黄博士",
-          phone: "+98 139 000000",
-          papers: "身份证 829743 297432",
-          sex: "男",
-          time: "2018年 6月5日  18:00",
-          par: "保险详情/无",
-          plan: "等待指挥 中心确认",
-          node: "指挥中心 确认",
-          get_time: "2018年 8月24日  20:00 耗时： 00:56 "
+          text: "今天",
+          onClick(picker) {
+            picker.$emit("pick", new Date());
+          }
         },
         {
-          number: 2,
-          casenumber: "AJ200101",
-          address: "美国纽约 第五大道",
-          username: "网易 黄博士",
-          phone: "+98 139 000000",
-          papers: "身份证 829743 297432",
-          sex: "男",
-          time: "2018年 6月5日  18:00",
-          par: "保险详情/无",
-          plan: "等待保险 公司授权",
-          node: "等待保险 公司授权",
-          get_time: "2018年 8月24日  20:00 耗时： 00:56 "
+          text: "昨天",
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit("pick", date);
+          }
+        },
+        {
+          text: "一周前",
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit("pick", date);
+          }
         }
-      ]
+      ],
+      st_time: "",
+      en_time: "",
+      pickerOptions1: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      }
     };
   },
   methods: {
-    topar() {
-      this.$router.push("lookinf");
+    topar(obj) {
+      //this.$router.push("lookinf");
+      this.$router.push({
+         name: 'lookinf',
+         params: {
+          caseid: obj.row.casenumber,
+          token:this.token
+         }
+        })
+    },
+    toUrl(url){
+      window.open(url);
+    },
+    time(str) {
+      var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "年";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "月"; 
+      var D = date.getDate() + "日";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
     }
   },
-  mounted() {
-    this.axios
-      .post(
-        "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
-        qs.stringify({
-          token: this.token,
-          caseId: this.caseId
-        })
-      )
-      .then(res => {
+   mounted() {
+    let that = this;
+    let n = 0;
+    let sex = "";
+    let isshow=false;
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/list_case", {
+      method: "POST",
+      body: `token=${this.token}&typeId=1&status=140`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
         console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        console.log(data.obj);
+        data.obj.map(v => {
+        if (v.solutionState && v.solutionState == "1"){
+
+        console.log(v.obj)
+          n = n + 1;
+          if (v.victimList[0].obj.gender == "1") {
+            sex = "男";
+          } else {
+            sex = "女";
+          }
+          
+          if(v.victimList[0].obj.insurancePaper && v.victimList[0].obj.insurancePaper !=""){
+            isshow = true;
+          }else{
+            isshow = false;          
+          }
+
+          that.tableData.push({
+            number: n, //序号
+            casenumber: v.obj.caseNo, //案件编号
+            address: v.obj.locId, //地址
+            username: v.victimList[0].obj.name, //姓名
+            phone: v.victimList[0].obj.contact, //联系方式
+            papers: v.victimList[0].obj.idNo, //身份证号
+            sex: sex, //性别
+            time: that.time(v.obj.incidentTs), //出险时间
+            par: "等待保险 公司授权", //状态
+            plan: "等待保险 公司授权",
+            node: "等待 授权",
+            get_time: that.time(v.obj.incidentTs),
+            op: "查看并操作",
+            insuranceUrl:v.victimList[0].obj.insurancePaper,//用户保险详情链接
+            isshow:isshow
+          });
+          that.obj.push(v.obj);
+          that.victimList.push(v.victimList[0]);
+         } 
+        });
       });
   }
 };

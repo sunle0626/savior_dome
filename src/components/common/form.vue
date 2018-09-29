@@ -48,7 +48,8 @@
                 label="用户保险详情"
                 width="90">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small">保险详情/无</el-button>
+                   <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
+                    <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button> 
                 </template>
             </el-table-column>
             <el-table-column
@@ -91,6 +92,7 @@ export default {
   methods: {
     topar(index) {
       let that = this;
+      console.log(that.obj);
       this.$router.push({
         path: "par",
         name: "Par",
@@ -108,18 +110,22 @@ export default {
       var M =
         (date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月"; 
+          : date.getMonth() + 1) + "月";
       var D = date.getDate() + "日";
       var h = date.getHours() + ":";
       var m = date.getMinutes() + ":";
       var s = date.getSeconds();
       return Y + M + D + h + m + s;
+    },
+    toUrl(url) {
+      window.open(url);
     }
   },
   mounted() {
     let that = this;
     let n = 0;
     let sex = "";
+    let isshow = false;
     fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/list_case", {
       method: "POST",
       body: `token=${this.token}&typeId=1&status=140`,
@@ -133,12 +139,20 @@ export default {
       .then(function(data) {
         console.log(data.obj);
         data.obj.map(v => {
-        console.log(v.obj)
+          console.log(v.obj);
           n = n + 1;
           if (v.victimList[0].gender == 1) {
             sex = "男";
           } else {
             sex = "女";
+          }
+          if (
+            v.victimList[0].obj.insurancePaper &&
+            v.victimList[0].obj.insurancePaper != ""
+          ) {
+            isshow = true;
+          } else {
+            isshow = false;
           }
           that.tableData.push({
             number: n, //序号
@@ -155,6 +169,7 @@ export default {
             get_time: that.time(v.obj.incidentTs),
             op: "查看并操作"
           });
+          console.log(v.obj);
           that.obj.push(v.obj);
           that.victimList.push(v.victimList[0]);
         });
