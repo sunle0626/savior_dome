@@ -101,11 +101,11 @@
         </p>
         <div class="p_box">
           <p>B、实际费用</p>
-          <label for="zt">整体报价<input type="text" name="zt" id="zt" v-model="zttxt"></label>
-          <label for="yl">医疗垫付<input type="text" name="yl" id="yl" v-model="yltxt"></label>
-          <label for="aj">案件费用<input type="text" name="aj" id="aj" v-model="ajtxt"></label>
-          <label for="jy">救援费用<input type="text" name="jy" id="jy" v-model="jytxt"></label>
-          <label for="qt">其他费用<input type="text" name="qt" id="qt" v-model="qttxt"></label>
+          <label for="zt">整体报价:<input type="text" name="zt" id="zt" v-model="zttxt"></label>
+          <label for="yl">医疗垫付:<input type="text" name="yl" id="yl" v-model="yltxt"></label>
+          <label for="aj">案件费用:<input type="text" name="aj" id="aj" v-model="ajtxt"></label>
+          <label for="jy">救援费用:<input type="text" name="jy" id="jy" v-model="jytxt"></label>
+          <label for="qt">其他费用:<input type="text" name="qt" id="qt" v-model="qttxt"></label>
           <el-input
             rows="3"
             type="textarea"
@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     accup(){
-
+      console.log()
     },
     setqt(){
 
@@ -283,6 +283,19 @@ export default {
 </script>
 
 <style scoped>
+label{
+  display: block;
+  float: left;
+  width: 33%;
+  margin:10px 0;
+}
+label input{
+  margin-left: 5px;
+  height: 25px;
+  border: 0;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
 .p {
   text-align: center;
 }
