@@ -1,7 +1,7 @@
 <template>
     <div>
         <caseVue :insti="insti" :token="token"/>
-        <manageVue/>
+        <manageVue :insti="insti" :token="token"/>
         <borardVue/>
         <funVue/>
     </div>

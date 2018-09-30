@@ -22,7 +22,6 @@
                 <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
                 </el-step>
             </el-steps>
-            <p class="p"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
             <div class="f_box f_box_1" ref="fb">
               <span @click="st(0)">开始操作</span>
               <span>其他</span>
@@ -36,6 +35,7 @@
               <span>其他</span>
             </div>
             </div>
+            <p class="p acc"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
         </div>
       <el-dialog
         title="案件操作"
@@ -94,10 +94,10 @@
         width="50%"
         center>
         <p>A、报价   
-        <span>整体报价 <small>{{ztfee}}</small></span>
-        <span>医疗垫付 <small>{{ztfee}}</small></span>
-        <span>案件费用 <small>{{ztfee}}</small></span>
-        <span>救援费用 <small>{{ztfee}}</small></span>
+        <span>整体报价 <small>${{feedata.totalFee}}</small></span>
+        <span>医疗垫付 <small>${{feedata.medicFee}}</small></span>
+        <span>案件费用 <small>${{feedata.caseFee}}</small></span>
+        <span>救援费用 <small>${{feedata.rescueFee}}</small></span>
         </p>
         <div class="p_box">
           <p>B、实际费用</p>
@@ -124,13 +124,12 @@ import qs from "qs";
 export default {
   data() {
     return {
-      zttxt:'',
-      yltxt:'',
-      ajtxt:'',
-      jytxt:'',
-      qttxt:'',
-      qt:'',
-      ztfee: "$10000",
+      zttxt: "",
+      yltxt: "",
+      ajtxt: "",
+      jytxt: "",
+      qttxt: "",
+      qt: "",
       token: this.$route.params.token,
       caseId: this.$route.params.caseId,
       stepdata: [],
@@ -143,16 +142,15 @@ export default {
       imgVisible: false,
       id: 0,
       num: 0,
-      isacc: false
+      isacc: false,
+      feedata: null
     };
   },
   methods: {
-    accup(){
-      console.log()
+    accup() {
+      console.log();
     },
-    setqt(){
-
-    },
+    setqt() {},
     getdata() {
       this.axios
         .post(
@@ -275,7 +273,7 @@ export default {
         })
       )
       .then(res => {
-        console.log(res.data);
+        this.feedata = res.data.obj;
         this.stepdata = res.data.obj2;
       });
   }
@@ -283,13 +281,13 @@ export default {
 </script>
 
 <style scoped>
-label{
+label {
   display: block;
   float: left;
   width: 33%;
-  margin:10px 0;
+  margin: 10px 0;
 }
-label input{
+label input {
   margin-left: 5px;
   height: 25px;
   border: 0;
@@ -361,22 +359,25 @@ p {
   position: relative;
   width: 300px;
   left: 280px;
-  top: -260px;
+  top: -330px;
 }
 .f_box_2 {
   position: relative;
   width: 300px;
   left: 280px;
-  top: -120px;
+  top: -200px;
 }
 .f_box_3 {
   position: relative;
   width: 300px;
   left: 280px;
-  top: -20px;
+  top: -70px;
 }
 .f_box input {
   display: block;
+}
+.acc {
+  margin-top: 20px;
 }
 .imgbox {
   width: 80px;

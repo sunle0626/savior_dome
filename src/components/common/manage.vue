@@ -1,14 +1,15 @@
 <template>
     <div class="manage_box">
         <h2>当前案件管理</h2>
+        <div v-for="(v,ind) in dataList" :key="ind">
         <div class="manage_case_box">
             <ul>
-                <li v-for="(v,ind) in manage_list" :key="ind">
-                    <span>{{v.order}}、{{v.name}}</span>
-                    <span>{{v.phone}}</span>
-                    <span>{{v.type}}</span>
-                    <span>救援模式：{{v.includetype}}</span>
-                    <span class="op">当前操作方：{{v.usertype}}</span>
+                <li >
+                    <span>{{v.name}}</span>
+                    <span>{{v.contact}}</span>
+                    <span>{{v.typename}}</span>
+                    <span>救援模式：{{v.contractTypeName}}</span>
+                    <span class="op">当前操作方：保险公司</span>
                     <b>查看并处理</b>
                 </li>
             </ul>
@@ -25,7 +26,7 @@
             </div>
             <div class="list_box">
                 <el-table
-                    :data="tableData"
+                    :data="v.tableData"
                     style="width: 100%"
                     >
                     <el-table-column
@@ -60,53 +61,109 @@
                 </el-table>
                 <div class="time_box">
                     已耗时：
-                    <span>{{time}}</span>
+                    <span>{{v.alltime}}</span>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+
+  props: ["insti", "token"],
   data() {
     return {
-      manage_list: [
-        {
-          order: 1,
-          name: "黄老板",
-          phone: "+851621665212121",
-          type: "门急诊就医",
-          includetype: "大包",
-          usertype: "保险公司"
-        }
-      ],
-      tableData: [
-        {
-          time: "2018.09.02 20:22",
-          oper: "安盛救援服务有限公司登录账号：1827372",
-          node: "医疗救援 出诊服务",
-          detail: "出诊安排 安盛附属医院骨科",
-          nstate: "已完成"
-        },
-        {
-          time: "2018.09.02 20:22",
-          oper: "安盛救援服务有限公司登录账号：1827372",
-          node: "医疗救援 出诊服务",
-          detail: "出诊安排 安盛附属医院骨科",
-          nstate: "已完成"
-        },
-        {
-          time: "2018.09.02 20:22",
-          oper: "平台指挥中心 登录账号：1827372",
-          node: " 服务清单 变更",
-          detail: "服务清单变更 新增遗体转运",
-          nstate: "未完成"
-        }
-      ],
-      time: "1天20小时"
+      dataList:[],
     };
-  }
+  },
+  methods:{
+     time(str) {
+      var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "年";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "月"; 
+      var D = date.getDate() + "日";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    timeToStr(time){
+       var timeNow=new Date().getTime();
+       var date3=timeNow-time;
+       //计算出相差天数
+        var days=Math.floor(date3/(24*3600*1000))
+         
+        //计算出小时数
+        var leave1=date3%(24*3600*1000)    //计算天数后剩余的毫秒数
+        var hours=Math.floor(leave1/(3600*1000))
+        var leave2=leave1%(3600*1000)        //计算小时数后剩余的毫秒数
+        var minutes=Math.floor(leave2/(60*1000))
+        var leave3=leave2%(60*1000)      //计算分钟数后剩余的毫秒数
+        var seconds=Math.round(leave3/1000)
+        return(days+"天 "+hours+"小时 "+minutes+" 分钟")
+
+            } 
+          },
+    mounted() {
+      let that = this;
+      let nodeName="";
+      //console.log(this.token);
+       fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case", {
+          method: "POST",
+          body: `token=${this.token}`,
+          mode: "cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(function(res) {
+          //console.log(res);
+          return res.json();         
+        })
+        .then(function(data){
+            //console.log(data.obj.length);
+            
+            data.obj.map(v =>{
+              var objNew={};
+              console.log(v.obj);
+
+              objNew.contact=v.obj.victimList[0].obj.contact;
+              objNew.name=v.obj.victimList[0].obj.name;
+              if(v.obj.obj.incidentType == 1){
+               objNew.typename="门诊就医";
+              }
+
+              if(v.obj.contractType == 1){
+                 objNew.contractTypeName="大包";
+              }else if(v.obj.contractType == 2){
+                 objNew.contractTypeName="小包";
+              }else if(v.obj.contractType == 3){
+                 objNew.contractTypeName="纯服务";
+              }
+              //计算总耗时              
+              objNew.alltime = that.timeToStr(v.obj2[0].obj.updateAt);
+              objNew.tableData=[];
+             
+             v.obj2.map(o =>{
+                objNew.tableData.push({
+                oper: o.instiName+"账号"+o.passport, //操作方
+                node: o.obj.opDesc, //操作节点
+                detail:o.obj.opStateText, //操作细节
+                nstate: "已完成", //当前状态
+                time: that.time(o.obj.updateAt), //时间               
+              });
+             })
+             
+             that.dataList.push(objNew);
+            })
+           
+
+        })
+      
+    }
 };
 </script>
 
