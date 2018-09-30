@@ -74,7 +74,7 @@ export default {
     let that = this;
     return {
       objId: null,
-      token: this.$route.params.token,
+      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
       init: this.$route.params.init,
       caseId: this.$route.params.caseId,
       obj: this.$route.params.obj,
@@ -97,7 +97,7 @@ export default {
       let that = this;
       this.axios
         .post(
-          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+          "/rescue/bidding/view_insti_solution",
           qs.stringify({
             token: this.token,
             caseId: this.caseId
@@ -120,7 +120,7 @@ export default {
     },
     upload() {
       let that = this;
-      fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
+      fetch("/rescue/case/upload_cnts", {
         method: "POST",
         body: `token=${this.token}&objType=1&objId=${this.objId}`,
         mode: "cors",
@@ -157,7 +157,7 @@ export default {
       weather: "天气灾害：" + that.init.obj.weatherTag
     };
     this.def = that.init.obj.incidentDesc;
-    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bidders", {
+    fetch("/rescue/bidding/bidders", {
       method: "POST",
       body: `token=${this.token}&caseId=${this.caseId}`,
       mode: "cors",
@@ -170,7 +170,7 @@ export default {
         that.bid = data.obj;
       });
     fetch(
-      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_case_solution",
+      "/rescue/bidding/view_case_solution",
       {
         method: "POST",
         body: `token=${this.token}&caseId=${this.caseId}`,

@@ -111,9 +111,9 @@ export default {
     let that = this;
     this.axios
       .post(
-        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/case_progress",
+        "/rescue/case/case_progress",
         qs.stringify({
-          token: this.$route.params.token,
+          token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
           caseId: this.$route.params.caseId
         })
       )

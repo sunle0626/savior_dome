@@ -117,13 +117,13 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      formdata.append("token", this.$route.params.token);
+      formdata.append("token", this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data);
       reader.onload = function(e) {
         that.avatar = this.result;
         formdata.append("file", that.file);
         that.axios
           .post(
-            "http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_file",
+            "/rescue/case/upload_file",
             formdata,
             config
           )
@@ -160,6 +160,7 @@ export default {
       let services = [];
       let tUploadCnts= [];
       that.txt.map((v, i) => {
+        console.log(that.data[i].obj)
         services.push({
           serviceId: that.data[i].obj.serviceId,
           description: that.data[i].obj.description,
@@ -169,9 +170,9 @@ export default {
       console.log(services);
       this.axios
         .post(
-          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bid_bill",
+          "/rescue/bidding/bid_bill",
           qs.stringify({
-            token: this.$route.params.token,
+            token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
             caseId: this.$route.params.obj.caseId,
             totalFee: this.totalFee,
             medicFee: this.medicFee,
@@ -190,9 +191,9 @@ export default {
           console.log(tUploadCnts)
           this.axios
             .post(
-              "http://api.test.dajiuxing.com.cn/1.0/rescue/case/create_upload_cnt",
+              "/rescue/case/create_upload_cnt",
               qs.stringify({
-                token: this.$route.params.token,
+                token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
                 tUploadCnts: JSON.stringify(tUploadCnts)
               })
             )

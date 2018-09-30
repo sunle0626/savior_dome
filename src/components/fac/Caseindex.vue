@@ -25,8 +25,8 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token,
-      insti: this.$route.params.insti
+      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      insti: this.$route.params.insti||JSON.parse(window.localStorage.getItem("insti"))
     };
   },
   methods: {

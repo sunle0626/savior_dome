@@ -29,11 +29,6 @@ export default new Router({
             component: Fac,
             children: [
                 {
-                    path: 'index',
-                    name: 'FacIndex',
-                    component: FacIndex,
-                },
-                {
                     path: 'caseindex',
                     name: 'Caseindex',
                     component: Caseindex,
@@ -64,14 +59,14 @@ export default new Router({
                             component: Lookinf,
                         },
                         {
-                            path:'alter',
-                            name:'alter',
-                            component:Alter
+                            path: 'alter',
+                            name: 'alter',
+                            component: Alter
                         },
                         {
-                            path:'resstep',
-                            name:'resstep',
-                            component:Resstep
+                            path: 'resstep',
+                            name: 'resstep',
+                            component: Resstep
                         },
                         {
                             path: 'par',
@@ -90,6 +85,11 @@ export default new Router({
                             ]
                         }
                     ]
+                }
+                , {
+                    path: 'index',
+                    name: 'FacIndex',
+                    component: FacIndex,
                 }
             ]
         }

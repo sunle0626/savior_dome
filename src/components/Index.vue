@@ -229,14 +229,17 @@
             </div>
         </footer>
         <div class="login_box">
-        <h2>登录</h2>
-        <form class="login_div">
-            <p><label for="id_box">登录ID&nbsp;: <input type="text" id="id_box" v-model="user"></label></p>
-            <p><label for="pwd_box">密&nbsp;&nbsp;&nbsp;码&nbsp;: <input type="text" id="pwd_box" v-model="pwd"></label></p>
-            <span class="btn_cancel div_btn" @click="tobtn('cancel')">取消</span>
-            <span class="btn_login div_btn" @click="tobtn('login')">登录</span>
-        </form>
-    </div>
+          <h2>大救星救援云平台</h2>
+          <div class="login_area">
+            <h2>登录</h2>
+            <form class="login_div">
+                <p><input type="text" id="id_box" placeholder="请输入ID" v-model="user"></p>
+                <p><input type="password" id="pwd_box" placeholder="请输入密码" v-model="pwd"></p>
+                <span class="btn_cancel div_btn" @click="tobtn('cancel')">取消</span>
+                <span class="btn_login div_btn" @click="tobtn('login')">登录</span>
+            </form>
+          </div>  
+        </div>
     </div>
 </template>
 
@@ -276,7 +279,7 @@ export default {
         // 0 救援机构 fac
         // 1 指挥中心
         // 2 监管机构
-        fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/user/login", {
+        fetch("/rescue/user/login", {
           method: "POST",
           body: `username=${this.user}&pwd=${this.pwd}`,
           mode: "cors",
@@ -286,16 +289,24 @@ export default {
             return res.json();
           })
           .then(function(data) {
-              let token = data.obj.token;
-              console.log(token)
             if (data.code === 0) {
               if (data.obj.user.type === 0) {
+                window.localStorage.setItem(
+                  "data",
+                  JSON.stringify({
+                      data:data.obj.token
+                  })
+                );
+                window.localStorage.setItem(
+                  "insti",
+                  JSON.stringify(data.obj.user.insti)
+                );
                 that.$router.push({
                   path: "/fac",
-                  name:'Fac',
+                  name: "Fac",
                   params: {
                     token: data.obj.token,
-                    insti:data.obj.user.insti
+                    insti: data.obj.user.insti
                   }
                 });
               }

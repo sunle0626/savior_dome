@@ -115,7 +115,9 @@ export default {
       tableData: [],
       obj: [],
       victimList: [],
-      token: this.$route.params.token,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       shortcuts: [
         {
           text: "今天",
@@ -153,14 +155,14 @@ export default {
     topar(obj) {
       //this.$router.push("lookinf");
       this.$router.push({
-         name: 'lookinf',
-         params: {
+        name: "lookinf",
+        params: {
           caseid: obj.row.casenumber,
-          token:this.token
-         }
-        })
+          token: this.token
+        }
+      });
     },
-    toUrl(url){
+    toUrl(url) {
       window.open(url);
     },
     time(str) {
@@ -169,7 +171,7 @@ export default {
       var M =
         (date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月"; 
+          : date.getMonth() + 1) + "月";
       var D = date.getDate() + "日";
       var h = date.getHours() + ":";
       var m = date.getMinutes() + ":";
@@ -177,61 +179,69 @@ export default {
       return Y + M + D + h + m + s;
     }
   },
-   mounted() {
+  mounted() {
+    window.localStorage.setItem(
+      "case",
+      JSON.stringify({
+        case: "Offer"
+      })
+    );
     let that = this;
     let n = 0;
     let sex = "";
-    let isshow=false;
-    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/list_case", {
+    let isshow = false;
+    fetch("/rescue/case/list_case", {
       method: "POST",
-      body: `token=${this.token}&typeId=1&status=140`,
+      body: `token=${this.token}&typeId=1&status=180`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
       .then(function(res) {
-        console.log(res);
+        console.log('请求了offer页面');
         return res.json();
       })
       .then(function(data) {
-        console.log(data.obj);
-        data.obj.map(v => {
-        if (v.solutionState && v.solutionState == "1"){
-
-        console.log(v.obj)
-          n = n + 1;
-          if (v.victimList[0].obj.gender == "1") {
-            sex = "男";
-          } else {
-            sex = "女";
-          }
-          
-          if(v.victimList[0].obj.insurancePaper && v.victimList[0].obj.insurancePaper !=""){
-            isshow = true;
-          }else{
-            isshow = false;          
-          }
-
-          that.tableData.push({
-            number: n, //序号
-            casenumber: v.obj.caseNo, //案件编号
-            address: v.obj.locId, //地址
-            username: v.victimList[0].obj.name, //姓名
-            phone: v.victimList[0].obj.contact, //联系方式
-            papers: v.victimList[0].obj.idNo, //身份证号
-            sex: sex, //性别
-            time: that.time(v.obj.incidentTs), //出险时间
-            par: "等待保险 公司授权", //状态
-            plan: "等待保险 公司授权",
-            node: "等待 授权",
-            get_time: that.time(v.obj.incidentTs),
-            op: "查看并操作",
-            insuranceUrl:v.victimList[0].obj.insurancePaper,//用户保险详情链接
-            isshow:isshow
+        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        if (data.obj) {
+          data.obj.map(v => {
+            if (v.solutionState && v.solutionState == "1") {
+              console.log(v.obj);
+              n = n + 1;
+              if (v.victimList[0].obj.gender == "1") {
+                sex = "男";
+              } else {
+                sex = "女";
+              }
+              if (
+                v.victimList[0].obj.insurancePaper &&
+                v.victimList[0].obj.insurancePaper != ""
+              ) {
+                isshow = true;
+              } else {
+                isshow = false;
+              }
+              that.tableData.push({
+                number: n, //序号
+                casenumber: v.obj.caseNo, //案件编号
+                address: v.obj.locId, //地址
+                username: v.victimList[0].obj.name, //姓名
+                phone: v.victimList[0].obj.contact, //联系方式
+                papers: v.victimList[0].obj.idNo, //身份证号
+                sex: sex, //性别
+                time: that.time(v.obj.incidentTs), //出险时间
+                par: "等待保险 公司授权", //状态
+                plan: "等待保险 公司授权",
+                node: "等待 授权",
+                get_time: that.time(v.obj.incidentTs),
+                op: "查看并操作",
+                insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
+                isshow: isshow
+              });
+              that.obj.push(v.obj);
+              that.victimList.push(v.victimList[0]);
+            }
           });
-          that.obj.push(v.obj);
-          that.victimList.push(v.victimList[0]);
-         } 
-        });
+        }
       });
   }
 };

@@ -1,6 +1,10 @@
 <template>
     <div class="manage_box">
         <h2>当前案件管理</h2>
+        <div v-if="dataList.length<=0">
+                <h3 class="no">暂无数据</h3>
+        </div>
+        <div v-else>
         <div v-for="(v,ind) in dataList" :key="ind">
         <div class="manage_case_box">
             <ul>
@@ -66,104 +70,100 @@
             </div>
         </div>
         </div>
+
+        </div>
     </div>
 </template>
 
 <script>
 export default {
-
   props: ["insti", "token"],
   data() {
     return {
-      dataList:[],
+      dataList: []
     };
   },
-  methods:{
-     time(str) {
+  methods: {
+    time(str) {
       var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
       var Y = date.getFullYear() + "年";
       var M =
         (date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月"; 
+          : date.getMonth() + 1) + "月";
       var D = date.getDate() + "日";
       var h = date.getHours() + ":";
       var m = date.getMinutes() + ":";
       var s = date.getSeconds();
       return Y + M + D + h + m + s;
     },
-    timeToStr(time){
-       var timeNow=new Date().getTime();
-       var date3=timeNow-time;
-       //计算出相差天数
-        var days=Math.floor(date3/(24*3600*1000))
-         
-        //计算出小时数
-        var leave1=date3%(24*3600*1000)    //计算天数后剩余的毫秒数
-        var hours=Math.floor(leave1/(3600*1000))
-        var leave2=leave1%(3600*1000)        //计算小时数后剩余的毫秒数
-        var minutes=Math.floor(leave2/(60*1000))
-        var leave3=leave2%(60*1000)      //计算分钟数后剩余的毫秒数
-        var seconds=Math.round(leave3/1000)
-        return(days+"天 "+hours+"小时 "+minutes+" 分钟")
-
-            } 
-          },
-    mounted() {
-      let that = this;
-      let nodeName="";
-      //console.log(this.token);
-       fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case", {
-          method: "POST",
-          body: `token=${this.token}`,
-          mode: "cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        })
-        .then(function(res) {
-          //console.log(res);
-          return res.json();         
-        })
-        .then(function(data){
-            //console.log(data.obj.length);
-            
-            data.obj.map(v =>{
-              var objNew={};
-              console.log(v.obj);
-
-              objNew.contact=v.obj.victimList[0].obj.contact;
-              objNew.name=v.obj.victimList[0].obj.name;
-              if(v.obj.obj.incidentType == 1){
-               objNew.typename="门诊就医";
-              }
-
-              if(v.obj.contractType == 1){
-                 objNew.contractTypeName="大包";
-              }else if(v.obj.contractType == 2){
-                 objNew.contractTypeName="小包";
-              }else if(v.obj.contractType == 3){
-                 objNew.contractTypeName="纯服务";
-              }
-              //计算总耗时              
-              objNew.alltime = that.timeToStr(v.obj2[0].obj.updateAt);
-              objNew.tableData=[];
-             
-             v.obj2.map(o =>{
-                objNew.tableData.push({
-                oper: o.instiName+"账号"+o.passport, //操作方
-                node: o.obj.opDesc, //操作节点
-                detail:o.obj.opStateText, //操作细节
-                nstate: "已完成", //当前状态
-                time: that.time(o.obj.updateAt), //时间               
-              });
-             })
-             
-             that.dataList.push(objNew);
-            })
-           
-
-        })
-      
+    timeToStr(time) {
+      var timeNow = new Date().getTime();
+      var date3 = timeNow - time;
+      //计算出相差天数
+      var days = Math.floor(date3 / (24 * 3600 * 1000));
+      //计算出小时数
+      var leave1 = date3 % (24 * 3600 * 1000); //计算天数后剩余的毫秒数
+      var hours = Math.floor(leave1 / (3600 * 1000));
+      var leave2 = leave1 % (3600 * 1000); //计算小时数后剩余的毫秒数
+      var minutes = Math.floor(leave2 / (60 * 1000));
+      var leave3 = leave2 % (60 * 1000); //计算分钟数后剩余的毫秒数
+      var seconds = Math.round(leave3 / 1000);
+      return days + "天 " + hours + "小时 " + minutes + " 分钟";
     }
+  },
+  mounted() {
+    let that = this;
+    let nodeName = "";
+    //console.log(this.token);
+    fetch("/rescue/case/all_ongoing_case", {
+      method: "POST",
+      body: `token=${this.token}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        //console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        //console.log(data.obj.length);
+
+        data.obj.map(v => {
+          var objNew = {};
+          console.log(v.obj);
+
+          objNew.contact = v.obj.victimList[0].obj.contact;
+          objNew.name = v.obj.victimList[0].obj.name;
+          if (v.obj.obj.incidentType == 1) {
+            objNew.typename = "门诊就医";
+          }
+
+          if (v.obj.contractType == 1) {
+            objNew.contractTypeName = "大包";
+          } else if (v.obj.contractType == 2) {
+            objNew.contractTypeName = "小包";
+          } else if (v.obj.contractType == 3) {
+            objNew.contractTypeName = "纯服务";
+          }
+          //计算总耗时
+          objNew.alltime = that.timeToStr(v.obj2[0].obj.updateAt);
+          objNew.tableData = [];
+
+          v.obj2.map(o => {
+            objNew.tableData.push({
+              oper: o.instiName + "账号" + o.passport, //操作方
+              node: o.obj.opDesc, //操作节点
+              detail: o.obj.opStateText, //操作细节
+              nstate: "已完成", //当前状态
+              time: that.time(o.obj.updateAt) //时间
+            });
+          });
+
+          that.dataList.push(objNew);
+        });
+      });
+  }
 };
 </script>
 
@@ -226,14 +226,17 @@ export default {
 }
 /* 步骤条、表格样式暂时无法修改，有空回来改 */
 .time_box {
-    height: 48px;
-    font-size: 24px;
-    line-height: 48px;
-    color: #444;
-    border-bottom: 1px  solid #eee;
-
+  height: 48px;
+  font-size: 24px;
+  line-height: 48px;
+  color: #444;
+  border-bottom: 1px solid #eee;
 }
-.time_box span{
-    color: #ff7200
+.time_box span {
+  color: #ff7200;
+}
+.no{
+    line-height: 80px;
+    color: #333;
 }
 </style>

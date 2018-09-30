@@ -34,7 +34,9 @@ import formVue from "../../common/form.vue";
 export default {
   data() {
     return {
-      token: this.$route.params.token,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       shortcuts: [
         {
           text: "今天",
@@ -72,6 +74,12 @@ export default {
     formVue
   },
   mounted() {
+    window.localStorage.setItem(
+      "case",
+      JSON.stringify({
+        case: "Await"
+      })
+    );
   }
 };
 </script>

@@ -15,86 +15,47 @@
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img :src="v.url" alt="">
                             <p>{{v.txt}}</p>
-                            <a :href="v.dow">上传附件</a>
+                            <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
                         </li>
                     </ul>
                 </div>
             </div>
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="整体报价:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="totalFee" placeholder="请输入金额($)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="医疗垫付:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="medicFee" placeholder="请输入金额($)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="案件费用:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="caseFee" placeholder="请输入金额($)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="救援费用:">
-                        <el-input v-model="formInline.user" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="rescueFee" placeholder="请输入金额($)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     </el-form>
-                <div class="rescue_box">
-                    <p>1、医疗救援</p>
-                    <el-checkbox-group v-model="checkList">
+                <div class="rescue_box" v-for="(item,ind) in checkList" :key="ind">
+                    <p>{{item.name}}</p>
+                    <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
                         <el-checkbox label="医疗机构推介" disabled checked>
-                            <span class="res_div">医疗机构推介</span>
+                            <span class="res_div">{{v.dict.name}}</span>
                             <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
+                            <span class="res_box">说明：{{v.obj.description}}</span>
                             <br/>
                             <el-input
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
-                            ></el-input>
+                            v-model="v.obj.reply"></el-input>
                         </el-checkbox>
-                        <el-checkbox label="门诊与住院预约" disabled checked>
-                            <span class="res_div">门诊与住院预约</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="出诊服务" disabled checked>
-                            <span class="res_div">出诊服务</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="医疗报告的索取与翻译" disabled checked>
-                            <span class="res_div">医疗报告的索取与翻译</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            ></el-input>
-                        </el-checkbox>
-                        <el-checkbox label="遗体转运" disabled checked>
-                            <span class="res_div">遗体转运</span>
-                            <br/>
-                            <span class="res_box">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span>
-                            <el-input
-                            rows="3"
-                            type="textarea"
-                            placeholder="添加回复"
-                            ></el-input>
-                        </el-checkbox>
+                        
                     </el-checkbox-group>
                         <div class="upbtn_box">
-                        <el-button type="primary" @click="flag=true">确定修改报价及方案</el-button>
+                        <el-button type="primary" @click="flag=true;">确定修改报价及方案</el-button>
                         <span @click="back">取消修改</span>
                         </div>
                 </div>
@@ -107,13 +68,14 @@
             <p>确认提交后，不可修改，是否确认提交</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="flag = false">修改一下</el-button>
-                <el-button type="primary" @click="flag = false;back()">确 定</el-button>
+                <el-button type="primary" @click="flag = false;tooffer();back()">确 定</el-button>
             </span>
             </el-dialog>
     </div>
 </template>
 
 <script>
+import qs from "qs";
 export default {
   data() {
     return {
@@ -124,18 +86,156 @@ export default {
           txt: "上传方案及报价"
         }
       ],
+      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      caseid: this.$route.params.caseid,
+      rescueFee: "",
+      medicFee: "",
+      caseFee: "",
+      totalFee: "",
       formInline: {
         user: "",
         region: ""
       },
       checkList: [],
-      flag:false
+      parentObj: [],
+      flag: false,
+      id: 0,
+      txt: [],
+      data: null,
+      url: ""
     };
   },
   methods: {
+    handleGetFile(e) {
+      let that = this;
+      this.file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      let formdata = new FormData();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      formdata.append("token", this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data);
+      reader.onload = function(e) {
+        that.avatar = this.result;
+        formdata.append("file", that.file);
+        that.axios
+          .post(
+            "/rescue/case/upload_file",
+            formdata,
+            config
+          )
+          .then(res => {
+            that.acc_list[0].url = res.data.obj;
+            that.url = res.data.obj;
+          });
+      };
+    },
+    tooffer() {
+      let that = this;
+      let services = [];
+      let tUploadCnts = [];
+      this.checkList[0].list.map((v, i) => {
+        console.log(that.data[i].obj);
+        console.log(v.obj.reply)
+        services.push({
+          id: that.data[i + 1].obj.id,
+          serviceId: that.data[i + 1].obj.serviceId,
+          description: that.data[i + 1].obj.description,
+          reply: v.obj.reply
+        });
+      });
+      console.log(services);
+      this.axios
+        .post(
+          "/rescue/bidding/alter_bill_assist",
+          qs.stringify({
+            token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+            caseId: this.$route.params.caseid,
+            id: this.id,
+            totalFee: this.totalFee,
+            medicFee: this.medicFee,
+            caseFee: this.caseFee,
+            rescueFee: this.rescueFee,
+            services: JSON.stringify(services)
+          })
+        )
+        .then(data => {
+          console.log(data.data);
+          tUploadCnts.push({
+            objType: 2,
+            url: that.url,
+            objId: that.id
+          });
+          console.log(tUploadCnts);
+          this.axios
+            .post(
+              "/rescue/case/create_upload_cnt",
+              qs.stringify({
+                token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+                tUploadCnts: JSON.stringify(tUploadCnts)
+              })
+            )
+            .then(obj => {
+              console.log(obj);
+            });
+        });
+    },
     back() {
-      this.$router.push("/fac/caseindex/offer");
+      this.$router.push({
+        name: "Offer",
+        params: {
+          token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+          caseid: this.$route.params.caseid
+        }
+      });
     }
+  },
+  mounted() {
+    let that = this;
+    console.log(this.token);
+    let n = 0;
+    fetch(
+      "/rescue/bidding/view_insti_solution",
+      {
+        method: "POST",
+        body: `token=${this.token}&caseId=${this.caseid}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(function(res) {
+        //console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        console.log(data);
+        that.id = data.obj.id;
+        that.rescueFee = data.obj.rescueFee;
+        that.medicFee = data.obj.medicFee;
+        that.caseFee = data.obj.caseFee;
+        that.totalFee = data.obj.totalFee;
+        that.data = data.obj2;
+        data.obj2.map(v => {
+          if (v.dict.parentId == "0") {
+            var obj = {};
+            obj.id = v.dict.parentId;
+            obj.childId = v.dict.id;
+            obj.name = v.dict.name;
+            obj.list = [];
+            that.checkList.push(obj);
+          } else {
+            that.checkList.map(o => {
+              if (v.dict.parentId == o.childId) {
+                //console.log(v.dict.parentId)
+                o.list.push(v);
+              }
+            });
+          }
+        });
+      });
   }
 };
 </script>
@@ -276,8 +376,8 @@ span {
 .upbtn_box {
   text-align: center;
 }
-.upbtn_box span{
-    color: #00abfa;
-    margin-left: 5px;
+.upbtn_box span {
+  color: #00abfa;
+  margin-left: 5px;
 }
 </style>

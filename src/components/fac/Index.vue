@@ -16,8 +16,12 @@ import qs from "qs";
 export default {
   data() {
     return {
-      token: this.$route.params.token,
-      insti: this.$route.params.insti
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      insti:
+        this.$route.params.insti ||
+        JSON.parse(window.localStorage.getItem("insti"))
     };
   },
   components: {
@@ -31,7 +35,7 @@ export default {
     console.log(this.token);
     this.axios
       .post(
-        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case",
+        "/rescue/case/all_ongoing_case",
         qs.stringify({
           token: this.token
         })

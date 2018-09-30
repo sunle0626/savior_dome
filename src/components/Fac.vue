@@ -1,7 +1,9 @@
 <template>
     <div>
         <headerVue :insti="insti"/>
-        <router-view/>
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
     </div>
 </template>
 
@@ -11,8 +13,12 @@ import IndexVue from "./fac/Index.vue";
 export default {
   data() {
     return {
-      token: this.$route.params.token,
-      insti: this.$route.params.insti
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      insti:
+        this.$route.params.insti ||
+        JSON.parse(window.localStorage.getItem("insti"))
     };
   },
   components: {

@@ -26,7 +26,9 @@
                     </p>
                 </div>
                 <div class="bottom_box">
+                  <keep-alive>
                     <router-view></router-view>
+                  </keep-alive>
                 </div>
             </div>
         </div>
@@ -37,7 +39,7 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token,
+      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
       obj: this.$route.params.obj[this.$route.params.index],
       victimList: this.$route.params.victimList[this.$route.params.index],
       casenumber: "AJ200101",
@@ -104,7 +106,7 @@ export default {
     console.log(this.victimList);
     this.casenumber = this.obj.caseNo;
     let that = this;
-    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/detail_case", {
+    fetch("/rescue/case/detail_case", {
       method: "POST",
       body: `token=${this.token}&caseId=${that.victimList.obj.caseId}`,
       mode: "cors",

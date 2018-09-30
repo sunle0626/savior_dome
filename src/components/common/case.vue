@@ -40,41 +40,42 @@ export default {
       username: "XXX",
       casename: "门诊治疗",
       casenum: 1,
+      name: "",
       case_list: [
         {
           txt: "医疗救援",
           tit: "包含门急诊就医、住院安排医疗转运全流程",
           num: "",
           id: 0,
-          icon: "../../../static/images/com_images/icon_01.png"
+          icon: "./static/images/com_images/icon_01.png"
         },
         {
           txt: "门急诊就医",
           tit: "客人门诊急诊就医服务",
           num: "",
           id: 1,
-          icon: "../../../static/images/com_images/icon_02.png"
+          icon: "./static/images/com_images/icon_02.png"
         },
         {
           txt: "住院安排",
           tit: "协助安排当地的住院服务",
           num: "",
           id: 2,
-          icon: "../../../static/images/com_images/icon_03.png"
+          icon: "./static/images/com_images/icon_03.png"
         },
         {
           txt: "医疗转运/送返",
           tit: "安排当地门诊及治疗",
           num: "",
           id: 3,
-          icon: "../../../static/images/com_images/icon_04.png"
+          icon: "./static/images/com_images/icon_04.png"
         },
         {
           txt: "星使服务",
           tit: "可安排当地向导陪同服务",
           num: "",
           id: 4,
-          icon: "../../../static/images/com_images/icon_05.png"
+          icon: "./static/images/com_images/icon_05.png"
         }
       ]
     };
@@ -83,22 +84,31 @@ export default {
     tocase() {
       let token = this.token;
       let insti = this.insti;
-      console.log(token)
+      window.localStorage.setItem(
+        "case",
+        JSON.stringify({
+          case: "Await"
+        })
+      );
       this.$router.push({
-        path: "/fac/caseindex/await",
-        name:'Await',
+        name: "Await",
         params: {
-          token:token,
-          insti:insti
+          token: token,
+          insti: insti
         }
       });
     }
   },
   mounted() {
+    let data = "";
+    if (JSON.parse(window.localStorage.getItem("case"))) {
+      data = JSON.parse(window.localStorage.getItem("case")).case;
+    }
+    this.name = data;
     // console.log(this.token);
     let that = this;
     let arr = [1, 2, 3, 4, 5];
-    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/batch_case_count", {
+    fetch("/rescue/case/batch_case_count", {
       method: "POST",
       body: `token=${this.token}`,
       mode: "cors",
@@ -117,6 +127,18 @@ export default {
           console.log(data.obj[v]);
         });
       });
+    if (this.name) {
+      this.$router.push({
+        name: this.name,
+        params: {
+          token: this.token,
+          insti: this.insti
+        }
+      });
+      window.localStorage.removeItem("case");
+    } else {
+      console.log(0);
+    }
   }
 };
 </script>
