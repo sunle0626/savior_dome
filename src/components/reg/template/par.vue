@@ -21,14 +21,12 @@
             <div class="swi_box">
                 <div class="top_box">
                     <p>
-                        <router-link :to="{name:'parinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
-                        <router-link :to="{name :'parcase',params:{token:token,caseId:obj.id}}">案件进展</router-link>
+                        <router-link :to="{name:'Regparinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
+                        <router-link :to="{name :'Regparcase',params:{token:token,caseId:obj.id}}">案件进展</router-link>
                     </p>
                 </div>
                 <div class="bottom_box">
-                  <keep-alive>
                     <router-view></router-view>
-                  </keep-alive>
                 </div>
             </div>
         </div>
@@ -39,7 +37,7 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token: this.$route.params.token,
       obj: this.$route.params.obj[this.$route.params.index],
       victimList: this.$route.params.victimList[this.$route.params.index],
       casenumber: "AJ200101",
@@ -70,8 +68,8 @@ export default {
       let that = this;
       console.log(that.token);
       this.$router.push({
-        path: "/fac/caseindex/await",
-        name: "Await",
+        path: "/reg/caseindex/await",
+        name: "RegAwait",
         params: {
           token: that.token
         }
@@ -96,17 +94,17 @@ export default {
           flag: true,
           data: "保单详情"
         },
-        belong: "所属保险公司：" + that.victimList.insuranceCompany || "",
+        belong: "所属保险公司：" + that.init.obj.caseSrc || "",
         source: "案件信息来源：" + that.obj.caseSrc || "",
         exp: "来源说明：" + that.obj.caseSrcDesc || ""
       };
     }
   },
   mounted() {
-    console.log(this.obj.id,this.victimList.obj.caseId)
+    console.log(this.victimList);
     this.casenumber = this.obj.caseNo;
     let that = this;
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/detail_case", {
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/detail_case", {
       method: "POST",
       body: `token=${this.token}&caseId=${that.victimList.obj.caseId}`,
       mode: "cors",
@@ -116,7 +114,6 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        console.log(data)
         that.init = data.obj;
         that.obj2 = data.obj2;
         that.setdata();

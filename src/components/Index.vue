@@ -279,7 +279,7 @@ export default {
         // 0 救援机构 fac
         // 1 指挥中心
         // 2 监管机构
-        fetch("/rescue/user/login", {
+        fetch("http://api.test.dajiuxing.com.cn/rescue/user/login", {
           method: "POST",
           body: `username=${this.user}&pwd=${this.pwd}`,
           mode: "cors",

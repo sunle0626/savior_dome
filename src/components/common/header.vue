@@ -26,7 +26,7 @@
             <div class="set_box">
                 个人设置
             </div>
-            <div class="logout_box">
+            <div class="logout_box" @click="logout">
                 注销
             </div>
         </div>
@@ -35,13 +35,23 @@
 
 <script>
 export default {
-  props:['insti'],
+  props: ["insti"],
   data() {
     return {
       userid: 0,
       usertype: "救援机构",
       username: "平安财险"
     };
+  },
+  methods: {
+    logout() {
+      this.$router.push({
+        name: "Index",
+        path:'/index'
+      });
+      localStorage.clear();
+      console.log("注销");
+    }
   }
 };
 </script>

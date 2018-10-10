@@ -151,12 +151,10 @@ export default {
   methods: {
     tores() {
       this.$router.push({
-        name: "resstep",
-        path: "http://api.test.dajiuxing.com.cn/fac/caseindex/resstep",
+        name: "Regresstep",
+        path: "/reg/caseindex/resstep",
         params: {
-          token:
-            this.$route.params.token ||
-            JSON.parse(window.localStorage.getItem("data")).data,
+          token: this.$route.params.token,
           caseId: this.caseId
         }
       });
@@ -176,71 +174,58 @@ export default {
     }
   },
   mounted() {
-    window.localStorage.setItem(
-      "case",
-      JSON.stringify({
-        case: "Rescue"
-      })
-    );
     let that = this;
     let n = 0;
     let sex = "";
     let isshow = false;
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/list_case", {
       method: "POST",
-      body: `token=${this.$route.params.token ||
-        JSON.parse(window.localStorage.getItem("data"))
-          .data}&typeId=1&status=180`,
+      body: `token=${this.$route.params.token}&typeId=1&status=180`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
       .then(function(res) {
-        console.log('请求了rescue页面')
         console.log(res);
         return res.json();
       })
       .then(function(data) {
         console.log(data);
-        if (data.obj) {
-          data.obj.map(v => {
-            that.caseId = v.obj.id;
-            console.log(v.obj);
-            if (v.solutionState && v.solutionState == "2") {
-              n = n + 1;
-              if (v.victimList[0].obj.gender == "1") {
-                sex = "男";
-              } else {
-                sex = "女";
-              }
+        data.obj.map(v => {
+          that.caseId = v.obj.id;
+          console.log(v.obj);
+          n = n + 1;
+          if (v.victimList[0].obj.gender == "1") {
+            sex = "男";
+          } else {
+            sex = "女";
+          }
 
-              if (
-                v.victimList[0].obj.insurancePaper &&
-                v.victimList[0].obj.insurancePaper != ""
-              ) {
-                isshow = true;
-              } else {
-                isshow = false;
-              }
-              that.tableData.push({
-                number: n, //序号
-                casenumber: v.obj.caseNo, //案件编号
-                address: v.obj.locId, //地址
-                username: v.victimList[0].obj.name, //姓名
-                phone: v.victimList[0].obj.contact, //联系方式
-                papers: v.victimList[0].obj.idNo, //身份证号
-                sex: sex, //性别
-                time: that.time(v.obj.incidentTs), //出险时间
-                par: "等待保险 公司授权", //状态
-                plan: "等待保险 公司授权",
-                node: "等待 授权",
-                get_time: that.time(v.obj.incidentTs),
-                op: "查看并操作"
-              });
-              //   that.obj.push(v.obj);
-              //   that.victimList.push(v.victimList[0]);
-            }
+          if (
+            v.victimList[0].obj.insurancePaper &&
+            v.victimList[0].obj.insurancePaper != ""
+          ) {
+            isshow = true;
+          } else {
+            isshow = false;
+          }
+          that.tableData.push({
+            number: n, //序号
+            casenumber: v.obj.caseNo, //案件编号
+            address: v.obj.locId, //地址
+            username: v.victimList[0].obj.name, //姓名
+            phone: v.victimList[0].obj.contact, //联系方式
+            papers: v.victimList[0].obj.idNo, //身份证号
+            sex: sex, //性别
+            time: that.time(v.obj.incidentTs), //出险时间
+            par: "等待保险 公司授权", //状态
+            plan: "等待保险 公司授权",
+            node: "等待 授权",
+            get_time: that.time(v.obj.incidentTs),
+            op: "查看并操作"
           });
-        }
+          //   that.obj.push(v.obj);
+          //   that.victimList.push(v.victimList[0]);
+        });
       });
   }
 };

@@ -18,39 +18,21 @@
             <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
                 {{v.dict.name}}
             </p>
-            <el-steps direction="vertical" :active="stid" class="box">
+            <el-steps direction="vertical" :active="1" class="box">
                 <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
                 </el-step>
             </el-steps>
-            <div class="f_box f_box_1" ref="fb" v-if="!stepdata[0].obj.state">
+            <div class="f_box f_box_1" ref="fb">
               <span @click="st(0)">开始操作</span>
               <span>其他</span>
             </div>
-            <div class="f_box f_box_1" ref="fb" v-else>
-              <div class="img_box">
-                <p>操作说明:{{stepdata[1].obj.description}}</p>
-                <img :src="v.url" v-for="(v,i) in imglist[1].list" :key="i"  v-if="v.url">
-              </div>
-            </div>
-            <div class="f_box f_box_2" ref="fb" v-if="!stepdata[1].obj.state">
+            <div class="f_box f_box_2" ref="fb">
               <span @click="st(1)">开始操作</span>
               <span>其他</span>
             </div>
-            <div class="f_box f_box_2" ref="fb" v-else>
-              <div class="img_box">
-                <p>操作说明:{{stepdata[2].obj.description}}</p>
-                  <img :src="v.url" v-for="(v,i) in imglist[2].list" :key="i" v-if="v.url">
-              </div>
-            </div>
-            <div class="f_box f_box_3" ref="fb" v-if="!stepdata[2].obj.state">
+            <div class="f_box f_box_3" ref="fb">
               <span @click="st(2)">开始操作</span>
               <span>其他</span>
-            </div>
-            <div class="f_box f_box_3" ref="fb" v-else>
-              <div class="img_box">
-                <p>操作说明:{{stepdata[3].obj.description}}</p>
-                <img :src="v.url" v-for="(v,i) in imglist[3].list" :key="i"  v-if="v.url">
-              </div>
             </div>
             </div>
             <p class="p acc"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
@@ -79,7 +61,7 @@
             </li>
             <li>
               <div class="up_box">
-                <span for="upimg" class="upspan" @click="upimg()">+</span>   
+                <span for="upimg" @click="upimg()">+</span>   
               </div>
               <P>添加</P>
             </li>
@@ -106,24 +88,24 @@
             </p>
             <p class="p"><el-button center type="button" size="small" @click="up()">确定</el-button></p>
       </el-dialog>
-      <el-dialog class="acc_box"
+      <el-dialog
         title="完成救援案件"
         :visible.sync="isacc"
         width="50%"
         center>
         <p>A、报价   
-        <span class="span">整体报价 <small v-if="flag">${{feedata.totalFee}}</small></span>
-        <span class="span">医疗垫付 <small v-if="flag">${{feedata.medicFee}}</small></span>
-        <span class="span">案件费用 <small v-if="flag">${{feedata.caseFee}}</small></span>
-        <span class="span">救援费用 <small v-if="flag">${{feedata.rescueFee}}</small></span>
+        <span>整体报价 <small>${{feedata.totalFee}}</small></span>
+        <span>医疗垫付 <small>${{feedata.medicFee}}</small></span>
+        <span>案件费用 <small>${{feedata.caseFee}}</small></span>
+        <span>救援费用 <small>${{feedata.rescueFee}}</small></span>
         </p>
         <div class="p_box">
           <p>B、实际费用</p>
-          <label for="zt">整体报价:<input type="text" name="zt" id="zt" v-model="zttxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="yl">医疗垫付:<input type="text" name="yl" id="yl" v-model="yltxt" placeholder='请输入金额($)'></label>
-          <label for="aj">案件费用:<input type="text" name="aj" id="aj" v-model="ajtxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="jy">救援费用:<input type="text" name="jy" id="jy" v-model="jytxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="qt">其他费用:<input type="text" name="qt" id="qt" v-model="qttxt" placeholder='请输入金额($)'></label>
+          <label for="zt">整体报价:<input type="text" name="zt" id="zt" v-model="zttxt"></label>
+          <label for="yl">医疗垫付:<input type="text" name="yl" id="yl" v-model="yltxt"></label>
+          <label for="aj">案件费用:<input type="text" name="aj" id="aj" v-model="ajtxt"></label>
+          <label for="jy">救援费用:<input type="text" name="jy" id="jy" v-model="jytxt"></label>
+          <label for="qt">其他费用:<input type="text" name="qt" id="qt" v-model="qttxt"></label>
           <el-input
             rows="3"
             type="textarea"
@@ -148,7 +130,7 @@ export default {
       jytxt: "",
       qttxt: "",
       qt: "",
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token: this.$route.params.token,
       caseId: this.$route.params.caseId,
       stepdata: [],
       urllist: [],
@@ -159,39 +141,28 @@ export default {
       centerDialogVisible: false,
       imgVisible: false,
       id: 0,
-      stid: 0,
       num: 0,
       isacc: false,
-      feedata: null,
-      flag: false,
-      imglist: []
+      feedata: null
     };
   },
   methods: {
     accup() {
-      let that = this;
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/finish",
-          qs.stringify({
-            token: this.token,
-            Id: this.caseId,
-            totalFee: this.zttxt,
-            rescueFee: this.jytxt,
-            medicFee: this.yltxt,
-            caseFee: this.ajtxt,
-            otherFee: this.qttxt,
-            otherFeedesc: this.qt
-          })
-        )
-        .then(res => {
-          if (res.data.code === 0) {
-            this.isacc = false;
-          }
-        });
+      console.log();
     },
     setqt() {},
     getdata() {
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+          qs.stringify({
+            token: this.token,
+            caseId: this.caseId
+          })
+        )
+        .then(res => {
+          console.log(res.data);
+        });
     },
     acc() {
       this.isacc = true;
@@ -209,9 +180,9 @@ export default {
       });
       this.axios
         .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/case/create_upload_cnt",
           qs.stringify({
-            token: this.token,
+            token: this.$route.params.token,
             tUploadCnts: JSON.stringify(tUploadCnts)
           })
         )
@@ -220,26 +191,18 @@ export default {
         });
       this.axios
         .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/conclude_phase",
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/case/conclude_phase",
           qs.stringify(...obj, {
             ...this.stepdata[this.num].obj,
-            ...{ description: this.txt, token: this.token }
+            ...{ description: this.txt, token: this.$route.params.token }
           })
         )
         .then(obj => {
           this.centerDialogVisible = false;
+          this.getdata();
         });
-      this.$router.push({
-        name: "Rescue",
-        params: {
-          token: this.$route.token,
-          caseId: this.$route.params.caseId
-        }
-      });
     },
     up() {
-      this.imglist[this.num].list.push(this.fileurl);
-      console.log(this.imglist);
       this.urllist.push({
         url: this.fileurl,
         txt: this.txts
@@ -261,12 +224,12 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      formdata.append("token", this.$route.token);
+      formdata.append("token", this.$route.params.token);
       reader.onload = function(e) {
         formdata.append("file", that.file);
         that.axios
           .post(
-            "http://api.test.dajiuxing.com.cn/rescue/case/upload_file",
+            "http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_file",
             formdata,
             config
           )
@@ -295,67 +258,36 @@ export default {
     dialogVisible() {},
     st(i) {
       this.num = i;
-      this.txt = this.stepdata[i + 1].obj.description;
-      this.id = this.stepdata[i + 1].obj.id;
+      this.txt = this.stepdata[i].obj.description;
+      this.id = this.stepdata[i].obj.id;
       this.centerDialogVisible = true;
-      this.stid = i;
     }
   },
   mounted() {
-    console.log(this.imglist);
     this.axios
       .post(
-        "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
+        "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
         qs.stringify({
           token: this.token,
           caseId: this.caseId
         })
       )
       .then(res => {
-        this.flag = true;
-        console.log(res.data);
         this.feedata = res.data.obj;
         this.stepdata = res.data.obj2;
-        this.stepdata.map(v => {
-          // if (v.uploadCntList.length > 0) {
-          this.imglist.push({
-            list: v.uploadCntList
-          });
-          // }
-          console.log(this.imglist);
-        });
       });
   }
 };
 </script>
 
 <style scoped>
-span {
-  font-size: 14px;
-}
-span small {
-  color: #ff7200;
-}
-.acc_box .span {
-  margin-left: 10px;
-  color: #333;
-}
-.rspan {
-  color: #df1717;
-}
-.upspan {
-  font-size: 64px;
-}
 label {
   display: block;
   float: left;
   width: 33%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 2px;
+  margin: 10px 0;
 }
 label input {
-  width: 130px;
   margin-left: 5px;
   height: 25px;
   border: 0;
@@ -479,14 +411,5 @@ ul > li p {
   color: #ccc;
   text-align: center;
   line-height: 80px;
-}
-.img_box img {
-  width: 80px;
-  height: 80px;
-  margin: 5px;
-}
-.img_box {
-  position: absolute;
-  top: -20px;
 }
 </style>

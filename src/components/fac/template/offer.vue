@@ -190,9 +190,9 @@ export default {
     let n = 0;
     let sex = "";
     let isshow = false;
-    fetch("/rescue/case/list_case", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
       method: "POST",
-      body: `token=${this.token}&typeId=1&status=180`,
+      body: `token=${this.token}&typeId=1&status=140`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
@@ -201,7 +201,6 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
         if (data.obj) {
           data.obj.map(v => {
             if (v.solutionState && v.solutionState == "1") {

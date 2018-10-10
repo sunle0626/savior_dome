@@ -14,7 +14,7 @@
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
                     <span class="op">当前操作方：保险公司</span>
-                    <b>查看并处理</b>
+                    <b class="lookinf">查看并处理</b>
                 </li>
             </ul>
         </div>
@@ -116,7 +116,7 @@ export default {
     let that = this;
     let nodeName = "";
     //console.log(this.token);
-    fetch("/rescue/case/all_ongoing_case", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/all_ongoing_case", {
       method: "POST",
       body: `token=${this.token}`,
       mode: "cors",

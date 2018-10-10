@@ -1,6 +1,9 @@
 <template>
     <div>
         <caseVue :insti="insti" :token="token"/>
+        <h2>
+          监管机构
+        </h2>
         <manageVue :insti="insti" :token="token"/>
         <borardVue/>
         <funVue/>
@@ -16,12 +19,8 @@ import qs from "qs";
 export default {
   data() {
     return {
-      token:
-        this.$route.params.token ||
-        JSON.parse(window.localStorage.getItem("data")).data,
-      insti:
-        this.$route.params.insti ||
-        JSON.parse(window.localStorage.getItem("insti"))
+      token: this.$route.params.token,
+      insti: this.$route.params.insti
     };
   },
   components: {
@@ -35,7 +34,7 @@ export default {
     console.log(this.token);
     this.axios
       .post(
-        "http://api.test.dajiuxing.com.cn/rescue/case/all_ongoing_case",
+        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case",
         qs.stringify({
           token: this.token
         })

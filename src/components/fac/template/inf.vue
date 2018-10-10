@@ -39,9 +39,9 @@
                     </el-form-item>
                     </el-form>
                 <div class="rescue_box">
-                    <p>1、{{data[0].dict.name}}</p>
+                    <p v-if="data[0].dict&&data[0].dict.parentId===0">1、{{data[0].dict.name}}</p>
                     <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="" disabled checked v-for="(v,ind) in data" :key="ind" v-if="ind>0">
+                        <el-checkbox label="" disabled checked v-for="(v,ind) in data" :key="ind" v-if="ind>0&&v.dict">
                             <span class="res_div">{{v.dict.name}}</span>
                             <br/>
                             <span class="res_box">说明：{{v.obj.description}}</span>
@@ -117,13 +117,17 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      formdata.append("token", this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data);
+      formdata.append(
+        "token",
+        this.$route.params.token ||
+          JSON.parse(window.localStorage.getItem("data")).data
+      );
       reader.onload = function(e) {
         that.avatar = this.result;
         formdata.append("file", that.file);
         that.axios
           .post(
-            "/rescue/case/upload_file",
+            "http://api.test.dajiuxing.com.cn/rescue/case/upload_file",
             formdata,
             config
           )
@@ -156,24 +160,25 @@ export default {
     },
     tooffer() {
       let that = this;
-      console.log(this.$route.params.data);
+      console.log(this.$route.params.caseId);
       let services = [];
-      let tUploadCnts= [];
+      let tUploadCnts = [];
       that.txt.map((v, i) => {
-        console.log(that.data[i].obj)
+        console.log(that.data[i].obj);
         services.push({
           serviceId: that.data[i].obj.serviceId,
           description: that.data[i].obj.description,
           reply: v
         });
       });
-      console.log(services);
       this.axios
         .post(
-          "/rescue/bidding/bid_bill",
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
           qs.stringify({
-            token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
-            caseId: this.$route.params.obj.caseId,
+            token:
+              this.$route.params.token ||
+              JSON.parse(window.localStorage.getItem("data")).data,
+            caseId: this.$route.params.caseId,
             totalFee: this.totalFee,
             medicFee: this.medicFee,
             caseFee: this.caseFee,
@@ -187,31 +192,35 @@ export default {
             objType: 2,
             url: this.url,
             objId: data.data.obj
-          })
-          console.log(tUploadCnts)
+          });
+          console.log(tUploadCnts);
           this.axios
             .post(
-              "/rescue/case/create_upload_cnt",
+              "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
               qs.stringify({
-                token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+                token:
+                  this.$route.params.token ||
+                  JSON.parse(window.localStorage.getItem("data")).data,
                 tUploadCnts: JSON.stringify(tUploadCnts)
               })
             )
             .then(obj => {
               console.log(obj);
             });
-          // that.$router.push({
-          //   path: "/fac/caseindex/offer",
-          //   name: "Offer",
-          //   params: {
-          //     token: this.$route.params.token,
-          //     caseId: this.$route.params.obj.caseId
-          //   }
-          // });
+          that.$router.push({
+            path: "/fac/caseindex/offer",
+            name: "Offer",
+            params: {
+              token: this.$route.params.token,
+              caseId: this.$route.params.obj.caseId
+            }
+          });
         });
     }
   },
-  mounted() {}
+  mounted() {
+    console.log(this.$route.params);
+  }
 };
 </script>
 

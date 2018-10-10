@@ -37,11 +37,11 @@
                        </div>
                        <div class="rescue_box">
                          <div class="box" v-for="(v,ind) in obj" :key="ind">
-                          <p v-if="v.dict&&v.dict.parentId===0">{{v.dict.name}}</p>
+                          <p v-if="v.dict.parentId===0">{{v.dict.name}}</p>
                          </div>
                          <div class="box">
                            <el-checkbox-group v-model="checkList">
-                              <el-checkbox label="医疗机构推介" disabled checked v-for="(v,ind) in obj" :key="ind" v-if="ind>0&&v.dict">
+                              <el-checkbox label="医疗机构推介" disabled checked v-for="(v,ind) in obj" :key="ind" v-if="ind>0">
                                     <span class="res_div">{{v.dict.name}}</span>
                                     <br/>
                                     <span class="res_box">说明：{{v.obj.description}}</span>
@@ -74,9 +74,7 @@ export default {
     let that = this;
     return {
       objId: null,
-      token:
-        this.$route.params.token ||
-        JSON.parse(window.localStorage.getItem("data")).data,
+      token: this.$route.params.token,
       init: this.$route.params.init,
       caseId: this.$route.params.caseId,
       obj: this.$route.params.obj,
@@ -99,31 +97,30 @@ export default {
       let that = this;
       this.axios
         .post(
-          "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
           qs.stringify({
             token: this.token,
             caseId: this.caseId
           })
         )
         .then(res => {
-          console.log(this.$route.params);
-          if (res.data.code === 101006) {
-            that.$router.push({
-              path: "/fac/caseindex/inf",
-              name: "Inf",
-              params: {
-                token: this.token,
-                obj: this.inf,
-                data: this.obj,
-                caseId:this.caseId
-              }
-            });
-          }
+          console.log(res.data);
+          // if (res.data.code === 101006) {
+          that.$router.push({
+            path: "/reg/caseindex/inf",
+            name: "RegInf",
+            params: {
+              token: this.token,
+              obj: this.inf,
+              data: this.obj
+            }
+          });
+          // }
         });
     },
     upload() {
       let that = this;
-      fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
+      fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
         method: "POST",
         body: `token=${this.token}&objType=1&objId=${this.objId}`,
         mode: "cors",
@@ -155,12 +152,12 @@ export default {
     this.objdata = {
       add: "出险地:" + that.init.caseCountry + that.init.caseCity + addr,
       type: "事故类型：" + that.init.obj.incidentType,
-      no: "是否团险：" + that.init.obj.caseInsured || "无",
+      no: "是否团险：" + that.init.obj.caseInsured,
       part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
-      weather: "天气灾害：" + that.init.obj.weatherTag || "无"
+      weather: "天气灾害：" + that.init.obj.weatherTag
     };
     this.def = that.init.obj.incidentDesc;
-    fetch("http://api.test.dajiuxing.com.cn/rescue/bidding/bidders", {
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bidders", {
       method: "POST",
       body: `token=${this.token}&caseId=${this.caseId}`,
       mode: "cors",
@@ -172,12 +169,15 @@ export default {
       .then(function(data) {
         that.bid = data.obj;
       });
-    fetch("http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution", {
-      method: "POST",
-      body: `token=${this.token}&caseId=${this.caseId}`,
-      mode: "cors",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
+    fetch(
+      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_case_solution",
+      {
+        method: "POST",
+        body: `token=${this.token}&caseId=${this.caseId}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
       .then(function(res) {
         return res.json();
       })

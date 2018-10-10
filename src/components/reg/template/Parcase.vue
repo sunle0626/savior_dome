@@ -76,13 +76,12 @@ export default {
       tableData: [
       ],
       imageUrl: "",
-      centerDialogVisible: false,
-      dialogVisible:false
+      centerDialogVisible: false
     };
   },
   methods: {
     close() {
-      this.$router.push("/fac/caseindex/par/parinf");
+      this.$router.push("/reg/caseindex/par/parinf");
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -112,9 +111,9 @@ export default {
     let that = this;
     this.axios
       .post(
-        "http://api.test.dajiuxing.com.cn/rescue/case/case_progress",
+        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/case_progress",
         qs.stringify({
-          token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+          token: this.$route.params.token,
           caseId: this.$route.params.caseId
         })
       )

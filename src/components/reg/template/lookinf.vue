@@ -47,7 +47,7 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token: this.$route.params.token,
       caseid: this.$route.params.caseid,
       acc_list: [],
       formInline: {
@@ -61,23 +61,17 @@ export default {
   },
   methods: {
     back() {
-      this.$router.push("/fac/caseindex/offer");
+      this.$router.push("/reg/caseindex/offer");
     },
     toalter() {
-       this.$router.push({
-         name: 'alter',
-         params: {
-          caseid: this.caseid,
-          token:this.token
-         }
-        })
+      this.$router.push("/reg/caseindex/alter");
     }
   },
   mounted() {
     let that = this;
     let n = 0;
     fetch(
-      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
+      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
       {
         method: "POST",
         body: `token=${this.token}&caseId=${this.caseid}`,
@@ -90,7 +84,7 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        console.log(data);
+        //console.log(data.obj2);
         data.obj2.map(v => {
           if (v.dict.parentId == "0") {
             var obj = {};
@@ -109,7 +103,7 @@ export default {
           }
         });
         //获取救援方案
-        fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
+        fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
           method: "POST",
           body: `token=${that.token}&objId=${data.obj.id}&objType=2`,
           mode: "cors",

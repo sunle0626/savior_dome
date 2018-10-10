@@ -4,9 +4,8 @@
           <img src="../../../../static/images/back.png" alt="">
           返回上一页
           </p>
-          <h2>修改报价</h2>
         <div class="box_req">
-            <h2>方案及报价详情</h2>
+            <h2>回复方案及报价详情</h2>
             <div class="req_box">
                 <b>救援方案</b>
                 <div class="acc_box">
@@ -15,6 +14,7 @@
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img :src="v.url" alt="">
                             <p>{{v.txt}}</p>
+                            <a :href="v.dow">上传附件</a>
                             <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
                         </li>
                     </ul>
@@ -22,26 +22,26 @@
             </div>
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="整体报价:">
-                        <el-input v-model="totalFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="totalFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="医疗垫付:">
-                        <el-input v-model="medicFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="medicFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="案件费用:">
-                        <el-input v-model="caseFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="caseFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="救援费用:">
-                        <el-input v-model="rescueFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="rescueFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     </el-form>
-                <div class="rescue_box" v-for="(item,ind) in checkList" :key="ind">
-                    <p>{{item.name}}</p>
-                    <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
-                        <el-checkbox label="医疗机构推介" disabled checked>
+                <div class="rescue_box">
+                    <p>1、{{data[0].dict.name}}</p>
+                    <el-checkbox-group v-model="checkList">
+                        <el-checkbox label="" disabled checked v-for="(v,ind) in data" :key="ind" v-if="ind>0">
                             <span class="res_div">{{v.dict.name}}</span>
                             <br/>
                             <span class="res_box">说明：{{v.obj.description}}</span>
@@ -50,13 +50,14 @@
                             rows="3"
                             type="textarea"
                             placeholder="添加回复"
-                            v-model="v.obj.reply"></el-input>
+                            v-model="txt[ind-1]"
+                            @input="txtdata"
+                            ></el-input>
                         </el-checkbox>
-                        
                     </el-checkbox-group>
                         <div class="upbtn_box">
-                        <el-button type="primary" @click="flag=true;">确定修改报价及方案</el-button>
-                        <span @click="back">取消修改</span>
+                        <el-button type="primary" @click="flag=true">提交报价及方案报价及方案</el-button>
+                        <span>取消回复</span>
                         </div>
                 </div>
            </div>
@@ -68,7 +69,7 @@
             <p>确认提交后，不可修改，是否确认提交</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="flag = false">修改一下</el-button>
-                <el-button type="primary" @click="flag = false;tooffer();back()">确 定</el-button>
+                <el-button type="primary" @click="flag = false;tooffer()">确 定</el-button>
             </span>
             </el-dialog>
     </div>
@@ -79,6 +80,8 @@ import qs from "qs";
 export default {
   data() {
     return {
+      data: this.$route.params.data,
+      fileList: [],
       acc_list: [
         {
           url:
@@ -86,22 +89,19 @@ export default {
           txt: "上传方案及报价"
         }
       ],
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
-      caseid: this.$route.params.caseid,
-      rescueFee: "",
-      medicFee: "",
-      caseFee: "",
-      totalFee: "",
       formInline: {
         user: "",
         region: ""
       },
       checkList: [],
-      parentObj: [],
       flag: false,
-      id: 0,
+      totalFee: this.$route.params.obj.totalFee,
+      medicFee: this.$route.params.obj.medicFee,
+      caseFee: this.$route.params.obj.caseFee,
+      rescueFee: this.$route.params.obj.rescueFee,
       txt: [],
-      data: null,
+      file: null,
+      avatar: null,
       url: ""
     };
   },
@@ -117,13 +117,13 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      formdata.append("token", this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data);
+      formdata.append("token", this.$route.params.token);
       reader.onload = function(e) {
         that.avatar = this.result;
         formdata.append("file", that.file);
         that.axios
           .post(
-            "http://api.test.dajiuxing.com.cn/rescue/case/upload_file",
+            "http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_file",
             formdata,
             config
           )
@@ -132,29 +132,47 @@ export default {
             that.url = res.data.obj;
           });
       };
+      // console.log(that.avatar);
+    },
+    txtdata() {},
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 3 个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    back() {
+      this.$router.push("/reg/caseindex/par/parinf");
     },
     tooffer() {
       let that = this;
+      console.log(this.$route.params.data);
       let services = [];
-      let tUploadCnts = [];
-      this.checkList[0].list.map((v, i) => {
-        console.log(that.data[i].obj);
-        console.log(v.obj.reply)
+      let tUploadCnts= [];
+      that.txt.map((v, i) => {
         services.push({
-          id: that.data[i + 1].obj.id,
-          serviceId: that.data[i + 1].obj.serviceId,
-          description: that.data[i + 1].obj.description,
-          reply: v.obj.reply
+          serviceId: that.data[i].obj.serviceId,
+          description: that.data[i].obj.description,
+          reply: v
         });
       });
-      console.log(this.$route.params.caseid);
+      console.log(services);
       this.axios
         .post(
-          "http://api.test.dajiuxing.com.cn/rescue/bidding/alter_bill_assist",
+          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bid_bill",
           qs.stringify({
-            token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
-            caseId: this.$route.params.caseid,
-            id: this.id,
+            token: this.$route.params.token,
+            caseId: this.$route.params.obj.caseId,
             totalFee: this.totalFee,
             medicFee: this.medicFee,
             caseFee: this.caseFee,
@@ -166,77 +184,33 @@ export default {
           console.log(data.data);
           tUploadCnts.push({
             objType: 2,
-            url: that.url,
-            objId: that.id
-          });
-          console.log(tUploadCnts);
+            url: this.url,
+            objId: data.data.obj
+          })
+          console.log(tUploadCnts)
           this.axios
             .post(
-              "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+              "http://api.test.dajiuxing.com.cn/1.0/rescue/case/create_upload_cnt",
               qs.stringify({
-                token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+                token: this.$route.params.token,
                 tUploadCnts: JSON.stringify(tUploadCnts)
               })
             )
             .then(obj => {
               console.log(obj);
             });
+          // that.$router.push({
+          //   path: "/fac/caseindex/offer",
+          //   name: "Offer",
+          //   params: {
+          //     token: this.$route.params.token,
+          //     caseId: this.$route.params.obj.caseId
+          //   }
+          // });
         });
-    },
-    back() {
-      this.$router.push({
-        name: "Offer",
-        params: {
-          token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
-          caseid: this.$route.params.caseid
-        }
-      });
     }
   },
-  mounted() {
-    let that = this;
-    console.log(this.token);
-    let n = 0;
-    fetch(
-      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
-      {
-        method: "POST",
-        body: `token=${this.token}&caseId=${this.caseid}`,
-        mode: "cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-      }
-    )
-      .then(function(res) {
-        //console.log(res);
-        return res.json();
-      })
-      .then(function(data) {
-        console.log(data);
-        that.id = data.obj.id;
-        that.rescueFee = data.obj.rescueFee;
-        that.medicFee = data.obj.medicFee;
-        that.caseFee = data.obj.caseFee;
-        that.totalFee = data.obj.totalFee;
-        that.data = data.obj2;
-        data.obj2.map(v => {
-          if (v.dict.parentId == "0") {
-            var obj = {};
-            obj.id = v.dict.parentId;
-            obj.childId = v.dict.id;
-            obj.name = v.dict.name;
-            obj.list = [];
-            that.checkList.push(obj);
-          } else {
-            that.checkList.map(o => {
-              if (v.dict.parentId == o.childId) {
-                //console.log(v.dict.parentId)
-                o.list.push(v);
-              }
-            });
-          }
-        });
-      });
-  }
+  mounted() {}
 };
 </script>
 

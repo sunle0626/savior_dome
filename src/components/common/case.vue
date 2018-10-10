@@ -6,7 +6,7 @@
             </div>
             <div class="view_box">
                 <span>进行中案件:<b>{{casename}}</b><b>({{casenum}})</b></span>
-                <small>立即查看</small>
+                <small @click="lookinf">立即查看</small>
             </div>
         </div>
         <div class="bottom_box">
@@ -97,6 +97,17 @@ export default {
           insti: insti
         }
       });
+    },
+    lookinf() {
+      let token = this.token;
+      let insti = this.insti;
+      this.$router.push({
+        name: "Await",
+        params: {
+          token: token,
+          insti: insti
+        }
+      });
     }
   },
   mounted() {
@@ -108,7 +119,7 @@ export default {
     // console.log(this.token);
     let that = this;
     let arr = [1, 2, 3, 4, 5];
-    fetch("/rescue/case/batch_case_count", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/batch_case_count", {
       method: "POST",
       body: `token=${this.token}`,
       mode: "cors",

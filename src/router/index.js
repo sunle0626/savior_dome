@@ -15,6 +15,20 @@ import Resstep from '../components/fac/template/resstep.vue'
 import Parcase from '../components/fac/template/Parcase.vue'
 import Parinf from '../components/fac/template/Parinf.vue'
 
+
+// import Reg from '@/components/Reg'
+// import RegIndex from '../components/Reg/Index.vue'
+// import RegCaseindex from '../components/Reg/Caseindex.vue'
+// import RegAwait from '../components/Reg/template/await.vue'
+// import RegOffer from '../components/Reg/template/Offer.vue'
+// import RegRescue from '../components/Reg/template/rescue.vue'
+// import RegPar from '../components/Reg/template/Par.vue'
+// import RegInf from '../components/Reg/template/inf.vue'
+// import RegLookinf from '../components/Reg/template/Lookinf.vue'
+// import RegAlter from '../components/Reg/template/alter.vue'
+// import RegResstep from '../components/Reg/template/resstep.vue'
+// import RegParcase from '../components/Reg/template/Parcase.vue'
+// import RegParinf from '../components/Reg/template/Parinf.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -28,6 +42,11 @@ export default new Router({
             name: 'Fac',
             component: Fac,
             children: [
+                {
+                    path: 'index',
+                    name: 'FacIndex',
+                    component: FacIndex,
+                },
                 {
                     path: 'caseindex',
                     name: 'Caseindex',
@@ -86,12 +105,78 @@ export default new Router({
                         }
                     ]
                 }
-                , {
-                    path: 'index',
-                    name: 'FacIndex',
-                    component: FacIndex,
-                }
             ]
         }
+
     ]
 })
+// , {
+//     path: '/reg',
+//     name: 'Reg',
+//     component: Reg,
+//     children: [
+//         {
+//             path: 'index',
+//             name: 'RegIndex',
+//             component: RegIndex,
+//         },
+//         {
+//             path: 'caseindex',
+//             name: 'RegCaseindex',
+//             component: RegCaseindex,
+//             children: [
+//                 {
+//                     path: 'await',
+//                     name: 'RegAwait',
+//                     component: RegAwait,
+//                 },
+//                 {
+//                     path: 'offer',
+//                     name: 'RegOffer',
+//                     component: RegOffer,
+//                 },
+//                 {
+//                     path: 'rescue',
+//                     name: 'RegRescue',
+//                     component: RegRescue,
+//                 },
+//                 {
+//                     path: 'inf',
+//                     name: 'RegInf',
+//                     component: RegInf,
+//                 },
+//                 {
+//                     path: 'lookinf',
+//                     name: 'Reglookinf',
+//                     component: RegLookinf,
+//                 },
+//                 {
+//                     path: 'alter',
+//                     name: 'Regalter',
+//                     component: RegAlter
+//                 },
+//                 {
+//                     path: 'resstep',
+//                     name: 'Regresstep',
+//                     component: RegResstep
+//                 },
+//                 {
+//                     path: 'par',
+//                     name: 'RegPar',
+//                     component: RegPar,
+//                     children: [
+//                         {
+//                             path: 'parcase',
+//                             name: 'Regparcase',
+//                             component: RegParcase
+//                         }, {
+//                             path: 'parinf',
+//                             name: 'Regparinf',
+//                             component: RegParinf
+//                         }
+//                     ]
+//                 }
+//             ]
+//         }
+//     ]
+// }

@@ -126,11 +126,11 @@ export default {
     let n = 0;
     let sex = "";
     let isshow = false;
-    fetch("/rescue/case/list_case", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
       method: "POST",
       body: `token=${this.token ||
         JSON.parse(window.localStorage.getItem("tokon"))
-          .obj}&typeId=1&status=180`,
+          .obj}&typeId=1&status=140`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
@@ -142,7 +142,6 @@ export default {
         console.log(data);
         if (data.obj) {
           data.obj.map(v => {
-            console.log(v.obj);
             if (!v.solutionState) {
               n = n + 1;
               if (v.victimList[0].gender == 1) {

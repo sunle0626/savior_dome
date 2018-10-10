@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="top_box">
-            <h2>救援中案件管理</h2>
+            <h2>等待救援中</h2>
             <div class="time_box">
-               <div class="block st_box">
+                 <div class="block st_box">
                     起始时间
                     <el-date-picker
                     v-model="st_time"
@@ -75,7 +75,7 @@
                 width="90">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
-                    <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button> 
+                    <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button>                   
                 </template>
             </el-table-column>
             <el-table-column
@@ -98,7 +98,7 @@
                 label="操作"
                 width="100">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="tores()">开始救援</el-button>
+                    <el-button  type="text" size="small" @click="topar(scope)">查看报价详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -108,13 +108,14 @@
 
 <script>
 import formVue from "../../common/form.vue";
+import qs from "qs";
 export default {
-  components: {
-    formVue
-  },
   data() {
     return {
       tableData: [],
+      obj: [],
+      victimList: [],
+      token: this.$route.params.token,
       shortcuts: [
         {
           text: "今天",
@@ -149,17 +150,18 @@ export default {
     };
   },
   methods: {
-    tores() {
+    topar(obj) {
+      //this.$router.push("lookinf");
       this.$router.push({
-        name: "resstep",
-        path: "http://api.test.dajiuxing.com.cn/fac/caseindex/resstep",
-        params: {
-          token:
-            this.$route.params.token ||
-            JSON.parse(window.localStorage.getItem("data")).data,
-          caseId: this.caseId
-        }
-      });
+         name: 'Reglookinf',
+         params: {
+          caseid: obj.row.casenumber,
+          token:this.token
+         }
+        })
+    },
+    toUrl(url){
+      window.open(url);
     },
     time(str) {
       var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -167,7 +169,7 @@ export default {
       var M =
         (date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月";
+          : date.getMonth() + 1) + "月"; 
       var D = date.getDate() + "日";
       var h = date.getHours() + ":";
       var m = date.getMinutes() + ":";
@@ -175,72 +177,61 @@ export default {
       return Y + M + D + h + m + s;
     }
   },
-  mounted() {
-    window.localStorage.setItem(
-      "case",
-      JSON.stringify({
-        case: "Rescue"
-      })
-    );
+   mounted() {
     let that = this;
     let n = 0;
     let sex = "";
-    let isshow = false;
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
+    let isshow=false;
+    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/list_case", {
       method: "POST",
-      body: `token=${this.$route.params.token ||
-        JSON.parse(window.localStorage.getItem("data"))
-          .data}&typeId=1&status=180`,
+      body: `token=${this.token}&typeId=1&status=140`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
       .then(function(res) {
-        console.log('请求了rescue页面')
         console.log(res);
         return res.json();
       })
       .then(function(data) {
-        console.log(data);
-        if (data.obj) {
-          data.obj.map(v => {
-            that.caseId = v.obj.id;
-            console.log(v.obj);
-            if (v.solutionState && v.solutionState == "2") {
-              n = n + 1;
-              if (v.victimList[0].obj.gender == "1") {
-                sex = "男";
-              } else {
-                sex = "女";
-              }
+        console.log(data.obj);
+        data.obj.map(v => {
+        if (v.solutionState && v.solutionState == "1"){
 
-              if (
-                v.victimList[0].obj.insurancePaper &&
-                v.victimList[0].obj.insurancePaper != ""
-              ) {
-                isshow = true;
-              } else {
-                isshow = false;
-              }
-              that.tableData.push({
-                number: n, //序号
-                casenumber: v.obj.caseNo, //案件编号
-                address: v.obj.locId, //地址
-                username: v.victimList[0].obj.name, //姓名
-                phone: v.victimList[0].obj.contact, //联系方式
-                papers: v.victimList[0].obj.idNo, //身份证号
-                sex: sex, //性别
-                time: that.time(v.obj.incidentTs), //出险时间
-                par: "等待保险 公司授权", //状态
-                plan: "等待保险 公司授权",
-                node: "等待 授权",
-                get_time: that.time(v.obj.incidentTs),
-                op: "查看并操作"
-              });
-              //   that.obj.push(v.obj);
-              //   that.victimList.push(v.victimList[0]);
-            }
+        console.log(v.obj)
+          n = n + 1;
+          if (v.victimList[0].obj.gender == "1") {
+            sex = "男";
+          } else {
+            sex = "女";
+          }
+          
+          if(v.victimList[0].obj.insurancePaper && v.victimList[0].obj.insurancePaper !=""){
+            isshow = true;
+          }else{
+            isshow = false;          
+          }
+
+          that.tableData.push({
+            number: n, //序号
+            casenumber: v.obj.caseNo, //案件编号
+            address: v.obj.locId, //地址
+            username: v.victimList[0].obj.name, //姓名
+            phone: v.victimList[0].obj.contact, //联系方式
+            papers: v.victimList[0].obj.idNo, //身份证号
+            sex: sex, //性别
+            time: that.time(v.obj.incidentTs), //出险时间
+            par: "等待保险 公司授权", //状态
+            plan: "等待保险 公司授权",
+            node: "等待 授权",
+            get_time: that.time(v.obj.incidentTs),
+            op: "查看并操作",
+            insuranceUrl:v.victimList[0].obj.insurancePaper,//用户保险详情链接
+            isshow:isshow
           });
-        }
+          that.obj.push(v.obj);
+          that.victimList.push(v.victimList[0]);
+         } 
+        });
       });
   }
 };
