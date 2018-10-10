@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap">
+    <div class="wrap" @click="removelogin()">
         <header class="header">
             <img src="../../static/images/banner_bg.png" alt="">
             <div class="nav">
@@ -228,7 +228,7 @@
                 大救星版权所有@2018
             </div>
         </footer>
-        <div class="login_box">
+        <div class="login_box" >
           <h2>大救星救援云平台</h2>
           <div class="login_area">
             <h2>登录</h2>
@@ -250,10 +250,17 @@ export default {
       flag: true,
       usertype: "",
       user: "",
-      pwd: ""
+      pwd: "",
+      loginflag:false
     };
   },
   methods: {
+    removelogin() {
+      let login_box = document.querySelector(".login_box");
+      if (login_box&&this.loginflag) {
+        login_box.style.display = "none";
+      }
+    },
     listlogin() {
       let login_list = document.querySelector(".login");
       if (this.flag) {
@@ -294,7 +301,7 @@ export default {
                 window.localStorage.setItem(
                   "data",
                   JSON.stringify({
-                      data:data.obj.token
+                    data: data.obj.token
                   })
                 );
                 window.localStorage.setItem(

@@ -7,7 +7,7 @@
                 </li>
                 <li>
                     <span>事故经过：</span>
-                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def">
+                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def" disabled="disabled">
                     </textarea>
                 </li>
             </ul>
@@ -115,7 +115,7 @@ export default {
                 token: this.token,
                 obj: this.inf,
                 data: this.obj,
-                caseId:this.caseId
+                caseId: this.caseId
               }
             });
           }
@@ -146,16 +146,19 @@ export default {
     }
   },
   mounted() {
-    console.log(this.obj);
     let that = this;
     let addr = "";
     if (that.init.generalLocation) {
-      addr = that.init.generalLocation.addr;
+      addr = that.init.generalLocation.addr || "";
     }
     this.objdata = {
-      add: "出险地:" + that.init.caseCountry + that.init.caseCity + addr,
-      type: "事故类型：" + that.init.obj.incidentType,
-      no: "是否团险：" + that.init.obj.caseInsured || "无",
+      add:
+        "出险地:" +
+        (that.init.caseCountry || "") +
+        (that.init.caseCity || "") +
+        addr,
+      type: "事故类型：" + that.init.obj.accidentType,
+      no: "是否团险：" + (that.init.obj.caseInsured?'是':'无'),
       part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
       weather: "天气灾害：" + that.init.obj.weatherTag || "无"
     };
@@ -172,12 +175,15 @@ export default {
       .then(function(data) {
         that.bid = data.obj;
       });
-    fetch("http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution", {
-      method: "POST",
-      body: `token=${this.token}&caseId=${this.caseId}`,
-      mode: "cors",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
+    fetch(
+      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
+      {
+        method: "POST",
+        body: `token=${this.token}&caseId=${this.caseId}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
       .then(function(res) {
         return res.json();
       })

@@ -14,7 +14,7 @@
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
                     <span class="op">当前操作方：保险公司</span>
-                    <b class="lookinf">查看并处理</b>
+                    <b @click="lookinf()">查看并处理</b>
                 </li>
             </ul>
         </div>
@@ -84,6 +84,9 @@ export default {
     };
   },
   methods: {
+    lookinf(){
+
+    },
     time(str) {
       var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
       var Y = date.getFullYear() + "年";

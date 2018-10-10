@@ -84,21 +84,21 @@ export default {
       console.log(this.$route.params.obj);
       let that = this;
       this.inf = {
-        time: "报案时间" + that.timestampToTime(that.obj.reportTs),
-        user: "报案客户：" + that.obj.reportUser || "",
+        time: "报案时间" + (that.timestampToTime(that.obj.reportTs)),
+        user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
-        phone: "报案电话：" + that.victimList.obj.contact || "",
-        instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
+        phone: "报案电话：" + (that.victimList.obj.contact || ""),
+        instime: "出险时间：" + (that.timestampToTime(that.obj.incidentTs)),
         null: "-",
-        card: "证件号码：" + that.victimList.obj.idNo || "",
-        number: "保单号码：" + that.victimList.obj.insurancePolicyNo || "",
+        card: "证件号码：" + (that.victimList.obj.idNo || ""),
+        number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),
         pardata: {
           flag: true,
           data: "保单详情"
         },
-        belong: "所属保险公司：" + that.victimList.insuranceCompany || "",
-        source: "案件信息来源：" + that.obj.caseSrc || "",
-        exp: "来源说明：" + that.obj.caseSrcDesc || ""
+        belong: "所属保险公司：" + (that.victimList.insuranceCompany || ""),
+        source: "案件信息来源：" + (that.obj.caseSrc || ""),
+        exp: "来源说明：" + (that.obj.caseSrcDesc || "")
       };
     }
   },
