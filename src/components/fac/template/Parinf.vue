@@ -113,6 +113,7 @@ export default {
               name: "Inf",
               params: {
                 token: this.token,
+                init:this.init,
                 obj: this.inf,
                 data: this.obj,
                 caseId: this.caseId

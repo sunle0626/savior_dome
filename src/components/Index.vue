@@ -244,6 +244,7 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -251,13 +252,13 @@ export default {
       usertype: "",
       user: "",
       pwd: "",
-      loginflag:false
+      loginflag: false
     };
   },
   methods: {
     removelogin() {
       let login_box = document.querySelector(".login_box");
-      if (login_box&&this.loginflag) {
+      if (login_box && this.loginflag) {
         login_box.style.display = "none";
       }
     },
@@ -282,6 +283,10 @@ export default {
         let login_box = document.querySelector(".login_box");
         login_box.style.display = "none";
       } else {
+        // 先匹配密码正则
+        if(!this.pwd.match(/^[a-zA-Z]\w{5,17}$/)){
+            Message.error("密码请以字母开头，长度在6~18之间，只能包含字母、数字和下划线");
+        }
         // 请求 判断角色
         // 0 救援机构 fac
         // 1 指挥中心
@@ -298,6 +303,10 @@ export default {
           .then(function(data) {
             if (data.code === 0) {
               if (data.obj.user.type === 0) {
+                Message({
+                  message: "登录成功",
+                  type: "success"
+                });
                 window.localStorage.setItem(
                   "data",
                   JSON.stringify({
@@ -317,8 +326,12 @@ export default {
                   }
                 });
               }
+            } else if (data.code === 200026) {
+              //   alert("登录失败,用户名或密码错误");
+              Message.error("登录失败，用户名或密码错误");
             } else {
-              alert("登录失败");
+              Message.error("登录失败，未知错误");
+              //   alert("登录失败,其他错误");
             }
             console.log(data);
           });

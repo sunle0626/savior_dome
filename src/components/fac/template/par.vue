@@ -39,7 +39,9 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       obj: this.$route.params.obj[this.$route.params.index],
       victimList: this.$route.params.victimList[this.$route.params.index],
       casenumber: "AJ200101",
@@ -84,11 +86,11 @@ export default {
       console.log(this.$route.params.obj);
       let that = this;
       this.inf = {
-        time: "报案时间" + (that.timestampToTime(that.obj.reportTs)),
+        time: "报案时间" + that.timestampToTime(that.obj.reportTs),
         user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
         phone: "报案电话：" + (that.victimList.obj.contact || ""),
-        instime: "出险时间：" + (that.timestampToTime(that.obj.incidentTs)),
+        instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
         null: "-",
         card: "证件号码：" + (that.victimList.obj.idNo || ""),
         number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),
@@ -100,10 +102,18 @@ export default {
         source: "案件信息来源：" + (that.obj.caseSrc || ""),
         exp: "来源说明：" + (that.obj.caseSrcDesc || "")
       };
+      this.$router.push({
+        name: "parinf",
+        params: {
+          token: this.token,
+          init: this.init,
+          caseId: this.obj.id,
+          obj: this.obj2
+        }
+      });
     }
   },
   mounted() {
-    console.log(this.obj.id,this.victimList.obj.caseId)
     this.casenumber = this.obj.caseNo;
     let that = this;
     fetch("http://api.test.dajiuxing.com.cn/rescue/case/detail_case", {
@@ -116,7 +126,7 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        console.log(data)
+        console.log(data);
         that.init = data.obj;
         that.obj2 = data.obj2;
         that.setdata();

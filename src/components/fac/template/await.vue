@@ -6,6 +6,7 @@
                 <div class="block st_box">
                     起始时间
                     <el-date-picker
+                    @change="sttime()"
                     v-model="st_time"
                     align="right"
                     type="date"
@@ -23,44 +24,27 @@
                     :picker-options="pickerOptions1">
                     </el-date-picker>
                 </div>
+                <div class="block">
+                  <el-button type="primary" plain @click="filt()">查询</el-button>
+                </div>
             </div>
         </div>
-        <formVue :token="token"/>
+        <formVue v-if="sereen" :token="token"></formVue>
+        <formVue v-if="!sereen" :token="token" :st_time="st_time" :en_time="en_time"/>
+        
     </div>
 </template>
 
 <script>
 import formVue from "../../common/form.vue";
+import funVue from "../../common/fun.vue";
 export default {
   data() {
     return {
+      sereen: true,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      shortcuts: [
-        {
-          text: "今天",
-          onClick(picker) {
-            picker.$emit("pick", new Date());
-          }
-        },
-        {
-          text: "昨天",
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            picker.$emit("pick", date);
-          }
-        },
-        {
-          text: "一周前",
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit("pick", date);
-          }
-        }
-      ],
       st_time: "",
       en_time: "",
       pickerOptions1: {
@@ -72,6 +56,17 @@ export default {
   },
   components: {
     formVue
+  },
+  methods: {
+    filt() {
+      this.sereen = false;
+    },
+    sttime() {
+      this.st_time = this.st_time * 1;
+    },
+    entime() {
+      this.en_time = this.en_time * 1;
+    }
   },
   mounted() {
     window.localStorage.setItem(

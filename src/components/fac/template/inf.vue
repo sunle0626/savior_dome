@@ -26,15 +26,15 @@
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="医疗垫付:">
-                        <el-input v-model="medicFee"></el-input>
+                        <el-input v-model="medicFee" @input="upnum(medicFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="案件费用:">
-                        <el-input v-model="caseFee"></el-input>
+                        <el-input v-model="caseFee" @input="upnum(caseFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="救援费用:">
-                        <el-input v-model="rescueFee"></el-input>
+                        <el-input v-model="rescueFee" @input="upnum(rescueFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     </el-form>
@@ -57,7 +57,7 @@
                     </el-checkbox-group>
                         <div class="upbtn_box">
                         <el-button type="primary" @click="flag=true">提交报价及方案报价及方案</el-button>
-                        <span>取消回复</span>
+                        <span @click="cancel()">取消回复</span>
                         </div>
                 </div>
            </div>
@@ -77,6 +77,7 @@
 
 <script>
 import qs from "qs";
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -102,10 +103,26 @@ export default {
       txt: [],
       file: null,
       avatar: null,
-      url: ""
+      url: ''
     };
   },
   methods: {
+    upnum(val) {
+      if (isNaN(val)) {
+        Message.error("请输入数字，而非其他");
+      } else {
+        this.totalFee =
+          this.medicFee * 1 + this.caseFee * 1 + this.rescueFee * 1;
+      }
+    },
+    cancel() {
+      this.$router.push({
+        name: "Await",
+        params: {
+          token: this.token
+        }
+      });
+    },
     handleGetFile(e) {
       let that = this;
       this.file = e.target.files[0];
@@ -139,22 +156,22 @@ export default {
       // console.log(that.avatar);
     },
     txtdata() {},
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
+    // handleRemove(file, fileList) {
+    //   console.log(file, fileList);
+    // },
+    // handlePreview(file) {
+    //   console.log(file);
+    // },
+    // handleExceed(files, fileList) {
+    //   this.$message.warning(
+    //     `当前限制选择 3 个文件，本次选择了 ${
+    //       files.length
+    //     } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+    //   );
+    // },
+    // beforeRemove(file, fileList) {
+    //   return this.$confirm(`确定移除 ${file.name}？`);
+    // },
     back() {
       this.$router.push("/fac/caseindex/par/parinf");
     },

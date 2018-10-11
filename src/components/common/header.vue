@@ -19,9 +19,13 @@
             </div>
         </div>
         <div class="header_set">
-            <div class="language_box">
-                中文
+            <div class="language_box" >
+               <span @click="languge()">中文</span> 
                 <i class="bottom-arrow"></i>
+                <div class="la_box">
+                  <p @click="lok()">中文</p>
+                  <p @click="lok()">English</p>
+                </div>
             </div>
             <div class="set_box">
                 个人设置
@@ -47,10 +51,18 @@ export default {
     logout() {
       this.$router.push({
         name: "Index",
-        path:'/index'
+        path: "/index"
       });
       localStorage.clear();
       console.log("注销");
+    },
+    languge() {
+      let labox = document.querySelector(".la_box");
+      labox.style.display = "block";
+    },
+    lok() {
+      let labox = document.querySelector(".la_box");
+      labox.style.display = "none";
     }
   }
 };
@@ -106,5 +118,25 @@ export default {
   top: -50px;
   left: 26px;
   border-radius: 2px;
+}
+.language_box {
+  position: relative;
+}
+.la_box {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: -60px;
+  width: 100px;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+.la_box p {
+  height: 40px;
+  line-height: 40px;
+}
+.la_box p:hover {
+  background: #00abfa;
+  color: #fff;
 }
 </style>

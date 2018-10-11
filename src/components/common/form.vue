@@ -81,7 +81,7 @@
 
 <script>
 export default {
-  props: ["token"],
+  props: ["token",'st_time','en_time'],
   data() {
     return {
       tableData: [],
@@ -126,6 +126,7 @@ export default {
     let n = 0;
     let sex = "";
     let isshow = false;
+    console.log(this.st_time)
     fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
       method: "POST",
       body: `token=${this.token ||
