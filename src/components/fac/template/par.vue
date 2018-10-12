@@ -30,12 +30,65 @@
                     <router-view></router-view>
                   </keep-alive>
                 </div>
+                        <div class="req_box">
+           <p><b>B、救援请求</b></p>
+           <div class="box_req">
+               <ul>
+                   <li>
+                       <!-- <b>A、已申请报价服务机构</b>
+                       <div class="org_box">
+                            <p v-for="(v,ind) in bid" :key="ind">
+                             {{v.instiCountry}} ------{{v.insti.category}}------{{v.insti.name}}</p>
+                       </div> -->
+                   </li>
+                   <li>
+                       <b>B、服务清单</b>
+                       <div class="acc_box">
+                           <p>相关附件({{acc_list.length}})</p>
+                           <ul>
+                               <li v-for="(v,ind) in acc_list" :key="ind">
+                                   <img :src="v.url" alt="">
+                                   <p>{{v.txt}}</p>
+                                   <a :href="v.dow" :download="v.dow">下载</a>
+                               </li>
+                           </ul>
+                       </div>
+                       <div class="rescue_box">
+                         <div class="box" v-for="(v,ind) in obj2" :key="ind">
+                        <p v-if="v.dict&&v.dict.parentId===0">{{v.dict.name}}</p>
+                         <div v-if="v.dict&&v.dict.parentId===0" class="box">
+                           <el-checkbox-group v-model="checkList">
+                              <el-checkbox label="医疗机构推介" disabled checked v-for="(v,ind) in obj2" :key="ind" v-if="ind>0&&v.dict">
+                                    <span class="res_div">{{v.dict.name}}</span>
+                                    <br/>
+                                    <span class="res_box">说明：{{v.obj.description}}</span>
+                                </el-checkbox>
+                            </el-checkbox-group>
+                         </div>
+                         </div>
+                           <p></p>
+                            <p>2、费用担保</p>
+                            <el-checkbox-group v-model="checkList">
+                                <el-checkbox label="医疗机构推介" disabled checked>
+                                    <span class="db_div">医疗费用担保或非医疗费用担保</span>
+                                    <span class="db_box">限额<b>$10000</b></span>
+                                </el-checkbox>
+                            </el-checkbox-group>
+                       </div>
+                   </li>
+               </ul>
+               <div class="upbtn_box">
+                   <el-button type="primary" @click="toinf">回复报价及方案</el-button>
+               </div>
+           </div>
+        </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import qs from "qs";
 export default {
   data() {
     return {
@@ -47,10 +100,39 @@ export default {
       casenumber: "AJ200101",
       inf: null,
       init: null,
-      obj2: null
+      obj2: null,
+      acc_list: [],
+      checkList: [],
+      bid: []
     };
   },
   methods: {
+    toinf() {
+      let that = this;
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
+          qs.stringify({
+            token: this.token,
+            caseId: this.obj.id
+          })
+        )
+        .then(res => {
+          if (res.data.code === 101006) {
+            that.$router.push({
+              path: "/fac/caseindex/inf",
+              name: "Inf",
+              params: {
+                token: this.token,
+                init: this.init,
+                obj: this.inf,
+                data: this.obj,
+                caseId: this.obj.id
+              }
+            });
+          }
+        });
+    },
     timestampToTime(timestamp) {
       if (timestamp) {
         var date = new Date(timestamp);
@@ -81,6 +163,29 @@ export default {
     },
     up(v) {
       console.log(v);
+    },
+    upload() {
+      let that = this;
+      fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
+        method: "POST",
+        body: `token=${this.token}&objType=1&objId=${this.objId}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      })
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          console.log(data);
+          data.obj.map(function(v) {
+            that.acc_list.push({
+              url:
+                "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
+              txt: v.description,
+              dow: v.url
+            });
+          });
+        });
     },
     setdata() {
       console.log(this.$route.params.obj);
@@ -131,6 +236,18 @@ export default {
         that.obj2 = data.obj2;
         that.setdata();
       });
+    fetch("http://api.test.dajiuxing.com.cn/rescue/bidding/bidders", {
+      method: "POST",
+      body: `token=${this.token}&caseId=${this.obj.id}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        that.bid = data.obj;
+      });        
     console.log(this.$route.params);
   }
 };
@@ -217,5 +334,91 @@ a {
 .router-link-active {
   color: #00abfa;
   background: #fff;
+}
+.req_box > p {
+  margin-top: 15px;
+  line-height: 45px;
+  text-align: left;
+}
+.box_req ul li b {
+  font-size: 14px;
+}
+.org_box {
+  font-size: 16px;
+  box-sizing: border-box;
+  padding-left: 15px;
+}
+.org_box p {
+  line-height: 40px;
+  color: #333;
+}
+.acc_box {
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+.acc_box > p {
+  color: #333;
+  line-height: 40px;
+  font-size: 15px;
+}
+.acc_box ul li {
+  display: inline-block;
+  width: 20%;
+  text-align: center;
+}
+.acc_box ul li p {
+  text-align: center;
+  line-height: 36px;
+}
+.acc_box ul li img {
+  width: 90px;
+  height: 120px;
+}
+.rescue_box {
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+.rescue_box > p {
+  line-height: 40px;
+  font-size: 14px;
+}
+.res_div {
+  position: relative;
+  top: 18px;
+}
+.res_box {
+  position: relative;
+  top: 20px;
+  font-size: 14px;
+  color: #999;
+}
+.el-checkbox-group {
+  position: relative;
+  box-sizing: border-box;
+  padding: 0 15px;
+}
+.el-checkbox {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.el-checkbox + .el-checkbox {
+  margin-left: 0;
+}
+.db_div,
+.res_div {
+  font-size: 14px;
+  color: #333;
+}
+.db_box {
+  font-size: 14px;
+  color: #333;
+  margin-left: 30px;
+}
+.db_box b {
+  color: #ff7200;
+  margin-left: 8px;
+}
+.upbtn_box {
+  text-align: center;
 }
 </style>

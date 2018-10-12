@@ -62,9 +62,6 @@
             <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </el-dialog>
-         <div class="upbtn_box">
-            <el-button type="primary" @click="close()">关闭详情</el-button>
-        </div>
     </div>
 </template>
 

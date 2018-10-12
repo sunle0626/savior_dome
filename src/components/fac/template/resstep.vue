@@ -13,26 +13,30 @@
                 <el-step title="收集医疗单据" ></el-step>
                 <el-step title="传递相关医疗单据到保险公司" ></el-step>
             </el-steps>
+            <!-- {{stepdata[0].obj}} -->
             <p>救援服务清单</p>
             <div class="det_box">
             <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
                 {{v.dict.name}}
             </p>
+            <div class="a_box" v-for="(v,ind) in stepdata" :key="ind">
             <el-steps direction="vertical" :active="stid" class="box">
-                <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
+                <el-step :title="v.dict.name" v-if="v.dict.parentId===1">
                 </el-step>
             </el-steps>
-            <div class="f_box f_box_1" ref="fb" v-if="!stepdata[0].obj.state">
-              <span @click="st(0)">开始操作</span>
+            <div class="f_box f_box_1" ref="fb" v-if="!stepdata[ind].obj.state">
+              <span @click="st(ind)">开始操作</span>
               <span>其他</span>
             </div>
             <div class="f_box f_box_1" ref="fb" v-else>
               <div class="img_box">
-                <p>操作说明:{{stepdata[1].obj.description}}</p>
+                <p>操作说明:{{stepdata[ind+1].obj.description}}</p>
                 <img :src="v.url" v-for="(v,i) in imglist[1].list" :key="i"  v-if="v.url">
               </div>
             </div>
-            <div class="f_box f_box_2" ref="fb" v-if="!stepdata[1].obj.state">
+            </div>
+
+            <!-- <div class="f_box f_box_2" ref="fb" v-if="!stepdata[1].obj.state">
               <span @click="st(1)">开始操作</span>
               <span>其他</span>
             </div>
@@ -51,7 +55,7 @@
                 <p>操作说明:{{stepdata[3].obj.description}}</p>
                 <img :src="v.url" v-for="(v,i) in imglist[3].list" :key="i"  v-if="v.url">
               </div>
-            </div>
+            </div> -->
             </div>
             <p class="p acc"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
         </div>
@@ -148,7 +152,9 @@ export default {
       jytxt: "",
       qttxt: "",
       qt: "",
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       caseId: this.$route.params.caseId,
       stepdata: [],
       urllist: [],
@@ -191,8 +197,7 @@ export default {
         });
     },
     setqt() {},
-    getdata() {
-    },
+    getdata() {},
     acc() {
       this.isacc = true;
     },
@@ -295,8 +300,8 @@ export default {
     dialogVisible() {},
     st(i) {
       this.num = i;
-      this.txt = this.stepdata[i + 1].obj.description;
-      this.id = this.stepdata[i + 1].obj.id;
+      this.txt = this.stepdata[i].obj.description;
+      this.id = this.stepdata[i].obj.id;
       this.centerDialogVisible = true;
       this.stid = i;
     }
@@ -422,6 +427,9 @@ p {
 .box {
   margin-left: 100px;
   margin-top: -20px;
+}
+.a_box{
+  position: absolute;
 }
 .f_box {
   position: relative;

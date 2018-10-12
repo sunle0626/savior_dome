@@ -8,8 +8,8 @@
         <router-link :to="{name:'FacIndex',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>
         <div class="nav_box">
         <router-link :to="{name:'Await',params:{token:token}}">门急诊案件管理</router-link>
-        <router-link class="ha" :to="{name:'Await',params:{token:token}}">等待授权启动救援案件</router-link>
-        <router-link class="ha" :to="{name:'Offer',params:{token:token}}">授权等待报价案件</router-link>
+        <router-link class="ha" :to="{name:'Await',params:{token:token}}">等待方案报价案件</router-link>
+        <router-link class="ha" :to="{name:'Offer',params:{token:token}}">等待授权中</router-link>
         <router-link class="ha" :to="{name:'Rescue',params:{token:token}}">救援中案件管理</router-link>
         </div>
         </el-menu>

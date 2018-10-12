@@ -167,9 +167,9 @@ export default {
                 papers: v.victimList[0].obj.idNo, //身份证号
                 sex: sex, //性别
                 time: that.time(v.obj.incidentTs), //出险时间
-                par: "等待保险 公司授权", //状态
-                plan: "等待保险 公司授权",
-                node: "等待 授权",
+                par: "等待救援公司报价中", //状态
+                plan: "等待救援公司报价中",
+                node: "等待报价",
                 get_time: that.time(v.obj.incidentTs),
                 op: "查看并操作"
               });

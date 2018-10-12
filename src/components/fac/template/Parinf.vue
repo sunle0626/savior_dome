@@ -12,7 +12,7 @@
                 </li>
             </ul>
         </div>
-        <div class="req_box">
+        <!-- <div class="req_box">
            <p><b>B、救援请求</b></p>
            <div class="box_req">
                <ul>
@@ -63,7 +63,7 @@
                    <el-button type="primary" @click="toinf">回复报价及方案</el-button>
                </div>
            </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -176,27 +176,27 @@ export default {
       .then(function(data) {
         that.bid = data.obj;
       });
-    fetch(
-      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
-      {
-        method: "POST",
-        body: `token=${this.token}&caseId=${this.caseId}`,
-        mode: "cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-      }
-    )
-      .then(function(res) {
-        return res.json();
-      })
-      .then(function(data) {
-        that.inf = data.obj;
-        that.objId = data.obj.id;
-        if (that.obj.length <= 0) {
-          that.obj = data.obj2;
-        }
-        console.log(data);
-        that.upload();
-      });
+    // fetch(
+    //   "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
+    //   {
+    //     method: "POST",
+    //     body: `token=${this.token}&caseId=${this.caseId}`,
+    //     mode: "cors",
+    //     headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    //   }
+    // )
+    //   .then(function(res) {
+    //     return res.json();
+    //   })
+    //   .then(function(data) {
+    //     that.inf = data.obj;
+    //     that.objId = data.obj.id;
+    //     if (that.obj.length <= 0) {
+    //       that.obj = data.obj2;
+    //     }
+    //     console.log(data);
+    //     that.upload();
+    //   });
   }
 };
 </script>

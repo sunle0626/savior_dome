@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top_box">
-            <h2>等待救援中</h2>
+            <h2>等待授权中</h2>
             <div class="time_box">
                  <div class="block st_box">
                     起始时间
