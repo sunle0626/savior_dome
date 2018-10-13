@@ -108,6 +108,17 @@ export default {
   },
   methods: {
     toinf() {
+      console.log({
+        path: "/fac/caseindex/inf",
+        name: "Inf",
+        params: {
+          token: this.token,
+          init: this.init,
+          obj: this.inf,
+          data: this.obj2,
+          caseId: this.obj.id
+        }
+      });
       let that = this;
       this.axios
         .post(
@@ -126,7 +137,7 @@ export default {
                 token: this.token,
                 init: this.init,
                 obj: this.inf,
-                data: this.obj,
+                data: this.obj2,
                 caseId: this.obj.id
               }
             });
@@ -247,7 +258,7 @@ export default {
       })
       .then(function(data) {
         that.bid = data.obj;
-      });        
+      });
     console.log(this.$route.params);
   }
 };

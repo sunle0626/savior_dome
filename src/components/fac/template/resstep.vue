@@ -13,7 +13,7 @@
                 <el-step title="收集医疗单据" ></el-step>
                 <el-step title="传递相关医疗单据到保险公司" ></el-step>
             </el-steps>
-            <!-- {{stepdata[0].obj}} -->
+            {{stepdata}}
             <p>救援服务清单</p>
             <div class="det_box">
             <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
@@ -300,13 +300,13 @@ export default {
     dialogVisible() {},
     st(i) {
       this.num = i;
-      this.txt = this.stepdata[i].obj.description;
-      this.id = this.stepdata[i].obj.id;
+      this.txt = this.stepdata[i + 1].obj.description;
+      this.id = this.stepdata[i + 1].obj.id;
       this.centerDialogVisible = true;
       this.stid = i;
     }
   },
-  mounted() {
+  created() {
     console.log(this.imglist);
     this.axios
       .post(
@@ -327,8 +327,8 @@ export default {
             list: v.uploadCntList
           });
           // }
-          console.log(this.imglist);
         });
+        console.log(this.stepdata[0].dict);
       });
   }
 };
@@ -428,7 +428,7 @@ p {
   margin-left: 100px;
   margin-top: -20px;
 }
-.a_box{
+.a_box {
   position: absolute;
 }
 .f_box {

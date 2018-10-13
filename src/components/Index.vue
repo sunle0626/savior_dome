@@ -284,9 +284,11 @@ export default {
         login_box.style.display = "none";
       } else {
         // 先匹配密码正则
-        if(!this.pwd.match(/^[a-zA-Z]\w{5,17}$/)){
-            Message.error("密码请以字母开头，长度在6~18之间，只能包含字母、数字和下划线");
-        }
+        // if (!this.pwd.match(/^[a-zA-Z]\w{5,17}$/)) {
+        //   Message.error(
+        //     "密码请以字母开头，长度在6~18之间，只能包含字母、数字和下划线"
+        //   );
+        // }
         // 请求 判断角色
         // 0 救援机构 fac
         // 1 指挥中心
@@ -318,13 +320,21 @@ export default {
                   JSON.stringify(data.obj.user.insti)
                 );
                 that.$router.push({
-                  path: "/fac",
-                  name: "Fac",
+                  path: "/fac/index",
+                  name: "FacIndex",
                   params: {
                     token: data.obj.token,
                     insti: data.obj.user.insti
                   }
                 });
+                // that.$router.push({
+                //   path: "/fac",
+                //   name: "Fac",
+                //   params: {
+                //     token: data.obj.token,
+                //     insti: data.obj.user.insti
+                //   }
+                // });
               }
             } else if (data.code === 200026) {
               //   alert("登录失败,用户名或密码错误");

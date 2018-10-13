@@ -81,7 +81,7 @@
 
 <script>
 export default {
-  props: ["token",'st_time','en_time'],
+  props: ["token", "st_time", "en_time"],
   data() {
     return {
       tableData: [],
@@ -119,67 +119,137 @@ export default {
     },
     toUrl(url) {
       window.open(url);
+    },
+    getData(st, et) {
+      let that = this;
+      let n = 0;
+      let sex = "";
+      let isshow = false;
+      let stTime = st || this.st_time;
+      let enTime = et || this.en_time;
+      if (stTime && enTime) {
+        fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
+          method: "POST",
+          body: `token=${this.token ||
+            JSON.parse(window.localStorage.getItem("tokon"))
+              .obj}&typeId=1&status=140&startTs=${stTime}&endTs=${enTime}`,
+          mode: "cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+          .then(function(res) {
+            console.log("请求了await");
+            return res.json();
+          })
+          .then(function(data) {
+            console.log(data);
+            if (data.obj) {
+              data.obj.map(v => {
+                if (!v.solutionState) {
+                  n = n + 1;
+                  if (v.victimList[0].gender == 1) {
+                    sex = "男";
+                  } else {
+                    sex = "女";
+                  }
+                  if (
+                    v.victimList[0].obj.insurancePaper &&
+                    v.victimList[0].obj.insurancePaper != ""
+                  ) {
+                    isshow = true;
+                  } else {
+                    isshow = false;
+                  }
+                  that.tableData.push({
+                    number: n, //序号
+                    casenumber: v.obj.caseNo, //案件编号
+                    address: v.obj.locId, //地址
+                    username: v.victimList[0].obj.name, //姓名
+                    phone: v.victimList[0].obj.contact, //联系方式
+                    papers: v.victimList[0].obj.idNo, //身份证号
+                    sex: sex, //性别
+                    time: that.time(v.obj.incidentTs), //出险时间
+                    par: "等待救援公司报价中", //状态
+                    plan: "等待救援公司报价中",
+                    node: "等待报价",
+                    get_time: that.time(v.obj.incidentTs),
+                    op: "查看并操作"
+                  });
+                  console.log(v.obj);
+                  that.obj.push(v.obj);
+                  that.victimList.push(v.victimList[0]);
+                }
+              });
+            }
+          });
+      } else {
+        fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
+          method: "POST",
+          body: `token=${this.token ||
+            JSON.parse(window.localStorage.getItem("tokon"))
+              .obj}&typeId=1&status=140`,
+          mode: "cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+          .then(function(res) {
+            console.log("请求了await");
+            return res.json();
+          })
+          .then(function(data) {
+            console.log(data);
+            if (data.obj) {
+              data.obj.map(v => {
+                if (!v.solutionState) {
+                  n = n + 1;
+                  if (v.victimList[0].gender == 1) {
+                    sex = "男";
+                  } else {
+                    sex = "女";
+                  }
+                  if (
+                    v.victimList[0].obj.insurancePaper &&
+                    v.victimList[0].obj.insurancePaper != ""
+                  ) {
+                    isshow = true;
+                  } else {
+                    isshow = false;
+                  }
+                  that.tableData.push({
+                    number: n, //序号
+                    casenumber: v.obj.caseNo, //案件编号
+                    address: v.obj.locId, //地址
+                    username: v.victimList[0].obj.name, //姓名
+                    phone: v.victimList[0].obj.contact, //联系方式
+                    papers: v.victimList[0].obj.idNo, //身份证号
+                    sex: sex, //性别
+                    time: that.time(v.obj.incidentTs), //出险时间
+                    par: "等待救援公司报价中", //状态
+                    plan: "等待救援公司报价中",
+                    node: "等待报价",
+                    get_time: that.time(v.obj.incidentTs),
+                    op: "查看并操作"
+                  });
+                  console.log(v.obj);
+                  that.obj.push(v.obj);
+                  that.victimList.push(v.victimList[0]);
+                }
+              });
+            }
+          });
+      }
+    }
+  },
+  watch: {
+    en_time(nv, ov) {
+      console.log(nv, ov);
+      this.getData(0,nv);
+    },
+    st_time(nv, ov) {
+       console.log(nv, ov);
+      this.getData(nv,0);
     }
   },
   mounted() {
-    let that = this;
-    let n = 0;
-    let sex = "";
-    let isshow = false;
-    console.log(this.st_time)
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
-      method: "POST",
-      body: `token=${this.token ||
-        JSON.parse(window.localStorage.getItem("tokon"))
-          .obj}&typeId=1&status=140`,
-      mode: "cors",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
-      .then(function(res) {
-        console.log('请求了await');
-        return res.json();
-      })
-      .then(function(data) {
-        console.log(data);
-        if (data.obj) {
-          data.obj.map(v => {
-            if (!v.solutionState) {
-              n = n + 1;
-              if (v.victimList[0].gender == 1) {
-                sex = "男";
-              } else {
-                sex = "女";
-              }
-              if (
-                v.victimList[0].obj.insurancePaper &&
-                v.victimList[0].obj.insurancePaper != ""
-              ) {
-                isshow = true;
-              } else {
-                isshow = false;
-              }
-              that.tableData.push({
-                number: n, //序号
-                casenumber: v.obj.caseNo, //案件编号
-                address: v.obj.locId, //地址
-                username: v.victimList[0].obj.name, //姓名
-                phone: v.victimList[0].obj.contact, //联系方式
-                papers: v.victimList[0].obj.idNo, //身份证号
-                sex: sex, //性别
-                time: that.time(v.obj.incidentTs), //出险时间
-                par: "等待救援公司报价中", //状态
-                plan: "等待救援公司报价中",
-                node: "等待报价",
-                get_time: that.time(v.obj.incidentTs),
-                op: "查看并操作"
-              });
-              console.log(v.obj);
-              that.obj.push(v.obj);
-              that.victimList.push(v.victimList[0]);
-            }
-          });
-        }
-      });
+    // this.getData();
   }
 };
 </script>

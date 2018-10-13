@@ -17,6 +17,7 @@
                 <div class="block en_box">
                     结束时间
                     <el-date-picker
+                    @change="entime()"
                     v-model="en_time"
                     align="right"
                     type="date"
@@ -29,8 +30,8 @@
                 </div>
             </div>
         </div>
-        <formVue v-if="sereen" :token="token"></formVue>
-        <formVue v-if="!sereen" :token="token" :st_time="st_time" :en_time="en_time"/>
+        <!-- <formVue v-if="sereen" :token="token"></formVue> -->
+        <formVue :token="token" :st_time="st_time" :en_time="en_time"/>
         
     </div>
 </template>
@@ -45,8 +46,8 @@ export default {
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      st_time: "",
-      en_time: "",
+      st_time: new Date()*1,
+      en_time: new Date()*1,
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -59,7 +60,13 @@ export default {
   },
   methods: {
     filt() {
-      this.sereen = false;
+      if (this.st_time) {
+        this.sereen = false;
+      } else if (this.en_time) {
+        this.sereen = false;
+      } else {
+        this.sereen = true;
+      }
     },
     sttime() {
       this.st_time = this.st_time * 1;

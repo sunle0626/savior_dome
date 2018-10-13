@@ -96,6 +96,13 @@ export default {
   },
   methods: {
     toinf() {
+      console.log({
+        token: this.token,
+        init: this.init,
+        obj: this.inf,
+        data: this.obj,
+        caseId: this.caseId
+      });
       let that = this;
       this.axios
         .post(
@@ -107,19 +114,19 @@ export default {
         )
         .then(res => {
           console.log(this.$route.params);
-          if (res.data.code === 101006) {
-            that.$router.push({
-              path: "/fac/caseindex/inf",
-              name: "Inf",
-              params: {
-                token: this.token,
-                init:this.init,
-                obj: this.inf,
-                data: this.obj,
-                caseId: this.caseId
-              }
-            });
-          }
+          // if (res.data.code === 101006) {
+          //   that.$router.push({
+          //     path: "/fac/caseindex/inf",
+          //     name: "Inf",
+          //     params: {
+          //       token: this.token,
+          //       init:this.init,
+          //       obj: this.inf,
+          //       data: this.obj,
+          //       caseId: this.caseId
+          //     }
+          //   });
+          // }
         });
     },
     upload() {
@@ -159,7 +166,7 @@ export default {
         (that.init.caseCity || "") +
         addr,
       type: "事故类型：" + that.init.obj.accidentType,
-      no: "是否团险：" + (that.init.obj.caseInsured?'是':'无'),
+      no: "是否团险：" + (that.init.obj.caseInsured ? "是" : "无"),
       part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
       weather: "天气灾害：" + that.init.obj.weatherTag || "无"
     };

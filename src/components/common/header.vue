@@ -51,7 +51,9 @@ export default {
     logout() {
       this.$router.push({
         name: "Index",
-        path: "/index"
+        params: {
+          time: new Date().getTime()
+        }
       });
       localStorage.clear();
       console.log("注销");
