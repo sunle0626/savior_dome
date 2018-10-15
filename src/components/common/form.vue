@@ -250,7 +250,10 @@ export default {
     }
   },
   mounted() {
-    this.getData();
+    if (this.flag) {
+      this.getData();
+    } else {
+    }
   }
 };
 </script>

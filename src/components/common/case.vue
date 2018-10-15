@@ -96,11 +96,19 @@ export default {
           name: "Await",
           params: {
             token: token,
-            insti: insti
+            insti: insti,
+            flag: true
           }
         });
       } else {
-        Message.error("当前分类无可管理案件，请选择正确的分类");
+        this.$router.push({
+          name: "Await",
+          params: {
+            token: token,
+            insti: insti,
+            flag: false
+          }
+        });
       }
     },
     lookinf() {

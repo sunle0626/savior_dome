@@ -5,7 +5,7 @@
         返回上一页
         </p>
         <h2>开始救援</h2>
-        <div class="step_box">
+        <div class="step_box" v-if="!loading">
             <p>流程示意</p>
             <el-steps :active="2" align-center>
                 <el-step title="启动当地救援公司" ></el-step>
@@ -13,28 +13,28 @@
                 <el-step title="收集医疗单据" ></el-step>
                 <el-step title="传递相关医疗单据到保险公司" ></el-step>
             </el-steps>
-            {{stepdata}}
             <p>救援服务清单</p>
             <div class="det_box">
             <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
                 {{v.dict.name}}
             </p>
-            <div class="a_box" v-for="(v,ind) in stepdata" :key="ind">
             <el-steps direction="vertical" :active="stid" class="box">
-                <el-step :title="v.dict.name" v-if="v.dict.parentId===1">
+                <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
                 </el-step>
             </el-steps>
-            <div class="f_box f_box_1" ref="fb" v-if="!stepdata[ind].obj.state">
-              <span @click="st(ind)">开始操作</span>
-              <span>其他</span>
+            <div class="a_box" v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===1">
+                <div class="f_box f_box_1" ref="fb" v-if="!v.obj.state">
+                  <span @click="st(ind)">开始操作</span>
+                  <span>其他</span>
+                </div>
+                <div class="img_box" v-if="v.obj.state==1">
+                  <p>操作说明:{{v.obj.description}}</p>
+                  <img :src="v.url" v-for="(v,i) in imglist[1].list" :key="i"  v-if="v.url">
+                </div>
             </div>
-            <div class="f_box f_box_1" ref="fb" v-else>
-              <div class="img_box">
-                <p>操作说明:{{stepdata[ind+1].obj.description}}</p>
-                <img :src="v.url" v-for="(v,i) in imglist[1].list" :key="i"  v-if="v.url">
-              </div>
-            </div>
-            </div>
+            <!-- <div class="f_box f_box_1" ref="fb" v-else>
+            </div> -->
+            <!-- </div> -->
 
             <!-- <div class="f_box f_box_2" ref="fb" v-if="!stepdata[1].obj.state">
               <span @click="st(1)">开始操作</span>
@@ -138,6 +138,9 @@
             <p class="p"><el-button center type="button" size="small" @click="accup()">确认提交</el-button></p>
         </div>
       </el-dialog>
+      <div class="loading" v-if="loading">
+        <img src="../../../../static/images/loading.gif" alt="">
+      </div>
     </div>
 </template>
 
@@ -152,6 +155,7 @@ export default {
       jytxt: "",
       qttxt: "",
       qt: "",
+      loading: true,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
@@ -202,6 +206,7 @@ export default {
       this.isacc = true;
     },
     ok() {
+      let that = this;
       let tUploadCnts = [];
       let obj = {};
       console.log(this.urllist);
@@ -232,15 +237,27 @@ export default {
           })
         )
         .then(obj => {
+          console.log(obj);
           this.centerDialogVisible = false;
+          this.axios
+            .post(
+              "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
+              qs.stringify({
+                token: that.token,
+                caseId: that.caseId
+              })
+            )
+            .then(res => {
+              console.log(res);
+            });
         });
-      this.$router.push({
-        name: "Rescue",
-        params: {
-          token: this.$route.token,
-          caseId: this.$route.params.caseId
-        }
-      });
+      // this.$router.push({
+      //   name: "Rescue",
+      //   params: {
+      //     token: this.$route.token,
+      //     caseId: this.$route.params.caseId
+      //   }
+      // });
     },
     up() {
       this.imglist[this.num].list.push(this.fileurl);
@@ -266,7 +283,7 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      formdata.append("token", this.$route.token);
+      formdata.append("token", this.token);
       reader.onload = function(e) {
         formdata.append("file", that.file);
         that.axios
@@ -300,35 +317,38 @@ export default {
     dialogVisible() {},
     st(i) {
       this.num = i;
-      this.txt = this.stepdata[i + 1].obj.description;
-      this.id = this.stepdata[i + 1].obj.id;
+      console.log(this.stepdata[i - 1].obj.id);
+      console.log(this.stepdata);
+      this.txt = this.stepdata[i - 1].obj.description;
+      this.id = this.stepdata[i - 1].obj.id;
       this.centerDialogVisible = true;
       this.stid = i;
     }
   },
-  created() {
-    console.log(this.imglist);
+  mounted() {
+    let that = this;
     this.axios
       .post(
         "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
         qs.stringify({
-          token: this.token,
-          caseId: this.caseId
+          token: that.token,
+          caseId: that.caseId
         })
       )
       .then(res => {
-        this.flag = true;
-        console.log(res.data);
-        this.feedata = res.data.obj;
-        this.stepdata = res.data.obj2;
-        this.stepdata.map(v => {
-          // if (v.uploadCntList.length > 0) {
-          this.imglist.push({
-            list: v.uploadCntList
-          });
-          // }
+        that.flag = true;
+        that.feedata = res.data.obj;
+        that.stepdata = res.data.obj2;
+        console.log(that.stepdata);
+        that.stepdata.map((v, i) => {
+          if (i != 0) {
+            that.imglist.push({
+              list: v.uploadCntList
+            });
+          }
         });
-        console.log(this.stepdata[0].dict);
+        console.log(that.imglist);
+        that.loading = false;
       });
   }
 };

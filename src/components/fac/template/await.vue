@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- <formVue v-if="sereen" :token="token"></formVue> -->
-        <formVue :token="token" :st_time="st_time" :en_time="en_time"/>
+        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag"/>
         
     </div>
 </template>
@@ -48,6 +48,7 @@ export default {
         JSON.parse(window.localStorage.getItem("data")).data,
       st_time: new Date() * 1,
       en_time: new Date() * 1,
+      flag: this.$route.params.flag,
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -76,7 +77,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.en_time)
+    console.log(this.en_time);
     window.localStorage.setItem(
       "case",
       JSON.stringify({
