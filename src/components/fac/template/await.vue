@@ -46,8 +46,8 @@ export default {
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      st_time: new Date()*1,
-      en_time: new Date()*1,
+      st_time: new Date() * 1,
+      en_time: new Date() * 1,
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -76,6 +76,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.en_time)
     window.localStorage.setItem(
       "case",
       JSON.stringify({

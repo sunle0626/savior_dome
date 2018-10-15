@@ -20,10 +20,10 @@
                         {{v.tit}}
                     </p>
 
-                    <b v-if="v.num" @click="tocase()">
+                    <b v-if="v.num" @click="tocase(ind)">
                         案件管理({{v.num}})
                     </b>
-                    <b v-else @click="tocase()">
+                    <b v-else @click="tocase(ind)">
                         案件管理
                     </b>
                 </li>
@@ -33,13 +33,14 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 export default {
   props: ["insti", "token"],
   data() {
     return {
       username: "XXX",
       casename: "门诊治疗",
-      casenum: 1,
+      casenum: 0,
       name: "",
       case_list: [
         {
@@ -81,7 +82,7 @@ export default {
     };
   },
   methods: {
-    tocase() {
+    tocase(ind) {
       let token = this.token;
       let insti = this.insti;
       window.localStorage.setItem(
@@ -90,13 +91,17 @@ export default {
           case: "Await"
         })
       );
-      this.$router.push({
-        name: "Await",
-        params: {
-          token: token,
-          insti: insti
-        }
-      });
+      if (this.case_list[ind].num > 0) {
+        this.$router.push({
+          name: "Await",
+          params: {
+            token: token,
+            insti: insti
+          }
+        });
+      } else {
+        Message.error("当前分类无可管理案件，请选择正确的分类");
+      }
     },
     lookinf() {
       let token = this.token;
@@ -130,10 +135,12 @@ export default {
         return res.json();
       })
       .then(function(data) {
+        console.log(data.obj);
         arr.map(function(v) {
-          console.log(that.case_list[v]);
+          console.log(data.obj[v]);
           if (data.obj[v]) {
             that.case_list[v].num = data.obj[v];
+            that.casenum += data.obj[v];
           }
           console.log(data.obj[v]);
         });

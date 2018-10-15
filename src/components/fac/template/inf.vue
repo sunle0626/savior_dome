@@ -172,9 +172,9 @@ export default {
     // beforeRemove(file, fileList) {
     //   return this.$confirm(`确定移除 ${file.name}？`);
     // },
-    back() {
-      this.$router.push("/fac/caseindex/par/parinf");
-    },
+    // back() {
+    //   window.history.back(-1);
+    // },
     tooffer() {
       let that = this;
       console.log(this.$route.params.caseId);

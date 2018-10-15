@@ -121,6 +121,7 @@ export default {
       window.open(url);
     },
     getData(st, et) {
+      this.tableData = [];
       let that = this;
       let n = 0;
       let sex = "";
@@ -241,15 +242,15 @@ export default {
   watch: {
     en_time(nv, ov) {
       console.log(nv, ov);
-      this.getData(0,nv);
+      this.getData(0, nv);
     },
     st_time(nv, ov) {
-       console.log(nv, ov);
-      this.getData(nv,0);
+      console.log(nv, ov);
+      this.getData(nv, 0);
     }
   },
   mounted() {
-    // this.getData();
+    this.getData();
   }
 };
 </script>

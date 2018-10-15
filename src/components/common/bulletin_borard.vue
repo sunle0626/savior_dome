@@ -21,6 +21,7 @@ export default {};
 .borard_box {
   width: 100%;
   float: left;
+  margin-top: 30px
 }
 .con_box {
   width: 78%;
@@ -28,6 +29,7 @@ export default {};
   margin-left: 11%;
   margin-right: 11%;
   float: left;
+  border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
 .con_box .box_bull,
