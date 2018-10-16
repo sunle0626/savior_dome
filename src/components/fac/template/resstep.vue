@@ -29,33 +29,9 @@
                 </div>
                 <div class="img_box" v-if="v.obj.state==1">
                   <p>操作说明:{{v.obj.description}}</p>
-                  <img :src="v.url" v-for="(v,i) in imglist[1].list" :key="i"  v-if="v.url">
+                  <img :src="v.url" v-for="(v,i) in imglist[ind-1].list" :key="i"  v-if="v.url">
                 </div>
             </div>
-            <!-- <div class="f_box f_box_1" ref="fb" v-else>
-            </div> -->
-            <!-- </div> -->
-
-            <!-- <div class="f_box f_box_2" ref="fb" v-if="!stepdata[1].obj.state">
-              <span @click="st(1)">开始操作</span>
-              <span>其他</span>
-            </div>
-            <div class="f_box f_box_2" ref="fb" v-else>
-              <div class="img_box">
-                <p>操作说明:{{stepdata[2].obj.description}}</p>
-                  <img :src="v.url" v-for="(v,i) in imglist[2].list" :key="i" v-if="v.url">
-              </div>
-            </div>
-            <div class="f_box f_box_3" ref="fb" v-if="!stepdata[2].obj.state">
-              <span @click="st(2)">开始操作</span>
-              <span>其他</span>
-            </div>
-            <div class="f_box f_box_3" ref="fb" v-else>
-              <div class="img_box">
-                <p>操作说明:{{stepdata[3].obj.description}}</p>
-                <img :src="v.url" v-for="(v,i) in imglist[3].list" :key="i"  v-if="v.url">
-              </div>
-            </div> -->
             </div>
             <p class="p acc"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
         </div>
@@ -260,8 +236,8 @@ export default {
       // });
     },
     up() {
-      this.imglist[this.num].list.push(this.fileurl);
-      console.log(this.imglist);
+      console.log(this.num);
+      this.imglist[this.num-1].list.push(this.fileurl);
       this.urllist.push({
         url: this.fileurl,
         txt: this.txts
@@ -317,11 +293,10 @@ export default {
     dialogVisible() {},
     st(i) {
       this.num = i;
-      console.log(this.stepdata[i - 1].obj.id);
-      console.log(this.stepdata);
-      this.txt = this.stepdata[i - 1].obj.description;
-      this.id = this.stepdata[i - 1].obj.id;
+      this.txt = this.stepdata[i].obj.description;
+      this.id = this.stepdata[i].obj.id;
       this.centerDialogVisible = true;
+      console.log(this.stepdata[i].obj.id);
       this.stid = i;
     }
   },
@@ -341,6 +316,10 @@ export default {
         that.stepdata = res.data.obj2;
         console.log(that.stepdata);
         that.stepdata.map((v, i) => {
+          if (v.obj.state) {
+            that.stid = i;
+            console.log(that.stid);
+          }
           if (i != 0) {
             that.imglist.push({
               list: v.uploadCntList
@@ -449,25 +428,16 @@ p {
   margin-top: -20px;
 }
 .a_box {
-  position: absolute;
+  position: relative;
+  top: 240px;
+  width: 50%;
+  left: 700px;
 }
 .f_box {
   position: relative;
   width: 300px;
-  left: 280px;
-  top: -330px;
-}
-.f_box_2 {
-  position: relative;
-  width: 300px;
-  left: 280px;
-  top: -200px;
-}
-.f_box_3 {
-  position: relative;
-  width: 300px;
-  left: 280px;
-  top: -70px;
+  /* left: 280px; */
+  top: 300px;
 }
 .f_box input {
   display: block;
