@@ -12,58 +12,6 @@
                 </li>
             </ul>
         </div>
-        <!-- <div class="req_box">
-           <p><b>B、救援请求</b></p>
-           <div class="box_req">
-               <ul>
-                   <li>
-                       <b>A、已申请报价服务机构</b>
-                       <div class="org_box">
-                            <p v-for="(v,ind) in bid" :key="ind">
-                             {{v.instiCountry}} ------{{v.insti.category}}------{{v.insti.name}}</p>
-                       </div>
-                   </li>
-                   <li>
-                       <b>B、服务清单</b>
-                       <div class="acc_box">
-                           <p>相关附件({{acc_list.length}})</p>
-                           <ul>
-                               <li v-for="(v,ind) in acc_list" :key="ind">
-                                   <img :src="v.url" alt="">
-                                   <p>{{v.txt}}</p>
-                                   <a :href="v.dow" :download="v.dow">下载</a>
-                               </li>
-                           </ul>
-                       </div>
-                       <div class="rescue_box">
-                         <div class="box" v-for="(v,ind) in obj" :key="ind">
-                          <p v-if="v.dict&&v.dict.parentId===0">{{v.dict.name}}</p>
-                         </div>
-                         <div class="box">
-                           <el-checkbox-group v-model="checkList">
-                              <el-checkbox label="医疗机构推介" disabled checked v-for="(v,ind) in obj" :key="ind" v-if="ind>0&&v.dict">
-                                    <span class="res_div">{{v.dict.name}}</span>
-                                    <br/>
-                                    <span class="res_box">说明：{{v.obj.description}}</span>
-                                </el-checkbox>
-                            </el-checkbox-group>
-                         </div>
-                           <p></p>
-                            <p>2、费用担保</p>
-                            <el-checkbox-group v-model="checkList">
-                                <el-checkbox label="医疗机构推介" disabled checked>
-                                    <span class="db_div">医疗费用担保或非医疗费用担保</span>
-                                    <span class="db_box">限额<b>$10000</b></span>
-                                </el-checkbox>
-                            </el-checkbox-group>
-                       </div>
-                   </li>
-               </ul>
-               <div class="upbtn_box">
-                   <el-button type="primary" @click="toinf">回复报价及方案</el-button>
-               </div>
-           </div>
-        </div> -->
     </div>
 </template>
 
@@ -165,10 +113,10 @@ export default {
         (that.init.caseCountry || "") +
         (that.init.caseCity || "") +
         addr,
-      type: "事故类型：" + that.init.obj.accidentType,
+      type: "事故类型：" + (that.init.obj.accidentType||""),
       no: "是否团险：" + (that.init.obj.caseInsured ? "是" : "无"),
-      part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
-      weather: "天气灾害：" + that.init.obj.weatherTag || "无"
+      part: "受伤部位：" + (that.init.victimList[0].obj.injuredPart||""),
+      weather: "天气灾害：" + (that.init.obj.weatherTag || "无")
     };
     this.def = that.init.obj.incidentDesc;
     fetch("http://api.test.dajiuxing.com.cn/rescue/bidding/bidders", {

@@ -15,14 +15,16 @@
             </el-steps>
             <p>救援服务清单</p>
             <div class="det_box">
-            <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
-                {{v.dict.name}}
-            </p>
-            <el-steps direction="vertical" :active="stid" class="box">
-                <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
-                </el-step>
-            </el-steps>
-            <div class="a_box" v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===1">
+              <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
+                  {{v.dict.name}}
+              </p>
+              <el-steps direction="vertical" :active="stid" class="box" :space="180">
+                  <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
+                  </el-step>
+              </el-steps>
+            </div>
+            <div class="_box">
+              <div class="a_box" v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===1">
                 <div class="f_box f_box_1" ref="fb" v-if="!v.obj.state">
                   <span @click="st(ind)">开始操作</span>
                   <span>其他</span>
@@ -31,9 +33,9 @@
                   <p>操作说明:{{v.obj.description}}</p>
                   <img :src="v.url" v-for="(v,i) in imglist[ind-1].list" :key="i"  v-if="v.url">
                 </div>
+              </div>
             </div>
-            </div>
-            <p class="p acc"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
+            <p class="p acc" v-if="btn_flag"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
         </div>
       <el-dialog
         title="案件操作"
@@ -150,7 +152,8 @@ export default {
       isacc: false,
       feedata: null,
       flag: false,
-      imglist: []
+      imglist: [],
+      btn_flag: false
     };
   },
   methods: {
@@ -173,6 +176,13 @@ export default {
         .then(res => {
           if (res.data.code === 0) {
             this.isacc = false;
+            this.$router.push({
+              name: "Rescue",
+              params: {
+                token: this.$route.token,
+                caseId: this.$route.params.caseId
+              }
+            });
           }
         });
     },
@@ -182,10 +192,14 @@ export default {
       this.isacc = true;
     },
     ok() {
+      let odom = document.querySelectorAll(".a_box")[this.num - 1];
+      let dom = document.querySelectorAll(".a_box")[this.num];
+      odom.style.visibility = "visible";
+      dom.style.visibility = "visible";
+      dom.style.top = odom.offsetTop + 180 + "px";
       let that = this;
       let tUploadCnts = [];
       let obj = {};
-      console.log(this.urllist);
       this.urllist.map(v => {
         tUploadCnts.push({
           objType: 3,
@@ -227,17 +241,9 @@ export default {
               console.log(res);
             });
         });
-      // this.$router.push({
-      //   name: "Rescue",
-      //   params: {
-      //     token: this.$route.token,
-      //     caseId: this.$route.params.caseId
-      //   }
-      // });
     },
     up() {
-      console.log(this.num);
-      this.imglist[this.num-1].list.push(this.fileurl);
+      this.imglist[this.num - 1].list.push(this.fileurl);
       this.urllist.push({
         url: this.fileurl,
         txt: this.txts
@@ -297,7 +303,6 @@ export default {
       this.id = this.stepdata[i].obj.id;
       this.centerDialogVisible = true;
       console.log(this.stepdata[i].obj.id);
-      this.stid = i;
     }
   },
   mounted() {
@@ -314,20 +319,24 @@ export default {
         that.flag = true;
         that.feedata = res.data.obj;
         that.stepdata = res.data.obj2;
-        console.log(that.stepdata);
         that.stepdata.map((v, i) => {
           if (v.obj.state) {
             that.stid = i;
-            console.log(that.stid);
           }
           if (i != 0) {
             that.imglist.push({
               list: v.uploadCntList
             });
+            if (v.uploadCntList.length > 0) {
+              this.num = i;
+            }
           }
         });
-        console.log(that.imglist);
+        if (this.num == this.imglist.length) {
+          this.btn_flag = true;
+        }
         that.loading = false;
+        console.log(document.querySelectorAll(".a_box"));
       });
   }
 };
@@ -406,7 +415,6 @@ p {
   line-height: 25px;
 }
 .det_box {
-  height: 350px;
   box-sizing: border-box;
   padding: 10px 15px;
 }
@@ -428,22 +436,43 @@ p {
   margin-top: -20px;
 }
 .a_box {
-  position: relative;
-  top: 240px;
+  position: absolute;
+  top: 330px;
   width: 50%;
   left: 700px;
+  height: 100px;
+}
+._box .a_box:not(:first-child) {
+  visibility: hidden;
+  top: 630px;
+}
+._box .a_box:nth-child(2) {
+  visibility: visible;
+  top: 510px;
+}
+._box .a_box:nth-child(3) {
+  visibility: visible;
+  top: 690px;
+}
+._box .a_box:nth-child(4) {
+  visibility: visible;
+  top: 870px;
+}
+._box .a_box:nth-child(5) {
+  visibility: visible;
+  top: 1050px;
 }
 .f_box {
-  position: relative;
+  position: absolute;
   width: 300px;
   /* left: 280px; */
-  top: 300px;
+  bottom: 0;
 }
 .f_box input {
   display: block;
 }
 .acc {
-  margin-top: 20px;
+  margin-top: 80px;
 }
 .imgbox {
   width: 80px;

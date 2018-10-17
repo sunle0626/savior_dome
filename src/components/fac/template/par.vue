@@ -35,11 +35,6 @@
            <div class="box_req">
                <ul>
                    <li>
-                       <!-- <b>A、已申请报价服务机构</b>
-                       <div class="org_box">
-                            <p v-for="(v,ind) in bid" :key="ind">
-                             {{v.instiCountry}} ------{{v.insti.category}}------{{v.insti.name}}</p>
-                       </div> -->
                    </li>
                    <li>
                        <b>B、服务清单</b>
@@ -206,7 +201,7 @@ export default {
         user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
         phone: "报案电话：" + (that.victimList.obj.contact || ""),
-        instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
+        instime: "出险时间：" + (that.timestampToTime(that.obj.incidentTs)),
         null: "-",
         card: "证件号码：" + (that.victimList.obj.idNo || ""),
         number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),
@@ -259,7 +254,6 @@ export default {
       .then(function(data) {
         that.bid = data.obj;
       });
-    console.log(this.$route.params);
   }
 };
 </script>

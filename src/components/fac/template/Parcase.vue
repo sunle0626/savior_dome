@@ -36,12 +36,13 @@
             label="相关单据及图片"
             align="center">
              <template slot-scope="scope">
-               <el-button type="text" @click="centerDialogVisible = true">
-               <div class="box" v-for="(item,ind) in scope.row.corr" :key="ind" >
-                  <img :src="item.url" width="40" height="40" class="head_pic"/>
-                  <p>{{item.txt}}</p>
-               </div>
-               </el-button>
+              <div class="box" v-for="(item,ind) in scope.row.corr" :key="ind" >
+              <img :src="item.url" width="40" height="40" class="head_pic"/>
+              <p>{{item.txt}}</p>
+              </div>
+              <el-button type="text" @click="centerDialog(scope.$index)" class="addimg">
+                 +
+              </el-button>
              </template>
             </el-table-column>
         </el-table>
@@ -52,13 +53,13 @@
           width="50%"
           center>
           <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://api.test.dajiuxing.com.cn/rescue/case/upload_file"
           list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove">
+          :data="{token}"
+          :on-success="ImgSuccess">
            <i class="el-icon-plus"></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
+          <el-dialog :visible.sync="dialog_Visible">
             <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </el-dialog>
@@ -70,27 +71,32 @@ import qs from "qs";
 export default {
   data() {
     return {
-      tableData: [
-      ],
+      tableData: [],
       imageUrl: "",
       centerDialogVisible: false,
-      dialogVisible:false
+      dialog_Visible: false,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      dialogImageUrl: "",
+      ind: 0
     };
   },
   methods: {
     close() {
       this.$router.push("/fac/caseindex/par/parinf");
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    centerDialog(i) {
+      this.ind = i;
+      this.centerDialogVisible = true;
     },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+    ImgSuccess(res, file, fileList) {
+      this.tableData[this.ind].corr.unshift({
+        url: res.obj,
+        txt: ""
+      });
+      console.log(res.obj);
     },
-    dialogImageUrl() {},
-    dialogVisible() {},
-    
     time(str) {
       var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
       var Y = date.getFullYear() + "年";
@@ -111,7 +117,9 @@ export default {
       .post(
         "http://api.test.dajiuxing.com.cn/rescue/case/case_progress",
         qs.stringify({
-          token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+          token:
+            this.$route.params.token ||
+            JSON.parse(window.localStorage.getItem("data")).data,
           caseId: this.$route.params.caseId
         })
       )
@@ -146,6 +154,13 @@ export default {
 </script>
 
 <style scoped>
+.el-button{
+  position: relative;
+  top: -63px;
+  font-size: 48px;
+  color: #ccc;
+
+}
 .upbtn_box {
   margin-top: 25px;
   text-align: center;

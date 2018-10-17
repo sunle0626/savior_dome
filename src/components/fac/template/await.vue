@@ -46,8 +46,8 @@ export default {
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      st_time: new Date() * 1,
-      en_time: new Date() * 1,
+      st_time: "",
+      en_time: "",
       flag: this.$route.params.flag,
       pickerOptions1: {
         disabledDate(time) {

@@ -120,11 +120,12 @@ export default {
       tableData: [],
       obj: [],
       victimList: [],
+      caseid:0,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      st_time: new Date() * 1,
-      en_time: new Date() * 1,
+      st_time: "",
+      en_time: "",
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -153,9 +154,9 @@ export default {
       if (stTime && enTime) {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
-          body: `token=${this.token ||
-            JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=140&startTs=${stTime}&endTs=${enTime}`,
+          body: `token=${
+            this.token
+          }&typeId=1&status=140&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -197,6 +198,7 @@ export default {
                     get_time: that.time(v.obj.incidentTs),
                     op: "查看并操作"
                   });
+                  this.caseid = v.obj.id;
                   console.log(v.obj);
                   that.obj.push(v.obj);
                   that.victimList.push(v.victimList[0]);
@@ -207,9 +209,7 @@ export default {
       } else {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
-          body: `token=${this.token ||
-            JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=140`,
+          body: `token=${this.token}&typeId=1&status=140`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -253,6 +253,7 @@ export default {
                     insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
                     isshow: isshow
                   });
+                  that.caseid = v.obj.id;
                   that.obj.push(v.obj);
                   that.victimList.push(v.victimList[0]);
                 }
@@ -266,7 +267,7 @@ export default {
       this.$router.push({
         name: "lookinf",
         params: {
-          caseid: obj.row.casenumber,
+          caseid: this.caseid,
           token: this.token
         }
       });
