@@ -47,7 +47,9 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       caseid: this.$route.params.caseid,
       acc_list: [],
       formInline: {
@@ -64,13 +66,13 @@ export default {
       this.$router.push("/fac/caseindex/offer");
     },
     toalter() {
-       this.$router.push({
-         name: 'alter',
-         params: {
+      this.$router.push({
+        name: "alter",
+        params: {
           caseid: this.caseid,
-          token:this.token
-         }
-        })
+          token: this.token
+        }
+      });
     }
   },
   mounted() {
@@ -102,7 +104,7 @@ export default {
           } else {
             that.checkList.map(o => {
               if (v.dict.parentId == o.childId) {
-                //console.log(v.dict.parentId)
+                console.log(v.dict.parentId)
                 o.list.push(v);
               }
             });

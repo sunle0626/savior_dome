@@ -74,12 +74,13 @@ export default {
 .header {
   width: 100%;
   height: 65px;
+  box-sizing: border-box;
+  padding: 0 12%;
   border-bottom: 1px solid #ccc;
 }
 .header_logo {
-  width: 30%;
   float: left;
-  margin-left: 200px;
+  margin-right: 1%;
 }
 .header_logo img,
 .header_logo .tit {
@@ -140,5 +141,33 @@ export default {
 .la_box p:hover {
   background: #00abfa;
   color: #fff;
+}
+@media screen and (min-width: 1280px) {
+  .header {
+    width: 100%;
+    height: 65px;
+    box-sizing: border-box;
+    padding: 0 10%;
+    border-bottom: 1px solid #ccc;
+  }
+  .header_user div,
+  .header_set div {
+    float: left;
+    margin-left: 10px;
+  }
+}
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
+  .header {
+    width: 100%;
+    height: 65px;
+    box-sizing: border-box;
+    padding: 0 3%;
+    border-bottom: 1px solid #ccc;
+  }
+  .header_user div,
+  .header_set div {
+    float: left;
+    margin-left: 15px;
+  }
 }
 </style>

@@ -90,8 +90,12 @@ export default {
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      obj: this.$route.params.obj[this.$route.params.index],
-      victimList: this.$route.params.victimList[this.$route.params.index],
+      obj:
+        this.$route.params.obj[this.$route.params.index] ||
+        this.$route.params.obj,
+      victimList:
+        this.$route.params.victimList[this.$route.params.index] ||
+        this.$route.params.victimList,
       casenumber: "AJ200101",
       inf: null,
       init: null,
@@ -108,6 +112,8 @@ export default {
         name: "Inf",
         params: {
           token: this.token,
+          obj2: this.obj,
+          victimList: this.victimList,
           init: this.init,
           obj: this.inf,
           data: this.obj2,
@@ -130,6 +136,8 @@ export default {
               name: "Inf",
               params: {
                 token: this.token,
+                obj2: this.obj,
+                victimList: this.victimList,
                 init: this.init,
                 obj: this.inf,
                 data: this.obj2,
@@ -201,7 +209,7 @@ export default {
         user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
         phone: "报案电话：" + (that.victimList.obj.contact || ""),
-        instime: "出险时间：" + (that.timestampToTime(that.obj.incidentTs)),
+        instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
         null: "-",
         card: "证件号码：" + (that.victimList.obj.idNo || ""),
         number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),

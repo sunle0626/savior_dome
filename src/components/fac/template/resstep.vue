@@ -303,6 +303,17 @@ export default {
       this.id = this.stepdata[i].obj.id;
       this.centerDialogVisible = true;
       console.log(this.stepdata[i].obj.id);
+    },
+    back() {
+      this.$router.push({
+        name: "Rescue",
+        params: {
+          token:
+            this.$route.params.token ||
+            JSON.parse(window.localStorage.getItem("data")).data,
+          caseid: this.$route.params.caseid
+        }
+      });
     }
   },
   mounted() {
@@ -459,6 +470,22 @@ p {
   top: 870px;
 }
 ._box .a_box:nth-child(5) {
+  visibility: visible;
+  top: 1050px;
+}
+._box .a_box:nth-child(6) {
+  visibility: visible;
+  top: 510px;
+}
+._box .a_box:nth-child(7) {
+  visibility: visible;
+  top: 690px;
+}
+._box .a_box:nth-child(8) {
+  visibility: visible;
+  top: 870px;
+}
+._box .a_box:nth-child(9) {
   visibility: visible;
   top: 1050px;
 }

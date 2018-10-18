@@ -6,47 +6,47 @@
             <el-table-column
                 prop="number"
                 label="序号"
-                width="50">
+                width="50%">
             </el-table-column>
             <el-table-column
                 prop="casenumber"
                 label="案件编号"
-                width="70">
+                width="80%">
             </el-table-column>
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="70">
+                width="50%">
             </el-table-column>
             <el-table-column
                 prop="username"
                 label="用户姓名"
-                width="60">
+                width="50%">
             </el-table-column>
             <el-table-column
                 prop="phone"
                 label="用户手机号"
-                width="70">
+                width="70%">
             </el-table-column>
             <el-table-column
                 prop="papers"
                 label="证件信息"
-                width="90">
+                width="80%">
             </el-table-column>
             <el-table-column
                 prop="sex"
                 label="性别"
-                width="50">
+                width="50%">
             </el-table-column>
             <el-table-column
                 prop="time"
                 label="出险时间"
-                width="90">
+                width="90%">
             </el-table-column>
             <el-table-column
                 prop="par"
                 label="用户保险详情"
-                width="90">
+                width="70%">
                 <template slot-scope="scope">
                    <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
                     <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button> 
@@ -55,22 +55,22 @@
             <el-table-column
                 prop="plan"
                 label="当前进度"
-                width="60">
+                width="80%">
             </el-table-column>
             <el-table-column
                 prop="node"
                 label="当前节点"
-                width="60">
+                width="60%">
             </el-table-column>
             <el-table-column
                 prop="get_time"
                 label="到达时间"
-                width="90">
+                width="90%">
             </el-table-column>
             <el-table-column
                 prop="op"
                 label="操作"
-                width="100">
+                width="110%">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="topar(scope.$index)">查看并操作</el-button>
                 </template>

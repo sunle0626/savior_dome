@@ -86,7 +86,9 @@ export default {
           txt: "上传方案及报价"
         }
       ],
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       caseid: this.$route.params.caseid,
       rescueFee: "",
       medicFee: "",
@@ -117,7 +119,11 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      formdata.append("token", this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data);
+      formdata.append(
+        "token",
+        this.$route.params.token ||
+          JSON.parse(window.localStorage.getItem("data")).data
+      );
       reader.onload = function(e) {
         that.avatar = this.result;
         formdata.append("file", that.file);
@@ -139,7 +145,7 @@ export default {
       let tUploadCnts = [];
       this.checkList[0].list.map((v, i) => {
         console.log(that.data[i].obj);
-        console.log(v.obj.reply)
+        console.log(v.obj.reply);
         services.push({
           id: that.data[i + 1].obj.id,
           serviceId: that.data[i + 1].obj.serviceId,
@@ -152,7 +158,9 @@ export default {
         .post(
           "http://api.test.dajiuxing.com.cn/rescue/bidding/alter_bill_assist",
           qs.stringify({
-            token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+            token:
+              this.$route.params.token ||
+              JSON.parse(window.localStorage.getItem("data")).data,
             caseId: this.$route.params.caseid,
             id: this.id,
             totalFee: this.totalFee,
@@ -174,7 +182,9 @@ export default {
             .post(
               "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
               qs.stringify({
-                token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+                token:
+                  this.$route.params.token ||
+                  JSON.parse(window.localStorage.getItem("data")).data,
                 tUploadCnts: JSON.stringify(tUploadCnts)
               })
             )
@@ -185,9 +195,11 @@ export default {
     },
     back() {
       this.$router.push({
-        name: "Offer",
+        name: "lookinf",
         params: {
-          token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
+          token:
+            this.$route.params.token ||
+            JSON.parse(window.localStorage.getItem("data")).data,
           caseid: this.$route.params.caseid
         }
       });
