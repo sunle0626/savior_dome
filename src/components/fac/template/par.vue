@@ -57,6 +57,8 @@
                                     <span class="res_div">{{v.dict.name}}</span>
                                     <br/>
                                     <span class="res_box">说明：{{v.obj.description}}</span>
+                                    <br/>
+                                    <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span>
                                 </el-checkbox>
                             </el-checkbox-group>
                          </div>

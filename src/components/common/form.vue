@@ -81,7 +81,7 @@
 
 <script>
 export default {
-  props: ["token", "st_time", "en_time"],
+  props: ["token", "st_time", "en_time", "sereen"],
   data() {
     return {
       tableData: [],
@@ -242,16 +242,22 @@ export default {
   watch: {
     en_time(nv, ov) {
       console.log(nv, ov);
-      this.getData(0, nv);
+      // this.getData(0, nv + 86400000);
     },
     st_time(nv, ov) {
       console.log(nv, ov);
-      this.getData(nv, 0);
+      // this.getData(nv, 0);
+    },
+    sereen(nv, ov) {
+      console.log(nv)
+      if (nv) {
+        this.getData(this.st_time, this.en_time + 86400000);
+      }
     }
   },
-  mounted() {
+  mounted() {  
     // if (this.flag) {
-      this.getData();
+    this.getData();
     // } else {
     // }
   }

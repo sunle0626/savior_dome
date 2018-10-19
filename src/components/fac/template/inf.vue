@@ -175,61 +175,63 @@ export default {
       let tUploadCnts = [];
       services.push({
         serviceId: that.data[0].obj.serviceId,
-        description: that.data[0].obj.description
+        description: that.data[0].obj.description,
+        fee: that.data[0].obj.fee
       });
       that.txt.map((v, i) => {
         services.push({
           serviceId: that.data[i + 1].obj.serviceId,
           description: that.data[i + 1].obj.description,
+          fee: that.data[i + 1].obj.fee,
           reply: v
         });
       });
-      console.log(services)
-      //   this.axios
-      //     .post(
-      //       "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
-      //       qs.stringify({
-      //         token:
-      //           this.$route.params.token ||
-      //           JSON.parse(window.localStorage.getItem("data")).data,
-      //         caseId: this.$route.params.caseId,
-      //         totalFee: this.totalFee,
-      //         medicFee: this.medicFee,
-      //         caseFee: this.caseFee,
-      //         rescueFee: this.rescueFee,
-      //         services: JSON.stringify(services)
-      //       })
-      //     )
-      //     .then(data => {
-      //       console.log(data.data);
-      //       tUploadCnts.push({
-      //         objType: 2,
-      //         url: this.url,
-      //         objId: data.data.obj
-      //       });
-      //       console.log(tUploadCnts);
-      //       this.axios
-      //         .post(
-      //           "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
-      //           qs.stringify({
-      //             token:
-      //               this.$route.params.token ||
-      //               JSON.parse(window.localStorage.getItem("data")).data,
-      //             tUploadCnts: JSON.stringify(tUploadCnts)
-      //           })
-      //         )
-      //         .then(obj => {
-      //           console.log(obj);
-      //         });
-      //       that.$router.push({
-      //         path: "/fac/caseindex/offer",
-      //         name: "Offer",
-      //         params: {
-      //           token: this.$route.params.token,
-      //           caseId: this.$route.params.obj.caseId
-      //         }
-      //       });
-      //     });
+      console.log(services);
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
+          qs.stringify({
+            token:
+              this.$route.params.token ||
+              JSON.parse(window.localStorage.getItem("data")).data,
+            caseId: this.$route.params.caseId,
+            totalFee: this.totalFee,
+            medicFee: this.medicFee,
+            caseFee: this.caseFee,
+            rescueFee: this.rescueFee,
+            services: JSON.stringify(services)
+          })
+        )
+        .then(data => {
+          console.log(data.data);
+          tUploadCnts.push({
+            objType: 2,
+            url: this.url,
+            objId: data.data.obj
+          });
+          console.log(tUploadCnts);
+          this.axios
+            .post(
+              "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+              qs.stringify({
+                token:
+                  this.$route.params.token ||
+                  JSON.parse(window.localStorage.getItem("data")).data,
+                tUploadCnts: JSON.stringify(tUploadCnts)
+              })
+            )
+            .then(obj => {
+              console.log(obj);
+            });
+          that.$router.push({
+            path: "/fac/caseindex/offer",
+            name: "Offer",
+            params: {
+              token: this.$route.params.token,
+              caseId: this.$route.params.obj.caseId
+            }
+          });
+        });
     }
   },
   mounted() {

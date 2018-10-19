@@ -134,14 +134,18 @@ export default {
     };
   },
   methods: {
+    filt() {
+      this.getData(this.st_time, this.en_time + 86400000);
+    },
     sttime() {
       this.st_time = this.st_time * 1;
-      this.getData(this.st_time, 0);
-      console.log(this.st_time);
+      // this.getData(this.st_time, 0);
+      // console.log(this.st_time);
     },
     entime() {
+      console.log(this.en_time);
       this.en_time = this.en_time * 1;
-      this.getData(0, this.en_time);
+      // this.getData(0, this.en_time + 86400000);
     },
     getData(st, et) {
       this.tableData = [];
@@ -265,7 +269,7 @@ export default {
       }
     },
     tores(i) {
-      console.log(this.caseId)
+      console.log(this.caseId);
       this.$router.push({
         name: "resstep",
         path: "http://api.test.dajiuxing.com.cn/fac/caseindex/resstep",

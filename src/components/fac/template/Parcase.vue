@@ -41,7 +41,7 @@
               <p>{{item.txt}}</p>
               </div>
               <el-button type="text" @click="centerDialog(scope.$index)" class="addimg">
-                 +
+                 
               </el-button>
              </template>
             </el-table-column>
@@ -52,13 +52,10 @@
           :visible.sync="centerDialogVisible"
           width="50%"
           center>
-          <el-upload
-          action="http://api.test.dajiuxing.com.cn/rescue/case/upload_file"
-          list-type="picture-card"
-          :data="{token}"
-          :on-success="ImgSuccess">
-           <i class="el-icon-plus"></i>
-          </el-upload>
+          <div class="box" v-for="(item,ind) in imgList" :key="ind" >
+            <img :src="item.url" width="40" height="40" class="head_pic"/>
+            <p>{{item.txt}}</p>
+          </div>
           <el-dialog :visible.sync="dialog_Visible">
             <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
@@ -79,7 +76,8 @@ export default {
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
       dialogImageUrl: "",
-      ind: 0
+      ind: 0,
+      imgList: []
     };
   },
   methods: {
@@ -154,12 +152,13 @@ export default {
 </script>
 
 <style scoped>
-.el-button{
+.el-button {
   position: relative;
-  top: -63px;
+  top: -46px;
+  width: 40px;
+  height: 40px;
   font-size: 48px;
   color: #ccc;
-
 }
 .upbtn_box {
   margin-top: 25px;

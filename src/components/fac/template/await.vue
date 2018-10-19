@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- <formVue v-if="sereen" :token="token"></formVue> -->
-        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag"/>
+        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen"/>
         
     </div>
 </template>
@@ -42,7 +42,7 @@ import funVue from "../../common/fun.vue";
 export default {
   data() {
     return {
-      sereen: true,
+      sereen: false,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
@@ -61,9 +61,11 @@ export default {
   },
   methods: {
     filt() {
-      if (this.st_time) {
+      if (this.st_time && !this.en_time) {
         this.sereen = false;
-      } else if (this.en_time) {
+      } else if (this.en_time && !this.st_time) {
+        this.sereen = false;
+      } else if (!this.st_time && !this.en_time) {
         this.sereen = false;
       } else {
         this.sereen = true;
@@ -74,6 +76,7 @@ export default {
     },
     entime() {
       this.en_time = this.en_time * 1;
+      console.log(this.en_time);
     }
   },
   mounted() {

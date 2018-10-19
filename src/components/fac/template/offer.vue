@@ -120,7 +120,7 @@ export default {
       tableData: [],
       obj: [],
       victimList: [],
-      caseid:0,
+      caseid: 0,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
@@ -134,14 +134,17 @@ export default {
     };
   },
   methods: {
+    filt() {
+      this.getData(this.st_time, this.en_time + 86400000);
+    },
     sttime() {
       this.st_time = this.st_time * 1;
-      this.getData(this.st_time, 0);
-      console.log(this.st_time);
+      // this.getData(this.st_time, 0);
+      // console.log(this.st_time);
     },
     entime() {
       this.en_time = this.en_time * 1;
-      this.getData(0, this.en_time);
+      // this.getData(0, this.en_time);
     },
     getData(st, et) {
       this.tableData = [];
