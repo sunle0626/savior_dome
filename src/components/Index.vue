@@ -320,8 +320,7 @@ export default {
                   JSON.stringify(data.obj.user.insti)
                 );
                 that.$router.push({
-                  path: "/fac/index",
-                  name: "FacIndex",
+                  name: "RegIndex",
                   params: {
                     token: data.obj.token,
                     insti: data.obj.user.insti

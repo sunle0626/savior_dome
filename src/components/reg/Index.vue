@@ -1,20 +1,20 @@
 <template>
     <div>
-        <caseVue :insti="insti" :token="token"/>
+        <CaseVue :insti="insti" :token="token"/>
         <h2>
           监管机构
         </h2>
-        <manageVue :insti="insti" :token="token"/>
-        <borardVue/>
-        <funVue/>
+        <ManageVue :insti="insti" :token="token"/>
+        <BorardVue/>
+        <FunVue/>
     </div>
 </template>
 
 <script>
-import caseVue from "../common/case.vue";
-import manageVue from "../common/manage.vue";
-import borardVue from "../common/bulletin_borard.vue";
-import funVue from "../common/fun.vue";
+import CaseVue from "../common_reg/case.vue";
+import ManageVue from "../common_reg/manage.vue";
+import BorardVue from "../common_reg/bulletin_borard.vue";
+import FunVue from "../common_reg/fun.vue";
 import qs from "qs";
 export default {
   data() {
@@ -32,16 +32,16 @@ export default {
   mounted() {
     //   /1.0/rescue/case/all_ongoing_case
     console.log(this.token);
-    this.axios
-      .post(
-        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case",
-        qs.stringify({
-          token: this.token
-        })
-      )
-      .then(res => {
-        console.log(res);
-      });
+    // this.axios
+    //   .post(
+    //     "http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case",
+    //     qs.stringify({
+    //       token: this.token
+    //     })
+    //   )
+    //   .then(res => {
+    //     console.log(res);
+    //   });
     ///1.0/rescue/service_plan/level_service
   }
 };

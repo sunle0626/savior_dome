@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top_box">
-            <h2>等待救援中</h2>
+            <h2>授权通过等待方案报价案件</h2>
             <div class="time_box">
                  <div class="block st_box">
                     起始时间
@@ -107,7 +107,6 @@
 </template>
 
 <script>
-import formVue from "../../common/form.vue";
 import qs from "qs";
 export default {
   data() {

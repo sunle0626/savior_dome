@@ -9,7 +9,7 @@
         <div class="nav_box">
         <router-link :to="{name:'RegAwait',params:{token:token}}">门急诊案件管理</router-link>
         <router-link class="ha" :to="{name:'RegAwait',params:{token:token}}">等待授权启动救援案件</router-link>
-        <router-link class="ha" :to="{name:'RegOffer',params:{token:token}}">授权等待报价案件</router-link>
+        <router-link class="ha" :to="{name:'RegOffer',params:{token:token}}">授权通过等待方案报价案件</router-link>
         <router-link class="ha" :to="{name:'RegRescue',params:{token:token}}">救援中案件管理</router-link>
         </div>
         </el-menu>

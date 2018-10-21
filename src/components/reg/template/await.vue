@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top_box">
-            <h2>等待方案报价案件</h2>
+            <h2>等待授权启动救援案件</h2>
             <div class="time_box">
                 <div class="block st_box">
                     起始时间
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import formVue from "../../common/form.vue";
+import formVue from "../../common_reg/form.vue";
 export default {
   data() {
     return {
