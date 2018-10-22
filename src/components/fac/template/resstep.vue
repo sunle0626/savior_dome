@@ -18,7 +18,7 @@
               <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
                   {{v.dict.name}}
               </p>
-              <el-steps direction="vertical" :active="stid" class="box" :space="180">
+              <el-steps direction="vertical" :active="stid" class="box" :space="320">
                   <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
                   </el-step>
               </el-steps>
@@ -26,10 +26,20 @@
             <div class="_box">
               <div class="a_box" v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===1">
                 <div class="f_box f_box_1" ref="fb" v-if="!v.obj.state">
+                  <div class="node_box">
+                    <p v-for="(val,i) in v.solutionSvrPointList" :key="i" v-if="i<5">
+                      节点{{i+1}}：{{val.description}}
+                    </p>
+                  </div>
                   <span @click="st(ind)">开始操作</span>
-                  <span>其他</span>
+                  <span @click="el(ind)">其他</span>
                 </div>
                 <div class="img_box" v-if="v.obj.state==1">
+                  <div class="node_box">
+                    <p v-for="(val,i) in v.solutionSvrPointList" :key="i" v-if="i<5">
+                      节点{{i+1}}：{{val.description}}
+                    </p>
+                  </div>
                   <p>操作说明:{{v.obj.description}}</p>
                   <img :src="v.url" v-for="(v,i) in imglist[ind-1].list" :key="i"  v-if="v.url">
                 </div>
@@ -116,6 +126,20 @@
             <p class="p"><el-button center type="button" size="small" @click="accup()">确认提交</el-button></p>
         </div>
       </el-dialog>
+      <el-dialog
+        title="案件操作"
+        :visible.sync="elseDialog"
+        width="30%"
+        center>
+        <p class="node" v-for="(v,ind) in nodelist" :key="ind">
+          <span>添加节点</span>
+          <input type="text" placeholder="请添加节点" v-model="v.description">
+          <small v-if="ind==nodelist.length-1" @click="add($event,ind)">添加+</small>
+        </p>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="elseDialog = false,upnode()">完成该操作</el-button>
+        </span>
+      </el-dialog>
       <div class="loading" v-if="loading">
         <img src="../../../../static/images/loading.gif" alt="">
       </div>
@@ -124,6 +148,7 @@
 
 <script>
 import qs from "qs";
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -133,6 +158,7 @@ export default {
       jytxt: "",
       qttxt: "",
       qt: "",
+      nodelist: [{ description: "" }],
       loading: true,
       token:
         this.$route.params.token ||
@@ -146,6 +172,7 @@ export default {
       fileurl: "",
       centerDialogVisible: false,
       imgVisible: false,
+      elseDialog: false,
       id: 0,
       stid: 0,
       num: 0,
@@ -153,10 +180,49 @@ export default {
       feedata: null,
       flag: false,
       imglist: [],
-      btn_flag: false
+      btn_flag: false,
+      serviceId: 0
     };
   },
   methods: {
+    upnode() {
+      let arr = new Array();
+      this.nodelist.map(v => {
+        if (v.description) {
+          arr.push(v);
+        }
+      });
+      console.log(arr);
+      if (arr.length < 5) {
+        this.axios
+          .post(
+            "http://api.test.dajiuxing.com.cn/rescue/case/create_svr_point",
+            qs.stringify({
+              token: this.token,
+              solutionSvrPoints: JSON.stringify(arr)
+            })
+          )
+          .then(res => {
+            console.log(res);
+          });
+      }else{
+        Message.error("请不要输入过多节点，默认显示五条");
+      }
+    },
+    add(e, i) {
+      let parent = e.target.parentNode;
+      this.nodelist[i].solutionSvrId = this.serviceId;
+      this.nodelist.push({
+        description: "",
+        solutionSvrId: this.serviceId
+      });
+      console.log(this.serviceId);
+      console.log(this.nodelist);
+    },
+    el(i) {
+      this.serviceId = this.stepdata[i].obj.id;
+      this.elseDialog = true;
+    },
     accup() {
       let that = this;
       this.axios
@@ -347,7 +413,6 @@ export default {
           this.btn_flag = true;
         }
         that.loading = false;
-        console.log(document.querySelectorAll(".a_box"));
       });
   }
 };
@@ -459,21 +524,21 @@ p {
 }
 ._box .a_box:nth-child(2) {
   visibility: visible;
-  top: 510px;
+  top: 620px;
 }
 ._box .a_box:nth-child(3) {
   visibility: visible;
-  top: 690px;
+  top: 940px;
 }
 ._box .a_box:nth-child(4) {
   visibility: visible;
-  top: 870px;
+  top: 1260px;
 }
 ._box .a_box:nth-child(5) {
   visibility: visible;
-  top: 1050px;
+  top: 1580px;
 }
-._box .a_box:nth-child(6) {
+/* ._box .a_box:nth-child(6) {
   visibility: visible;
   top: 510px;
 }
@@ -488,7 +553,7 @@ p {
 ._box .a_box:nth-child(9) {
   visibility: visible;
   top: 1050px;
-}
+} */
 .f_box {
   position: absolute;
   width: 300px;

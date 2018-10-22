@@ -24,10 +24,10 @@ export default {
     };
   },
   components: {
-    caseVue,
-    manageVue,
-    borardVue,
-    funVue
+    CaseVue,
+    ManageVue,
+    BorardVue,
+    FunVue
   },
   mounted() {
     //   /1.0/rescue/case/all_ongoing_case

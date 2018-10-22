@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/Index'
-import Fac from '@/components/Fac'
+import Fac from '@/components/Fac.vue'
 import FacIndex from '../components/fac/Index.vue'
 import Caseindex from '../components/fac/Caseindex.vue'
 import Await from '../components/fac/template/await.vue'
@@ -16,7 +16,7 @@ import Parcase from '../components/fac/template/Parcase.vue'
 import Parinf from '../components/fac/template/Parinf.vue'
 
 
-import Reg from '@/components/reg'
+import Reg from '@/components/Reg.vue'
 import RegIndex from '../components/reg/Index.vue'
 import RegCaseindex from '../components/reg/Caseindex.vue'
 import RegAwait from '../components/reg/template/await.vue'
@@ -29,6 +29,9 @@ import RegAlter from '../components/reg/template/alter.vue'
 import RegResstep from '../components/reg/template/resstep.vue'
 import RegParcase from '../components/reg/template/Parcase.vue'
 import RegParinf from '../components/reg/template/Parinf.vue'
+
+import Com from '@/components/Com.vue'
+import ComIndex from '@/components/com/Index.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -175,6 +178,16 @@ export default new Router({
                     ]
                 }
             ]
+        }, {
+            path: '/com',
+            name: 'Com',
+            component: Com,
+            children: [
+                {
+                    path: 'index',
+                    name: 'ComIndex',
+                    component: ComIndex,
+                }]
         }
 
     ]

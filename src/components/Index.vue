@@ -320,12 +320,23 @@ export default {
                   JSON.stringify(data.obj.user.insti)
                 );
                 that.$router.push({
-                  name: "RegIndex",
+                  name: "FacIndex",
                   params: {
                     token: data.obj.token,
                     insti: data.obj.user.insti
                   }
                 });
+
+                //检验成功直接跳至指挥中心
+
+                // that.$router.push({
+                //   name: "Com",
+                //   params: {
+                //     token: data.obj.token,
+                //     insti: data.obj.user.insti
+                //   }
+                // });
+
                 // that.$router.push({
                 //   path: "/fac",
                 //   name: "Fac",
