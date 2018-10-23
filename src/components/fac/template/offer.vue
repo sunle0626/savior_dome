@@ -103,7 +103,7 @@
                 label="操作"
                 width="100">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar(scope)">查看报价详情</el-button>
+                    <el-button  type="text" size="small" @click="topar(scope.$index)">查看报价详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -114,13 +114,14 @@
 <script>
 import formVue from "../../common/form.vue";
 import qs from "qs";
+import { Message } from "element-ui";
 export default {
   data() {
     return {
       tableData: [],
       obj: [],
       victimList: [],
-      caseid: 0,
+      caseid: [],
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
@@ -139,11 +140,17 @@ export default {
     },
     sttime() {
       this.st_time = this.st_time * 1;
+      if (this.en_time + 86400000 < this.st_time && this.en_time != "") {
+        Message.error("结束时间不能早于起始时间");
+      }
       // this.getData(this.st_time, 0);
       // console.log(this.st_time);
     },
     entime() {
       this.en_time = this.en_time * 1;
+      if (this.en_time + 86400000 < this.st_time && this.en_time != "") {
+        Message.error("结束时间不能早于起始时间");
+      }
       // this.getData(0, this.en_time);
     },
     getData(st, et) {
@@ -256,7 +263,7 @@ export default {
                     insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
                     isshow: isshow
                   });
-                  that.caseid = v.obj.id;
+                  that.caseid.push(v.obj.id);
                   that.obj.push(v.obj);
                   that.victimList.push(v.victimList[0]);
                 }
@@ -265,12 +272,12 @@ export default {
           });
       }
     },
-    topar(obj) {
+    topar(i) {
       //this.$router.push("lookinf");
       this.$router.push({
         name: "lookinf",
         params: {
-          caseid: this.caseid,
+          caseid: this.caseid[i],
           token: this.token
         }
       });

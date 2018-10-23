@@ -261,8 +261,8 @@ export default {
       let odom = document.querySelectorAll(".a_box")[this.num - 1];
       let dom = document.querySelectorAll(".a_box")[this.num];
       odom.style.visibility = "visible";
-      dom.style.visibility = "visible";
-      dom.style.top = odom.offsetTop + 180 + "px";
+      // dom.style.visibility = "visible";
+      dom.style.top = odom.offsetTop + 320 + "px";
       let that = this;
       let tUploadCnts = [];
       let obj = {};

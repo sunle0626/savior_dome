@@ -1,6 +1,7 @@
 <template>
     <div>
         <!-- HTML结构 -->
+        一个页面
     </div>
 </template>
 

@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 export default {
   props: ["token", "st_time", "en_time", "sereen"],
   data() {
@@ -243,23 +244,30 @@ export default {
     en_time(nv, ov) {
       console.log(nv, ov);
       // this.getData(0, nv + 86400000);
+      if (this.en_time + 86400000 < this.st_time && this.en_time != "") {
+        Message.error("结束时间不能早于起始时间");
+      }
+      //  this.getData(this.st_time, this.en_time + 86400000);
     },
     st_time(nv, ov) {
       console.log(nv, ov);
+      if (this.en_time + 86400000 < this.st_time && this.en_time != "") {
+        Message.error("结束时间不能早于起始时间");
+      }
       // this.getData(nv, 0);
+      //  this.getData(this.st_time, this.en_time + 86400000);
     },
     sereen(nv, ov) {
-      console.log(nv)
+      console.log(nv);
       if (nv) {
         this.getData(this.st_time, this.en_time + 86400000);
       }
     }
   },
-  mounted() {  
-    // if (this.flag) {
-    this.getData();
-    // } else {
-    // }
+  mounted() {
+    if (this.st_time == "" && this.en_time == "") {
+      this.getData();
+    }
   }
 };
 </script>

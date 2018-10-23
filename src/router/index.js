@@ -32,6 +32,11 @@ import RegParinf from '../components/reg/template/Parinf.vue'
 
 import Com from '@/components/Com.vue'
 import ComIndex from '@/components/com/Index.vue'
+import Comset from '@/components/com/set.vue'
+import pact from '@/components/com/pact.vue'
+import serve from '@/components/com/serve.vue'
+import add from '@/components/com/add.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -184,9 +189,28 @@ export default new Router({
             component: Com,
             children: [
                 {
-                    path: 'index',
+                    path: 'ComIndex',
                     name: 'ComIndex',
                     component: ComIndex,
+                },{
+                    path:'Comset',
+                    name:'Comset',
+                    component:Comset,
+                    children:[
+                        {
+                            path:'pact',
+                            name:'pact',
+                            component:pact
+                        },{
+                            path:'serve',
+                            name:'serve',
+                            component:serve
+                        },{
+                            path:'add',
+                            name:'add',
+                            component:add
+                        }
+                    ]
                 }]
         }
 

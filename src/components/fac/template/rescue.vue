@@ -113,6 +113,7 @@
 
 <script>
 import formVue from "../../common/form.vue";
+import { Message } from "element-ui";
 export default {
   components: {
     formVue
@@ -139,12 +140,17 @@ export default {
     },
     sttime() {
       this.st_time = this.st_time * 1;
+      if (this.en_time + 86400000 < this.st_time && this.en_time != "") {
+        Message.error("结束时间不能早于起始时间");
+      }
       // this.getData(this.st_time, 0);
       // console.log(this.st_time);
     },
     entime() {
-      console.log(this.en_time);
       this.en_time = this.en_time * 1;
+      if (this.en_time + 86400000 < this.st_time && this.en_time != "") {
+        Message.error("结束时间不能早于起始时间");
+      }
       // this.getData(0, this.en_time + 86400000);
     },
     getData(st, et) {

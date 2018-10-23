@@ -62,13 +62,25 @@ export default {
   methods: {
     filt() {
       if (this.st_time && !this.en_time) {
-        this.sereen = false;
+        this.sereen = {
+          flag: false,
+          time: new Date()
+        };
       } else if (this.en_time && !this.st_time) {
-        this.sereen = false;
+        this.sereen = {
+          flag: false,
+          time: new Date()
+        };
       } else if (!this.st_time && !this.en_time) {
-        this.sereen = false;
+        this.sereen = {
+          flag: false,
+          time: new Date()
+        };
       } else {
-        this.sereen = true;
+        this.sereen = {
+          flag: true,
+          time: new Date()
+        };
       }
     },
     sttime() {

@@ -14,8 +14,8 @@
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img :src="v.url" alt="">
                             <p>{{v.txt}}</p>
-                            <a :href="v.dow">上传附件</a>
-                            <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+                            <a @click="imgVisible=true" v-if="ind==0">上传附件</a>
+                            <!-- <input type="file" name="file" id="filebox" @change="handleGetFile($event)"> -->
                         </li>
                     </ul>
                 </div>
@@ -72,6 +72,25 @@
                 <el-button type="primary" @click="flag = false;tooffer()">确 定</el-button>
             </span>
             </el-dialog>
+            <el-dialog
+              title="上传方案"
+              :visible.sync="imgVisible"
+              class="img_dialog"
+              width="50%"
+              center>
+              <p><span>图片名称</span><el-input
+                  type="text"
+                  placeholder="上传方案及报价"
+                  v-model="txts"
+                  ></el-input></p>
+                  <p>
+                    <span>
+                      图片地址
+                    </span>
+                    <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+                  </p>
+                  <p class="p"><el-button center type="button" size="small" @click="up(),imgVisible=false">确定</el-button></p>
+            </el-dialog>
     </div>
 </template>
 
@@ -85,9 +104,8 @@ export default {
       fileList: [],
       acc_list: [
         {
-          url:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
-          txt: "上传方案及报价"
+          url: "",
+          txt: ""
         }
       ],
       formInline: {
@@ -103,9 +121,11 @@ export default {
       caseFee: this.$route.params.obj.caseFee,
       rescueFee: this.$route.params.obj.rescueFee,
       txt: [],
+      txts: "",
       file: null,
       avatar: null,
-      url: ""
+      url: "",
+      imgVisible: false
     };
   },
   methods: {
@@ -113,9 +133,29 @@ export default {
       if (isNaN(val)) {
         Message.error("请输入数字，而非其他");
       } else {
+        console.log(this.medicFee * 1, this.caseFee * 1, this.rescueFee * 1);
+        if (!this.caseFee) {
+          this.caseFee = 0;
+        }
+        if (!this.medicFee) {
+          this.medicFee = 0;
+        }
+        if (!this.rescueFee) {
+          this.rescueFee = 0;
+        }
         this.totalFee =
           this.medicFee * 1 + this.caseFee * 1 + this.rescueFee * 1;
       }
+    },
+    up() {
+      // if (this.acc_list.length > 3) {
+      //    Message.error("最多只能上传三个附件哦");
+      // } else {
+        this.acc_list.unshift({
+          url: this.url,
+          txt: this.txts
+        });
+      // }
     },
     cancel() {
       this.$router.push({
@@ -151,7 +191,12 @@ export default {
             config
           )
           .then(res => {
-            that.acc_list[0].url = res.data.obj;
+            // that.acc_list.push({
+            //   url: res.data.obj,
+            //   txt: ""
+            // });
+            console.log(that.acc_list);
+            // that.acc_list[0].url = res.data.obj;
             that.url = res.data.obj;
           });
       };
@@ -187,51 +232,55 @@ export default {
         });
       });
       console.log(services);
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
-          qs.stringify({
-            token:
-              this.$route.params.token ||
-              JSON.parse(window.localStorage.getItem("data")).data,
-            caseId: this.$route.params.caseId,
-            totalFee: this.totalFee,
-            medicFee: this.medicFee,
-            caseFee: this.caseFee,
-            rescueFee: this.rescueFee,
-            services: JSON.stringify(services)
-          })
-        )
-        .then(data => {
-          console.log(data.data);
-          tUploadCnts.push({
-            objType: 2,
-            url: this.url,
-            objId: data.data.obj
-          });
-          console.log(tUploadCnts);
-          this.axios
-            .post(
-              "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
-              qs.stringify({
-                token:
-                  this.$route.params.token ||
-                  JSON.parse(window.localStorage.getItem("data")).data,
-                tUploadCnts: JSON.stringify(tUploadCnts)
-              })
-            )
-            .then(obj => {
-              console.log(obj);
+      if (!this.caseFee || !this.medicFee || !this.totalFee) {
+        Message.error("请完整填写必填项");
+      } else {
+        this.axios
+          .post(
+            "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
+            qs.stringify({
+              token:
+                this.$route.params.token ||
+                JSON.parse(window.localStorage.getItem("data")).data,
+              caseId: this.$route.params.caseId,
+              totalFee: this.totalFee,
+              medicFee: this.medicFee,
+              caseFee: this.caseFee,
+              rescueFee: this.rescueFee,
+              services: JSON.stringify(services)
+            })
+          )
+          .then(data => {
+            console.log(data.data);
+            tUploadCnts.push({
+              objType: 2,
+              url: this.url,
+              objId: data.data.obj
             });
-          that.$router.push({
-            path: "/fac/caseindex/offer",
-            name: "Offer",
-            params: {
-              token: this.$route.params.token,
-              caseId: this.$route.params.obj.caseId
-            }
+            console.log(tUploadCnts);
+            this.axios
+              .post(
+                "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+                qs.stringify({
+                  token:
+                    this.$route.params.token ||
+                    JSON.parse(window.localStorage.getItem("data")).data,
+                  tUploadCnts: JSON.stringify(tUploadCnts)
+                })
+              )
+              .then(obj => {
+                console.log(obj);
+              });
+            that.$router.push({
+              path: "/fac/caseindex/offer",
+              name: "Offer",
+              params: {
+                token: this.$route.params.token,
+                caseId: this.$route.params.obj.caseId
+              }
+            });
           });
-        });
+      }
     }
   },
   mounted() {
@@ -379,5 +428,22 @@ span {
 .upbtn_box span {
   color: #00abfa;
   margin-left: 5px;
+}
+.img_dialog p {
+  width: 100%;
+  line-height: 48px;
+}
+.img_dialog p .el-input {
+  width: 80%;
+  margin-left: 3%;
+}
+.img_dialog p span {
+  color: #333;
+}
+.img_dialog p input[type="file"] {
+  margin-left: 3%;
+}
+.p {
+  text-align: center;
 }
 </style>
