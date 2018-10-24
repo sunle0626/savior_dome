@@ -28,15 +28,15 @@
                             <span class="res_box">说明：{{v.obj.description}}</span>
                             <br/>
                             <span class="res_box">回复：{{v.obj.reply}}</span>
-                            <br/>
-                            <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span>
+                            <!--br/>
+                            <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span -->
                         </el-checkbox>
                         
                     </el-checkbox-group>
                 </div>
                         <div class="upbtn_box">
-                        <el-button type="primary" @click="flag=true;back()">关闭详情</el-button>
-                        <span @click="toalter">修改报价</span>
+                        <el-button type="primary" @click="flag=true;apply()">授权通过，启动救援</el-button>
+                        <!-- span @click="toalter">修改报价</span -->
                         </div>
                 
            </div>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import qs from "qs";
 export default {
   data() {
     return {
@@ -60,8 +61,31 @@ export default {
     };
   },
   methods: {
-    back() {
-      this.$router.push("/reg/caseindex/offer");
+    apply() {
+      let that = this;
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/authorize_solution",
+          qs.stringify({
+            token: this.token,
+            caseId: this.caseid,
+            status:1
+          })
+        )
+        .then(res => {
+          console.log(res.data);
+         if (res.data.code === 0) {
+          that.$router.push({
+            path: "/reg/caseindex/offer",
+            name: "RegOffer",
+            params: {
+              token: this.token,
+              obj: this.inf,
+              data: this.obj
+            }
+          });
+          }
+        });
     },
     toalter() {
       this.$router.push("/reg/caseindex/alter");
@@ -71,7 +95,7 @@ export default {
     let that = this;
     let n = 0;
     fetch(
-      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
+      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
       {
         method: "POST",
         body: `token=${this.token}&caseId=${this.caseid}`,
@@ -103,7 +127,7 @@ export default {
           }
         });
         //获取救援方案
-        fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
+        fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
           method: "POST",
           body: `token=${that.token}&objId=${data.obj.id}&objType=2`,
           mode: "cors",

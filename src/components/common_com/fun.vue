@@ -10,12 +10,41 @@
                 <img src="../../../static/images/com_images/icon_08.png" alt="">
                 <span>财务结算查询</span>
             </div>
+            <div class="fun_two fun">
+                <img src="../../../static/images/com_images/icon_08.png" alt="">
+            <span @click="todr()">保单导入</span>
+            </div>
+            <div class="fun_two fun">
+                <img src="../../../static/images/com_images/icon_08.png" alt="">
+            <span @click="toadd()">保险公司合同管理</span>
+            </div>
+            <div class="fun_two fun">
+                <img src="../../../static/images/com_images/icon_08.png" alt="">
+            <span @click="toserve()">设置授权费用</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+  methods: {
+    toadd() {
+      this.$router.push({
+        name: "add"
+      });
+    },
+    toserve() {
+      this.$router.push({
+        name: "serve"
+      });
+    },
+    todr() {
+      this.$router.push({
+        name: "dr"
+      });
+    }
+  }
 };
 </script>
 

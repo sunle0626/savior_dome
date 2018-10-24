@@ -51,16 +51,6 @@
           :visible.sync="centerDialogVisible"
           width="50%"
           center>
-          <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove">
-           <i class="el-icon-plus"></i>
-          </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
         </el-dialog>
          <div class="upbtn_box">
             <el-button type="primary" @click="close()">关闭详情</el-button>
@@ -111,7 +101,7 @@ export default {
     let that = this;
     this.axios
       .post(
-        "http://api.test.dajiuxing.com.cn/1.0/rescue/case/case_progress",
+        "http://api.test.dajiuxing.com.cn/rescue/case/case_progress",
         qs.stringify({
           token: this.$route.params.token,
           caseId: this.$route.params.caseId

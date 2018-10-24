@@ -6,6 +6,7 @@
                 <div class="block st_box">
                     起始时间
                     <el-date-picker
+                    @change="sttime()"
                     v-model="st_time"
                     align="right"
                     type="date"
@@ -16,6 +17,7 @@
                 <div class="block en_box">
                     结束时间
                     <el-date-picker
+                    @change="entime()"
                     v-model="en_time"
                     align="right"
                     type="date"
@@ -23,9 +25,12 @@
                     :picker-options="pickerOptions1">
                     </el-date-picker>
                 </div>
+                <div class="block">
+                  <el-button type="primary" plain @click="filt()">查询</el-button>
+                </div>
             </div>
         </div>
-        <formVue :token="token"/>
+        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen"/>
     </div>
 </template>
 
@@ -34,33 +39,13 @@ import formVue from "../../common_reg/form.vue";
 export default {
   data() {
     return {
-      token: this.$route.params.token,
-      shortcuts: [
-        {
-          text: "今天",
-          onClick(picker) {
-            picker.$emit("pick", new Date());
-          }
-        },
-        {
-          text: "昨天",
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            picker.$emit("pick", date);
-          }
-        },
-        {
-          text: "一周前",
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit("pick", date);
-          }
-        }
-      ],
+      sereen: false,
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
       st_time: "",
       en_time: "",
+      flag: this.$route.params.flag,
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -71,7 +56,33 @@ export default {
   components: {
     formVue
   },
+  methods: {
+    filt() {
+      if (this.st_time && !this.en_time) {
+        this.sereen = false;
+      } else if (this.en_time && !this.st_time) {
+        this.sereen = false;
+      } else if (!this.st_time && !this.en_time) {
+        this.sereen = false;
+      } else {
+        this.sereen = true;
+      }
+    },
+    sttime() {
+      this.st_time = this.st_time * 1;
+    },
+    entime() {
+      this.en_time = this.en_time * 1;
+      console.log(this.en_time);
+    }
+  },
   mounted() {
+    window.localStorage.setItem(
+      "case",
+      JSON.stringify({
+        case: "RegAwait"
+      })
+    );
   }
 };
 </script>

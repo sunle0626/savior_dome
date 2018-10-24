@@ -22,22 +22,22 @@
             </div>
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="整体报价:">
-                        <el-input v-model="totalFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="totalFee"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="医疗垫付:">
-                        <el-input v-model="medicFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="medicFee" @input="upnum(medicFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="案件费用:">
-                        <el-input v-model="caseFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="caseFee" @input="upnum(caseFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
                     <el-form-item label="救援费用:">
-                        <el-input v-model="rescueFee" placeholder="请输入金额($)"></el-input>
+                        <el-input v-model="rescueFee" @input="upnum(rescueFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
-                    </el-form>
+                </el-form>
                 <div class="rescue_box" v-for="(item,ind) in checkList" :key="ind">
                     <p>{{item.name}}</p>
                     <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
@@ -68,7 +68,7 @@
             <p>确认提交后，不可修改，是否确认提交</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="flag = false">修改一下</el-button>
-                <el-button type="primary" @click="flag = false;tooffer();back()">确 定</el-button>
+                <el-button type="primary" @click="flag = false;tooffer()">确 定</el-button>
             </span>
             </el-dialog>
     </div>
@@ -76,6 +76,7 @@
 
 <script>
 import qs from "qs";
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -108,6 +109,26 @@ export default {
     };
   },
   methods: {
+    upnum(val) {
+      if (isNaN(val)) {
+        Message.error("请输入数字，而非其他");
+      } else {
+        console.log(this.medicFee * 1, this.caseFee * 1, this.rescueFee * 1);
+        if (!this.caseFee) {
+          this.caseFee = 0;
+        }
+        if (!this.medicFee) {
+          this.medicFee = 0;
+        }
+        if (!this.rescueFee) {
+          this.rescueFee = 0;
+        }
+        this.medicFee = this.medicFee * 1;
+        this.caseFee = this.caseFee * 1;
+        this.rescueFee = this.rescueFee * 1;
+        this.totalFee = this.medicFee + this.caseFee + this.rescueFee;
+      }
+    },
     handleGetFile(e) {
       let that = this;
       this.file = e.target.files[0];
@@ -153,45 +174,52 @@ export default {
           reply: v.obj.reply
         });
       });
-      console.log(this.$route.params.caseid);
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/bidding/alter_bill_assist",
-          qs.stringify({
-            token:
-              this.$route.params.token ||
-              JSON.parse(window.localStorage.getItem("data")).data,
-            caseId: this.$route.params.caseid,
-            id: this.id,
-            totalFee: this.totalFee,
-            medicFee: this.medicFee,
-            caseFee: this.caseFee,
-            rescueFee: this.rescueFee,
-            services: JSON.stringify(services)
-          })
-        )
-        .then(data => {
-          console.log(data.data);
-          tUploadCnts.push({
-            objType: 2,
-            url: that.url,
-            objId: that.id
-          });
-          console.log(tUploadCnts);
+      if (!this.caseFee || !this.medicFee || !this.totalFee) {
+        Message.error("请完整填写必填项");
+      } else {
+        if (this.totalFee == this.rescueFee + this.caseFee + this.medicFee) {
           this.axios
             .post(
-              "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+              "http://api.test.dajiuxing.com.cn/rescue/bidding/alter_bill_assist",
               qs.stringify({
                 token:
                   this.$route.params.token ||
                   JSON.parse(window.localStorage.getItem("data")).data,
-                tUploadCnts: JSON.stringify(tUploadCnts)
+                caseId: this.$route.params.caseid,
+                id: this.id,
+                totalFee: this.totalFee,
+                medicFee: this.medicFee,
+                caseFee: this.caseFee,
+                rescueFee: this.rescueFee,
+                services: JSON.stringify(services)
               })
             )
-            .then(obj => {
-              console.log(obj);
+            .then(data => {
+              console.log(data.data);
+              tUploadCnts.push({
+                objType: 2,
+                url: that.url,
+                objId: that.id
+              });
+              console.log(tUploadCnts);
+              this.axios
+                .post(
+                  "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+                  qs.stringify({
+                    token:
+                      this.$route.params.token ||
+                      JSON.parse(window.localStorage.getItem("data")).data,
+                    tUploadCnts: JSON.stringify(tUploadCnts)
+                  })
+                )
+                .then(obj => {
+                  console.log(obj);
+                });
             });
-        });
+        } else {
+          Message.error("请确认输入的数值，总价必须是其他三项之和");
+        }
+      }
     },
     back() {
       this.$router.push({

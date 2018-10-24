@@ -8,8 +8,7 @@
 </template>
 
 <script>
-import headerVue from "./common/header.vue";
-import IndexVue from "./fac/Index.vue";
+import headerVue from "./common_reg/header.vue";
 export default {
   data() {
     return {
@@ -22,8 +21,7 @@ export default {
     };
   },
   components: {
-    headerVue,
-    IndexVue
+    headerVue
   },
   mounted() {
     let insti = this.insti;

@@ -13,7 +13,7 @@
                     <span>{{v.contact}}</span>
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
-                    <span class="op">当前操作方：监管机构</span>
+                    <span class="op">当前操作方：保险公司</span>
                     <b @click="lookinf()">查看并处理</b>
                 </li>
             </ul>
@@ -119,7 +119,7 @@ export default {
     let that = this;
     let nodeName = "";
     //console.log(this.token);
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/regulationGoingCase", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/all_ongoing_case", {
       method: "POST",
       body: `token=${this.token}`,
       mode: "cors",
@@ -174,9 +174,7 @@ export default {
 .manage_box {
   margin-top: 25px;
   box-sizing: border-box;
-  padding: 30px 180px;
-  background: #f2f2f2;
-
+  padding: 0 180px;
 }
 .manage_box h2 {
   font-size: 20px;

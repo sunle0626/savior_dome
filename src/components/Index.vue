@@ -304,11 +304,11 @@ export default {
           })
           .then(function(data) {
             if (data.code === 0) {
+              Message({
+                message: "登录成功",
+                type: "success"
+              });
               if (data.obj.user.type === 0) {
-                Message({
-                  message: "登录成功",
-                  type: "success"
-                });
                 window.localStorage.setItem(
                   "data",
                   JSON.stringify({
@@ -336,15 +336,24 @@ export default {
                     insti: data.obj.user.insti
                   }
                 });
-
-                // that.$router.push({
-                //   path: "/fac",
-                //   name: "Fac",
-                //   params: {
-                //     token: data.obj.token,
-                //     insti: data.obj.user.insti
-                //   }
-                // });
+              } else if (data.obj.user.type === 2) {
+                window.localStorage.setItem(
+                  "data",
+                  JSON.stringify({
+                    data: data.obj.token
+                  })
+                );
+                window.localStorage.setItem(
+                  "insti",
+                  JSON.stringify(data.obj.user.insti)
+                );
+                that.$router.push({
+                  name: "RegIndex",
+                  params: {
+                    token: data.obj.token,
+                    insti: data.obj.user.insti
+                  }
+                });
               }
             } else if (data.code === 200026) {
               //   alert("登录失败,用户名或密码错误");

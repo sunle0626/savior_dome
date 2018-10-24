@@ -4,10 +4,10 @@
         <el-container>
         <el-aside width="15%">
         <el-menu
-        default-active="/fac/index" router>
+        default-active="add" router>
         <router-link :to="{name:'Com',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>
         <div class="nav_box">
-        <router-link :to="{name:'Await',params:{token:token}}">功能</router-link>
+        <router-link :to="{name:'add',params:{token:token}}">功能</router-link>
         <router-link class="ha" :to="{name:'add',params:{token:token}}">新增保险合作客户</router-link>
         <router-link class="ha" :to="{name:'pact',params:{token:token}}">保险公司合同管理</router-link>
         <router-link class="ha" :to="{name:'serve',params:{token:token}}">设置服务流程</router-link>

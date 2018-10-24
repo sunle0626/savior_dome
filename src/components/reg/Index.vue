@@ -1,9 +1,6 @@
 <template>
     <div>
         <CaseVue :insti="insti" :token="token"/>
-        <h2>
-          监管机构
-        </h2>
         <ManageVue :insti="insti" :token="token"/>
         <BorardVue/>
         <FunVue/>
@@ -19,8 +16,12 @@ import qs from "qs";
 export default {
   data() {
     return {
-      token: this.$route.params.token,
-      insti: this.$route.params.insti
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      insti:
+        this.$route.params.insti ||
+        JSON.parse(window.localStorage.getItem("insti"))
     };
   },
   components: {

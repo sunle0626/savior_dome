@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       userid: 0,
-      usertype: "监管机构",
+      usertype: "救援机构",
       username: "平安财险"
     };
   },

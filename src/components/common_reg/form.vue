@@ -94,8 +94,7 @@ export default {
       let that = this;
       console.log(that.obj);
       this.$router.push({
-        path: "par",
-        name: "Par",
+        name: "RegPar",
         params: {
           token: that.token,
           obj: that.obj,
@@ -132,8 +131,8 @@ export default {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
           body: `token=${this.token ||
-            JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=140&startTs=${stTime}&endTs=${enTime}`,
+            JSON.parse(window.localStorage.getItem("token"))
+              .obj}&typeId=1&status=120&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -145,7 +144,6 @@ export default {
             console.log(data);
             if (data.obj) {
               data.obj.map(v => {
-                if (!v.solutionState) {
                   n = n + 1;
                   if (v.victimList[0].gender == 1) {
                     sex = "男";
@@ -178,7 +176,6 @@ export default {
                   console.log(v.obj);
                   that.obj.push(v.obj);
                   that.victimList.push(v.victimList[0]);
-                }
               });
             }
           });
@@ -186,8 +183,8 @@ export default {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
           body: `token=${this.token ||
-            JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=140`,
+            JSON.parse(window.localStorage.getItem("token"))
+              .obj}&typeId=1&status=120`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -199,7 +196,6 @@ export default {
             console.log(data);
             if (data.obj) {
               data.obj.map(v => {
-                if (!v.solutionState) {
                   n = n + 1;
                   if (v.victimList[0].gender == 1) {
                     sex = "男";
@@ -232,7 +228,6 @@ export default {
                   console.log(v.obj);
                   that.obj.push(v.obj);
                   that.victimList.push(v.victimList[0]);
-                }
               });
             }
           });

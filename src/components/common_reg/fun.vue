@@ -10,6 +10,10 @@
                 <img src="../../../static/images/com_images/icon_08.png" alt="">
                 <span>财务结算查询</span>
             </div>
+            <div class="fun_th fun">
+                <img src="../../../static/images/com_images/icon_10.png" alt="">
+                <span>保单导入</span>
+            </div>
         </div>
     </div>
 </template>

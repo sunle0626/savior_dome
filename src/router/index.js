@@ -29,6 +29,7 @@ import RegAlter from '../components/reg/template/alter.vue'
 import RegResstep from '../components/reg/template/resstep.vue'
 import RegParcase from '../components/reg/template/Parcase.vue'
 import RegParinf from '../components/reg/template/Parinf.vue'
+import Regdr from '@/components/reg/template/dr.vue'
 
 import Com from '@/components/Com.vue'
 import ComIndex from '@/components/com/Index.vue'
@@ -36,6 +37,7 @@ import Comset from '@/components/com/set.vue'
 import pact from '@/components/com/pact.vue'
 import serve from '@/components/com/serve.vue'
 import add from '@/components/com/add.vue'
+import dr from '@/components/com/dr.vue'
 
 Vue.use(Router)
 
@@ -130,6 +132,11 @@ export default new Router({
                     component: RegCaseindex,
                     children: [
                         {
+                            path:'dr',
+                            name:'Regdr',
+                            component:Regdr
+                        },
+                        {
                             path: 'await',
                             name: 'RegAwait',
                             component: RegAwait,
@@ -209,6 +216,10 @@ export default new Router({
                             path:'add',
                             name:'add',
                             component:add
+                        },{
+                            path:'dr',
+                            name:'dr',
+                            component:dr
                         }
                     ]
                 }]

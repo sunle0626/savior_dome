@@ -1,8 +1,7 @@
 <template>
     <div>
     <div class="form_box">
-        <h2>保险公司合同设定</h2>
-        <span @click="isset=true">编辑</span>
+        <h2>设置服务流程</h2>
         <el-table
         :data="tableData"
         border>
@@ -76,21 +75,6 @@
             </el-table-column>
         </el-table>
     </div>
-        <el-dialog class="set_box"
-        title="编辑保险产品"
-        :visible.sync="isset"
-        width="50%"
-        center>
-        <div class="p_box">
-            <p><label for="name">产品名称:<input type="text" name="name" id="name" v-model="nametxt" placeholder=''><span class="rspan">*</span></label></p>
-            <p><label for="contacts">A、方案名称:<input type="text" name="contacts" id="contacts" v-model="contactstxt" placeholder=''><span class="rspan">*</span></label></p>
-            <p><label for="information">产品条款:<input type="text" name="information" id="information" v-model="informationtxt" placeholder=''><span class="rspan">*</span><label for="num">保额<input type="text" name="num" id="num"></label></label><span class="rspan">*</span></p>
-            <p>
-                <el-button type="primary" @click="isset = false">确认提交</el-button>
-            </p>
-            
-        </div>
-    </el-dialog>
     </div>
 </template>
 
@@ -98,21 +82,17 @@
 export default {
   data() {
     return {
-      isset: false,
-       nametxt: "",
-      contactstxt: "",
-      informationtxt: "",
-      mailboxtxt: "",
       tableData: [
         {
           number: 1,
           name: "平安保险",
-          start: "2019 01 01  24:00",
-          end: "2019 01 01  24:00",
-          pattern: "大包",
-          cost: "10000",
-          currency: "RMB",
-          agreement: ""
+          start:'2019 01 01  24:00',
+          end:'2019 01 01  24:00',
+          pattern:'大包',
+          cost:'10000',
+          currency:'RMB',
+          agreement:'',
+
         }
       ]
     };
@@ -121,21 +101,4 @@ export default {
 </script>
 
 <style scoped>
-.set_box .span {
-  margin-left: 10px;
-  color: #333;
-}
-.rspan {
-  color: #df1717;
-}
-.set_box p{
-    line-height: 66px;
-}
-.set_box p label{
-    font-size: 18px;
-    color: #333
-}
-.set_box p:last-child{
-    text-align: center;
-}
 </style>

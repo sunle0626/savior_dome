@@ -59,10 +59,25 @@
                        </div>
                    </li>
                </ul>
-               <div class="upbtn_box">
-                   <el-button type="primary" @click="toinf">回复报价及方案</el-button>
-               </div>
            </div>
+           <p><b>C、江泰指挥中心救援整体说明</b></p>
+           <div class="box_exp">
+             <p><span class="res_box_exp">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span></p>
+             <div class="exp_box">
+                <span>附件</span>
+             </div>
+           </div>
+            <p><b>D、添加整体说明</b></p>
+           <div class="com_exp">
+              <textarea name="exp" id="exp" cols="30" rows="10" v-model="exp">
+            </textarea>
+             <div class="exp_box">
+                <span>附件</span>
+             </div>
+           </div>
+          <div class="upbtn_box">
+            <el-button type="primary" @click="apply">通过救援请求</el-button>
+          </div>
         </div>
     </div>
 </template>
@@ -73,6 +88,7 @@ export default {
   data() {
     let that = this;
     return {
+      exp: "同意附件是授权文件",
       objId: null,
       token: this.$route.params.token,
       init: this.$route.params.init,
@@ -93,34 +109,34 @@ export default {
     };
   },
   methods: {
-    toinf() {
-      let that = this;
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_insti_solution",
-          qs.stringify({
-            token: this.token,
-            caseId: this.caseId
-          })
-        )
-        .then(res => {
-          console.log(res.data);
-          // if (res.data.code === 101006) {
-          that.$router.push({
-            path: "/reg/caseindex/inf",
-            name: "RegInf",
-            params: {
-              token: this.token,
-              obj: this.inf,
-              data: this.obj
-            }
-          });
-          // }
-        });
+    apply() {
+      // let that = this;
+      // this.axios
+      //   .post(
+      //     "http://api.test.dajiuxing.com.cn/rescue/bidding/author_rescue",
+      //     qs.stringify({
+      //       token: this.token,
+      //       caseId: this.caseId
+      //     })
+      //   )
+      //   .then(res => {
+      //     console.log(res.data);
+      //     if (res.data.code === 0) {
+      //       that.$router.push({
+      //         path: "/reg/caseindex/await",
+      //         name: "RegAwait",
+      //         params: {
+      //           token: this.token,
+      //           obj: this.inf,
+      //           data: this.obj
+      //         }
+      //       });
+      //     }
+      //   });
     },
     upload() {
       let that = this;
-      fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/upload_cnts", {
+      fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
         method: "POST",
         body: `token=${this.token}&objType=1&objId=${this.objId}`,
         mode: "cors",
@@ -143,21 +159,25 @@ export default {
     }
   },
   mounted() {
-    console.log(this.obj);
+    console.log(this.$route.params);
     let that = this;
     let addr = "";
     if (that.init.generalLocation) {
       addr = that.init.generalLocation.addr;
     }
     this.objdata = {
-      add: "出险地:" + that.init.caseCountry + that.init.caseCity + addr,
-      type: "事故类型：" + that.init.obj.incidentType,
-      no: "是否团险：" + that.init.obj.caseInsured,
-      part: "受伤部位：" + that.init.victimList[0].obj.injuredPart,
-      weather: "天气灾害：" + that.init.obj.weatherTag
+      add:
+        "出险地:" +
+        (that.init.caseCountry || "") +
+        (that.init.caseCity || "") +
+        addr,
+      type: "事故类型：" + (that.init.obj.accidentType || ""),
+      no: "是否团险：" + (that.init.obj.caseInsured ? "是" : "无"),
+      part: "受伤部位：" + (that.init.victimList[0].obj.injuredPart || ""),
+      weather: "天气灾害：" + (that.init.obj.weatherTag || "无")
     };
     this.def = that.init.obj.incidentDesc;
-    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/bidders", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/bidding/bidders", {
       method: "POST",
       body: `token=${this.token}&caseId=${this.caseId}`,
       mode: "cors",
@@ -170,7 +190,7 @@ export default {
         that.bid = data.obj;
       });
     fetch(
-      "http://api.test.dajiuxing.com.cn/1.0/rescue/bidding/view_case_solution",
+      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
       {
         method: "POST",
         body: `token=${this.token}&caseId=${this.caseId}`,
@@ -223,10 +243,31 @@ a {
 .data_wrap ul li:last-child textarea {
   float: left;
 }
+.com_exp textarea {
+  margin-left: 5%;
+  width: 90%;
+  height: 80px;
+  border: 0;
+  border: 1px solid #d9ddde;
+  border-radius: 5px;
+  font-size: 15px;
+}
 .req_box > p {
   margin-top: 15px;
   line-height: 45px;
   text-align: left;
+}
+.res_box_exp {
+  margin-left: 32px;
+  font-size: 14px;
+  color: #999;
+}
+.req_box > p > b {
+  font-size: 14px;
+}
+.exp_box {
+  box-sizing: border-box;
+  padding: 10px 32px;
 }
 .box_req ul li b {
   font-size: 14px;

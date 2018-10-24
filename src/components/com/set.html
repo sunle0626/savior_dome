@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body,html{
+            width: 100%;
+            height: 100%;
+        }
+        li{
+            list-style: none;
+        }
+        table{
+        border-collapse: collapse;
+        width: 97%;
+        margin-left: 2%;
+        border: #999;
+        }
+        th{
+            color: #909399;
+            font-size: 16px;
+            font-weight: 500;
+            height: 28px;
+        }
+        td{
+            color: #333;
+        }
+        span{
+            cursor:pointer;
+        }
+        .wrap{
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 0 180px;
+            background: #f6f6f6;
+        }
+        .nav {
+            width: 15%;
+            float: left;
+        }
+        .savior,.add,.pact {
+            float:right;
+            width: 80%;
+            background: #fff;
+            margin-top: 30px;
+            color: #333;
+            text-align: center;
+            padding-bottom: 50px;
+            display: none;
+        }
+        .block_box{
+            display: block;
+        }
+        a {
+            text-decoration: none;
+            color: #666666;
+            display: block;
+            height: 40px;
+            line-height: 40px;
+            text-align: left;
+            padding-left: 30px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        .b_index {
+            margin-bottom: 20px;
+            background: #fff;
+            font-size: 16px;
+            text-align: center;
+            padding: 0;
+            color: #00abfa;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .case_wrap {
+            box-sizing: border-box;
+            background: #f6f6f6;
+        }
+
+        .nav_box {
+            background: #fff;
+        }
+        .nav_box div{
+            height: 40px;
+            line-height: 40px;
+            text-align: left;
+            padding-left: 30px;
+            box-sizing: border-box;
+            font-size: 14px;
+            color: #666666;
+        }
+        .nav_box .gn{
+            background: #f6f6f6;
+        }
+        .nav_box .ha{
+            background: #fff;
+        }
+        .nav_box .ha.hs{
+            background: #00abfa;
+        }
+        .nav_box a:first-child {
+            border: 1px solid #fff;
+            background: #f6f6f6;
+            padding-left: 20px;
+            color: #000332;
+            font-size: 16px;
+        }
+
+        .sa_box {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .set_box,.add_box,.pact_set_box {
+            position: fixed;
+            left: 50%;
+            margin-left: -450px;
+            display: none;
+            background: #fff;
+            border: #333 1px solid;
+            border-radius: 3px;
+            background: #fff;
+            width:900px;
+        }
+        .re_btn{
+            position: absolute;
+            top: 6px;
+            right: 5px;
+            color: #333
+        }
+        .sa_box li {
+            width: 22%;
+            height: 50px;
+            line-height: 50px;
+            border: 1px solid #00abfa;
+            border-radius: 3px;
+        }
+
+        .sa_box li div {
+            line-height: 55px;
+        }
+
+        span {
+            color: #00abfa;
+        }
+
+        .savior_box {
+            margin-top: 18px;
+            display: flex;
+            justify-content:space-around;
+        }
+
+        .savior_box p {
+            text-align: center;
+        }
+        .form_box h2{
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 48px;
+            margin-left: 10px;
+            float: left;
+        }
+        .form_box>span{
+            float: left;
+            line-height: 48px;
+            margin-left: 18px;
+        }
+        .box{
+            float: left;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="nav">
+            <div class="case_wrap">
+                <div class="b_index">返回首页</div>
+                <div class="nav_box">
+                    <div class="gn">功能</div>
+                    <div class="ha add_btn">新增保险合作客户</div>
+                    <div class="ha pact_btn">保险公司合同管理</div>
+                    <div class="ha sacior_btn">设置服务流程</router-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="savior dsbox">
+            <div class="form_box">
+                <h2>设置服务流程</h2>
+                <div class="box">
+                    <h3>一、医疗救援</h3>
+                    <ul class="sa_box">
+                        <li>
+                            <div class="icon_box">
+                                <img src="../../../static/images/savior_icon_01.png" alt="">
+                                <small>医疗救援</small>
+                            </div>
+                            <span class="setbtn">
+                                编辑
+                            </span>
+                        </li>
+                        <li>
+                            <div class="icon_box">
+                                <img src="../../../static/images/savior_icon_01.png" alt="">
+                                <small>住院安排</small>
+                            </div>
+                            <span class="setbtn">
+                                编辑
+                            </span>
+                        </li>
+                        <li>
+                            <div class="icon_box">
+                                <img src="../../../static/images/savior_icon_01.png" alt="">
+                                <small>医疗送返/转运</small>
+                            </div>
+                            <span class="setbtn">
+                                编辑
+                            </span>
+                        </li>
+                        <li>
+                            <div class="icon_box">
+                                <img src="../../../static/images/savior_icon_01.png" alt="">
+                                <small>其他医疗救援</small>
+                            </div>
+                            <span class="setbtn">
+                                编辑
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="set_box">
+                <span class="re_btn">
+                    X
+                </span>
+                <div class="set_savior_box">
+                    <h3>
+                        编辑服务流程
+                    </h3>
+                    <p>一、门诊急救医</p>
+                    <ul class="savior_box">
+                        <li><img click="set()" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                            <p>医疗咨询</p>
+                        </li>
+                        <li><img click="set()" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                            <p>医疗咨询</p>
+                        </li>
+                        <li><img click="set()" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                            <p>医疗咨询</p>
+                        </li>
+                        <li><img click="set()" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                            <p>医疗咨询</p>
+                        </li>
+                        <li><img click="set()" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                            <p>医疗咨询</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="add block_box dsbox">
+            <div class="form_box">
+                <h2>新增保险公司客户</h2>
+                <span class="add_btn_">新增</span>
+                <table border="1">
+                    <tr>
+                        <th>序号</th>
+                        <th>保险公司名称</th>
+                        <th>联系人</th>
+                        <th>联系方式</th>
+                        <th>操作联系邮箱</th>
+                        <th>登录账号</th>
+                        <th>重置密码</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>平安保险</td>
+                        <td>杨大爷</td>
+                        <td>1380328209</td>
+                        <td>ytj@jiangtai.com</td>
+                        <td></td>
+                        <td>
+                            <span>重置</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="add_box">
+                <h3>新增保险公司名单</h3>
+                <span class="re_btn">
+                    X
+                </span>
+                <div class="p_box">
+                    <p> <label for="name">输入保险公司名称:<input type="text" name="name" id="name" v-model="nametxt"
+                                placeholder=''><span class="rspan">*确保全部称呼</span></label></p>
+                    <p> <label for="contacts">联系人:<input type="text" name="contacts" id="contacts" v-model="contactstxt"
+                                placeholder=''><span class="rspan">*</span></label></p>
+                    <p><label for="information">联系手机号:<input type="text" name="information" id="information" v-model="informationtxt"
+                                placeholder=''><span class="rspan">*</span></label></p>
+                    <p><label for="mailbox">操作邮箱:<input type="text" name="mailbox" id="mailbox" v-model="mailboxtxt"
+                                placeholder=''><span class="nrspan">收到登录密码和账号</span></label></p>
+                    <p>
+                        <el-button type="primary" @click="isadd = false">确认新增</el-button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="pact dsbox">
+            <div class="form_box">
+                <h2>保险公司合同设定</h2>
+                <span class="pact_btn_">编辑</span>
+                <table border="1">
+                    <tr>
+                        <th>序号</th>
+                        <th>保险公司</th>
+                        <th>合作起期</th>
+                        <th>合作到期</th>
+                        <th>合作模式</th>
+                        <th>授权费用</th>
+                        <th>币种</th>
+                        <th>协议</th>
+                        <th>操作</th>
+                        <th>签约保险产品</th>
+                        <th>保单用户数据</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>平安保险</td>
+                        <td>2019 01 01 24:00</td>
+                        <td>2019 01 01 24:00</td>
+                        <td>大包</td>
+                        <td>10000</td>
+                        <td>RMB</td>
+                        <td>
+                            <span>下载</span></td>
+                        <td><span>编辑</span><span>删除</span></td>
+                        <td><span>平安畅游产品</span></td>
+                        <td><span>共14条数据</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="pact_set_box">
+                <h3>编辑保险产品</h3>
+                <span class="re_btn">
+                    X
+                </span>
+                <div class="p_box">
+                    <p><label for="name">产品名称:<input type="text" name="name" id="name" v-model="nametxt" placeholder=''><span
+                                class="rspan">*</span></label></p>
+                    <p><label for="contacts">A、方案名称:<input type="text" name="contacts" id="contacts" v-model="contactstxt"
+                                placeholder=''><span class="rspan">*</span></label></p>
+                    <p><label for="information">产品条款:<input type="text" name="information" id="information" v-model="informationtxt"
+                                placeholder=''><span class="rspan">*</span><label for="num">保额<input type="text" name="num"
+                                    id="num"></label></label><span class="rspan">*</span></p>
+                    <p>
+                        <el-button type="primary" @click="isset = false">确认提交</el-button>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let addbtn = document.querySelector('.add_btn');
+    let pactbtn = document.querySelector('.pact_btn');
+    let saviorbtn = document.querySelector('.sacior_btn');
+    let setbtns = [...document.querySelectorAll('.setbtn')];
+    let rebtn = [...document.querySelectorAll('.re_btn')];
+
+    let add_btn = document.querySelector('.add_btn_');
+    let pact_btn = document.querySelector('.pact_btn_');
+
+    let set_box = document.querySelector('.set_box');
+    setbtns.map(v => {
+        v.onclick = function () {
+            console.log(0)
+            set_box.style.display = "block"
+        }
+    });
+    rebtn.map(v => {
+        v.onclick = function () {
+            let parent = v.parentNode;
+            parent.style.display = 'none';
+        }
+    })
+    add_btn.onclick = function () {
+        let add_box = document.querySelector('.add_box');
+        add_box.style.display = 'block';
+    }
+    pact_btn.onclick = function () {
+        let pact_set_box = document.querySelector('.pact_set_box');
+        pact_set_box.style.display = 'block'
+    }
+    // 点击导航显示不同页面
+    // 新增保险公司
+    addbtn.onclick = function () {
+        let dsbox = [...document.querySelectorAll('.dsbox')];
+        let adddom = document.querySelector('.add');
+        dsbox.map(v => {
+            v.style.display = 'none'
+            console.log(v.className)
+        });
+        adddom.style.display = 'block'
+    }
+    //保险公司合同
+    pactbtn.onclick = function () {
+        let dsbox = [...document.querySelectorAll('.dsbox')];
+        let pactdom = document.querySelector('.pact');
+        dsbox.map(v => {
+            v.style.display = 'none'
+            console.log(v.className)
+        });
+        pactdom.style.display = 'block'
+    }
+    //服务设置
+    saviorbtn.onclick = function () {
+        let dsbox = [...document.querySelectorAll('.dsbox')];
+        let saviordom = document.querySelector('.savior');
+        dsbox.map(v => {
+            v.style.display = 'none'
+            console.log(v.className)
+        });
+        saviordom.style.display = 'block'
+    }
+
+</script>
+
+</html>

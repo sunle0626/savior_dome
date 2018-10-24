@@ -1,25 +1,42 @@
 <template>
     <div>
-        指挥中心
-        <router-link to="/Com/ComIndex">
-            页面一
-        </router-link>
-        <router-link to="/Com/Comset/pact">
-            保险公司合同管理
-        </router-link>
-        <router-link to="/com/Comset/serve">
-            设置服务流程
-        </router-link>
-        <router-view></router-view>
+        <headerVue :insti="insti"/>
+            指挥中心
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
     </div>
 </template>
 
 <script>
-    export default {
-        
-    }
+import headerVue from "./common_com/header.vue";
+export default {
+  data() {
+    return {
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      insti:
+        this.$route.params.insti ||
+        JSON.parse(window.localStorage.getItem("insti"))
+    };
+  },
+  components: {
+    headerVue,
+  },
+  mounted() {
+    let insti = this.insti;
+    let token = this.token;
+    this.$router.push({
+      name: "ComIndex",
+      params: {
+        insti,
+        token
+      }
+    });
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

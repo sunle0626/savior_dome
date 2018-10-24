@@ -2,79 +2,69 @@
     <div>
     <div class="form_box">
         <h2>设置服务流程</h2>
-        <el-table
-        :data="tableData"
-        border>
-            <el-table-column
-                prop="number"
-                label="序号"
-                width="70%">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                label="保险公司"
-                width="100%">
-            </el-table-column>
-            <el-table-column
-                prop="start"
-                label="合作起期"
-                width="80%">
-            </el-table-column>
-            <el-table-column
-                prop="end"
-                label="合作到期"
-                width="80%">
-            </el-table-column>
-            <el-table-column
-                prop="pattern"
-                label="合作模式"
-                width="80%">
-            </el-table-column>
-            <el-table-column
-                prop="cost"
-                label="授权费用"
-                width="80%">
-            </el-table-column>
-            <el-table-column
-                prop="currency"
-                label="币种"
-                width="70%">
-            </el-table-column>
-            <el-table-column
-                prop="agreement"
-                label="协议"
-                width="80%">
-                <template slot-scope="scope">
-                <el-button  type="text" size="small" @click="dow(scope.$index)">下载</el-button>
-            </template>
-            </el-table-column>
-            <el-table-column
-                prop="operation"
-                label="操作"
-                width="100%">
-                <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar(scope.$index)">编辑</el-button>
-                    <el-button  type="text" size="small" @click="topar(scope.$index)">删除</el-button>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="contract"
-                label="签约保险产品"
-                width="120%">
-                <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar(scope.$index)">平安畅游产品</el-button>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="policy"
-                label="保单用户数据"
-                width="120%">
-                <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar(scope.$index)">共14条数据</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+        <div class="box">  
+            <h3>一、医疗救援</h3>
+            <ul class="sa_box">
+                <li>
+                    <div class="icon_box">
+                        <img src="../../../static/images/savior_icon_01.png" alt="">
+                        <small>医疗救援</small>
+                    </div>
+                    <span @click="setsavior=true">
+                        编辑
+                    </span>
+                </li>
+                <li>
+                    <div class="icon_box">
+                        <img src="../../../static/images/savior_icon_01.png" alt="">
+                        <small>住院安排</small>
+                    </div>
+                    <span @click="setsavior=true">
+                        编辑
+                    </span>
+                </li>
+                <li>
+                    <div class="icon_box">
+                        <img src="../../../static/images/savior_icon_01.png" alt="">
+                        <small>医疗送返/转运</small>
+                    </div>
+                    <span @click="setsavior=true">
+                        编辑
+                    </span>
+                </li>
+                <li>
+                    <div class="icon_box">
+                        <img src="../../../static/images/savior_icon_01.png" alt="">
+                        <small>其他医疗救援</small>
+                    </div>
+                    <span @click="setsavior=true">
+                        编辑
+                    </span>                    
+                </li>
+            </ul>
+        </div>
     </div>
+        <el-dialog class="set_box"
+        title="编辑服务流程"
+        :visible.sync="setsavior"
+        width="50%"
+        center>
+        <div class="set_savior_box">
+            <p>一、门诊急救医</p>
+            <ul class="savior_box">
+                <li><img @click="set($event)" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                <p>医疗咨询</p></li>
+                <li><img @click="set($event)" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                <p>医疗咨询</p></li>
+                <li><img @click="set($event)" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                <p>医疗咨询</p></li>
+                <li><img @click="set($event)" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                <p>医疗咨询</p></li>
+                <li><img @click="set($event)" src="../../../static/images/savior_icons/e_r_0.png" alt="">
+                <p>医疗咨询</p></li>
+            </ul>
+        </div>
+    </el-dialog>
     </div>
 </template>
 
@@ -82,23 +72,53 @@
 export default {
   data() {
     return {
+      setsavior: false,
       tableData: [
         {
           number: 1,
           name: "平安保险",
-          start:'2019 01 01  24:00',
-          end:'2019 01 01  24:00',
-          pattern:'大包',
-          cost:'10000',
-          currency:'RMB',
-          agreement:'',
-
+          start: "2019 01 01  24:00",
+          end: "2019 01 01  24:00",
+          pattern: "大包",
+          cost: "10000",
+          currency: "RMB",
+          agreement: ""
         }
       ]
     };
+  },
+  methods:{
+      set(){
+
+      }
   }
 };
 </script>
 
 <style scoped>
+.sa_box {
+  display: flex;
+  justify-content: space-between;
+}
+.sa_box li {
+  width: 22%;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #00abfa;
+  border-radius: 3px;
+}
+.sa_box li div {
+  line-height: 55px;
+}
+span {
+  color: #00abfa;
+}
+.savior_box{
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+}
+.savior_box p{
+    text-align: center;
+}
 </style>

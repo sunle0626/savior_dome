@@ -83,28 +83,37 @@ export default {
       let that = this;
       this.inf = {
         time: "报案时间" + that.timestampToTime(that.obj.reportTs),
-        user: "报案客户：" + that.obj.reportUser || "",
+        user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
-        phone: "报案电话：" + that.victimList.obj.contact || "",
+        phone: "报案电话：" + (that.victimList.obj.contact || ""),
         instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
         null: "-",
-        card: "证件号码：" + that.victimList.obj.idNo || "",
-        number: "保单号码：" + that.victimList.obj.insurancePolicyNo || "",
+        card: "证件号码：" + (that.victimList.obj.idNo || ""),
+        number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),
         pardata: {
           flag: true,
           data: "保单详情"
         },
-        belong: "所属保险公司：" + that.init.obj.caseSrc || "",
-        source: "案件信息来源：" + that.obj.caseSrc || "",
-        exp: "来源说明：" + that.obj.caseSrcDesc || ""
+        belong: "所属保险公司：" + (that.victimList.insuranceCompany || ""),
+        source: "案件信息来源：" + (that.obj.caseSrc || ""),
+        exp: "来源说明：" + (that.obj.caseSrcDesc || "")
       };
+      that.$router.push({
+        name: "Regparinf",
+        params: {
+          token: that.token,
+          init: that.init,
+          caseId: that.obj.id,
+          obj: that.obj2
+        }
+      });
     }
   },
   mounted() {
     console.log(this.victimList);
     this.casenumber = this.obj.caseNo;
     let that = this;
-    fetch("http://api.test.dajiuxing.com.cn/1.0/rescue/case/detail_case", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/detail_case", {
       method: "POST",
       body: `token=${this.token}&caseId=${that.victimList.obj.caseId}`,
       mode: "cors",

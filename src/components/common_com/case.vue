@@ -4,16 +4,11 @@
             <div class="wel_box">
                 尊敬的{{insti.name||username}}，欢迎登录
             </div>
-            <div class="num_box">
-              当前服务剩余<b>30</b>天
-              <span>续费</span>
-            </div>
             <div class="view_box">
                 <span>进行中案件:<b>{{casename}}</b><b>({{casenum}})</b></span>
                 <small @click="lookinf">立即查看</small>
             </div>
         </div>
-        <purchase/>
         <div class="bottom_box">
             <ul class="bottom_ul">
                 <li v-for="(v,ind) in case_list" :key="ind">
@@ -39,11 +34,7 @@
 
 <script>
 import { Message } from "element-ui";
-import purchase from "./purchase.vue";
 export default {
-  components: {
-    purchase
-  },
   props: ["insti", "token"],
   data() {
     return {
@@ -60,32 +51,32 @@ export default {
           icon: "./static/images/com_images/icon_01.png"
         },
         {
+          txt: "门急诊就医",
+          tit: "客人门诊急诊就医服务",
+          num: "",
+          id: 1,
+          icon: "./static/images/com_images/icon_02.png"
+        },
+        {
           txt: "住院安排",
           tit: "协助安排当地的住院服务",
           num: "",
-          id: 1,
+          id: 2,
           icon: "./static/images/com_images/icon_03.png"
         },
         {
           txt: "医疗转运/送返",
           tit: "安排当地门诊及治疗",
           num: "",
-          id: 2,
+          id: 3,
           icon: "./static/images/com_images/icon_04.png"
         },
         {
           txt: "星使服务",
           tit: "可安排当地向导陪同服务",
           num: "",
-          id: 3,
+          id: 4,
           icon: "./static/images/com_images/icon_05.png"
-        },
-        {
-          txt: "道路救援",
-          tit: "可安排他国医疗一定 额度的费用垫付",
-          num: "",
-          id: 3,
-          icon: "./static/images/com_images/icon_09.png"
         }
       ]
     };
@@ -97,12 +88,12 @@ export default {
       window.localStorage.setItem(
         "case",
         JSON.stringify({
-          case: "RegAwait"
+          case: "Await"
         })
       );
       if (this.case_list[ind].num > 0) {
         this.$router.push({
-          name: "RegAwait",
+          name: "Await",
           params: {
             token: token,
             insti: insti,
@@ -111,7 +102,7 @@ export default {
         });
       } else {
         this.$router.push({
-          name: "RegAwait",
+          name: "Await",
           params: {
             token: token,
             insti: insti,
@@ -124,7 +115,7 @@ export default {
       let token = this.token;
       let insti = this.insti;
       this.$router.push({
-        name: "RegAwait",
+        name: "Await",
         params: {
           token: token,
           insti: insti
@@ -199,24 +190,6 @@ export default {
   font-size: 22px;
   color: #666;
 }
-.num_box {
-  float: left;
-  margin-left: 190px;
-  font-size: 16px;
-  color: #666;
-}
-.num_box b {
-  color: #ff7200;
-  font-weight: normal;
-  font-size: 22px;
-}
-.num_box span {
-  background: #ff7200;
-  color: #fff;
-  border: 1px solid #ff7200;
-  border-radius: 15px;
-  padding: 3px 15px;
-}
 .view_box b:first-child {
   font-weight: 500;
   color: #000;
@@ -239,8 +212,6 @@ export default {
 }
 .bottom_box {
   width: 100%;
-  padding-top: 18px;
-  background: #fff;
 }
 .bottom_ul {
   width: 76%;
@@ -249,7 +220,7 @@ export default {
   margin-right: 12%;
 }
 .bottom_ul li {
-  width: 18%;
+  width: 20%;
   float: left;
 }
 .bottom_ul li h3 {

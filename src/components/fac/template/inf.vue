@@ -37,7 +37,7 @@
                         <el-input v-model="rescueFee" @input="upnum(rescueFee)"></el-input>
                         <span>*</span>
                     </el-form-item>
-                    </el-form>
+                </el-form>
                 <div class="rescue_box">
                     <p v-if="data[0].dict&&data[0].dict.parentId===0">1、{{data[0].dict.name}}</p>
                     <el-checkbox-group v-model="checkList">
@@ -143,18 +143,20 @@ export default {
         if (!this.rescueFee) {
           this.rescueFee = 0;
         }
-        this.totalFee =
-          this.medicFee * 1 + this.caseFee * 1 + this.rescueFee * 1;
+        this.medicFee = this.medicFee * 1;
+        this.caseFee = this.caseFee * 1;
+        this.rescueFee = this.rescueFee * 1;
+        this.totalFee = this.medicFee + this.caseFee + this.rescueFee;
       }
     },
     up() {
       // if (this.acc_list.length > 3) {
       //    Message.error("最多只能上传三个附件哦");
       // } else {
-        this.acc_list.unshift({
-          url: this.url,
-          txt: this.txts
-        });
+      this.acc_list.unshift({
+        url: this.url,
+        txt: this.txts
+      });
       // }
     },
     cancel() {
@@ -235,51 +237,55 @@ export default {
       if (!this.caseFee || !this.medicFee || !this.totalFee) {
         Message.error("请完整填写必填项");
       } else {
-        this.axios
-          .post(
-            "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
-            qs.stringify({
-              token:
-                this.$route.params.token ||
-                JSON.parse(window.localStorage.getItem("data")).data,
-              caseId: this.$route.params.caseId,
-              totalFee: this.totalFee,
-              medicFee: this.medicFee,
-              caseFee: this.caseFee,
-              rescueFee: this.rescueFee,
-              services: JSON.stringify(services)
-            })
-          )
-          .then(data => {
-            console.log(data.data);
-            tUploadCnts.push({
-              objType: 2,
-              url: this.url,
-              objId: data.data.obj
-            });
-            console.log(tUploadCnts);
-            this.axios
-              .post(
-                "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
-                qs.stringify({
-                  token:
-                    this.$route.params.token ||
-                    JSON.parse(window.localStorage.getItem("data")).data,
-                  tUploadCnts: JSON.stringify(tUploadCnts)
-                })
-              )
-              .then(obj => {
-                console.log(obj);
+        if (this.totalFee == this.rescueFee + this.caseFee + this.medicFee) {
+          this.axios
+            .post(
+              "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
+              qs.stringify({
+                token:
+                  this.$route.params.token ||
+                  JSON.parse(window.localStorage.getItem("data")).data,
+                caseId: this.$route.params.caseId,
+                totalFee: this.totalFee,
+                medicFee: this.medicFee,
+                caseFee: this.caseFee,
+                rescueFee: this.rescueFee,
+                services: JSON.stringify(services)
+              })
+            )
+            .then(data => {
+              console.log(data.data);
+              tUploadCnts.push({
+                objType: 2,
+                url: this.url,
+                objId: data.data.obj
               });
-            that.$router.push({
-              path: "/fac/caseindex/offer",
-              name: "Offer",
-              params: {
-                token: this.$route.params.token,
-                caseId: this.$route.params.obj.caseId
-              }
+              console.log(tUploadCnts);
+              this.axios
+                .post(
+                  "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
+                  qs.stringify({
+                    token:
+                      this.$route.params.token ||
+                      JSON.parse(window.localStorage.getItem("data")).data,
+                    tUploadCnts: JSON.stringify(tUploadCnts)
+                  })
+                )
+                .then(obj => {
+                  console.log(obj);
+                });
+              that.$router.push({
+                path: "/fac/caseindex/offer",
+                name: "Offer",
+                params: {
+                  token: this.$route.params.token,
+                  caseId: this.$route.params.obj.caseId
+                }
+              });
             });
-          });
+        } else {
+          Message.error("请确认输入的数值，总价必须是其他三项之和");
+        }
       }
     }
   },
