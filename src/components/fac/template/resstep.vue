@@ -36,12 +36,14 @@
                 </div>
                 <div class="img_box" v-if="v.obj.state==1">
                   <div class="node_box">
-                    <p v-for="(val,i) in v.solutionSvrPointList" :key="i" v-if="i<5">
-                      节点{{i+1}}：{{val.description}}
+                    <p v-for="(val,i) in v.solutionSvrPointList" :key="i" v-if="i<5" class="node_p">
+                      节点{{i+1}}： <span class="node_span">{{val.description}}</span>
                     </p>
                   </div>
-                  <p>操作说明:{{v.obj.description}}</p>
-                  <img :src="v.url" v-for="(v,i) in imglist[ind-1].list" :key="i"  v-if="v.url">
+                  <div class="des_node">
+                    <p>操作说明:{{v.obj.description}}</p>
+                    <img :src="v.url" v-for="(v,i) in imglist[ind-1].list" :key="i"  v-if="v.url">
+                  </div>
                 </div>
               </div>
             </div>
@@ -205,7 +207,7 @@ export default {
           .then(res => {
             console.log(res);
           });
-      }else{
+      } else {
         Message.error("请不要输入过多节点，默认显示五条");
       }
     },
@@ -443,6 +445,26 @@ label {
   margin-bottom: 10px;
   margin-left: 2px;
 }
+.node_p {
+  height: 28px;
+  line-height: 28px;
+  margin: 8px 0;
+}
+.node_span {
+  display: inline-block;
+  width: 600px;
+  height: 28px;
+  line-height: 28px;
+  border: 1px solid #d9ddde;
+  padding-left: 10px;
+  border-radius: 3px;
+}
+.des_node {
+  border: 1px solid #d9ddde;
+  padding-left: 10px;
+  border-radius: 3px;
+  width: 660px;
+}
 label input {
   width: 130px;
   margin-left: 5px;
@@ -538,22 +560,26 @@ p {
   visibility: visible;
   top: 1580px;
 }
-/* ._box .a_box:nth-child(6) {
+._box .a_box:nth-child(6) {
   visibility: visible;
-  top: 510px;
+  top: 1900px;
 }
 ._box .a_box:nth-child(7) {
   visibility: visible;
-  top: 690px;
+  top: 2220px;
 }
 ._box .a_box:nth-child(8) {
   visibility: visible;
-  top: 870px;
+  top: 2540px;
 }
 ._box .a_box:nth-child(9) {
   visibility: visible;
-  top: 1050px;
-} */
+  top: 2860px;
+}
+._box .a_box:nth-child(9) {
+  visibility: visible;
+  top: 3180px;
+}
 .f_box {
   position: absolute;
   width: 300px;

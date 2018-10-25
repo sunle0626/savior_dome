@@ -10,7 +10,7 @@
             </div>
             <div class="view_box">
                 <span>进行中案件:<b>{{casename}}</b><b>({{casenum}})</b></span>
-                <small @click="lookinf">立即查看</small>
+                <small class="pointer_box" @click="lookinf">立即查看</small>
             </div>
         </div>
         <purchase/>
@@ -25,10 +25,10 @@
                         {{v.tit}}
                     </p>
 
-                    <b v-if="v.num" @click="tocase(ind)">
+                    <b class="pointer_box" v-if="v.num" @click="tocase(ind)">
                         案件管理({{v.num}})
                     </b>
-                    <b v-else @click="tocase(ind)">
+                    <b class="pointer_box" v-else @click="tocase(ind)">
                         案件管理
                     </b>
                 </li>

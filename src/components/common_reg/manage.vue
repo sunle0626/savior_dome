@@ -14,7 +14,7 @@
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
                     <span class="op">当前操作方：监管机构</span>
-                    <b @click="lookinf()">查看并处理</b>
+                    <b class="pointer_box" @click="lookinf()">查看并处理</b>
                 </li>
             </ul>
         </div>

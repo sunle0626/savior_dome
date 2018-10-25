@@ -213,7 +213,7 @@ export default {
                   })
                 )
                 .then(obj => {
-                  console.log(obj);
+                  that.back();
                 });
             });
         } else {

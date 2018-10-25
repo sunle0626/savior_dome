@@ -171,7 +171,6 @@ export default {
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
           .then(function(res) {
-            console.log("请求了await");
             return res.json();
           })
           .then(function(data) {

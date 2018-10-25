@@ -95,7 +95,7 @@
             </el-table-column>
             <el-table-column
                 prop="get_time"
-                label="回复时间"
+                label="到达时间"
                 width="90">
             </el-table-column>
             <el-table-column

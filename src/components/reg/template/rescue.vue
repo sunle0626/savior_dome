@@ -234,8 +234,8 @@ export default {
                   });
                   this.caseid = v.obj.id;
                   console.log(v.obj);
-                  that.obj.push(v.obj);
-                  that.victimList.push(v.victimList[0]);
+                  // that.obj.push(v.obj);
+                  // that.victimList.push(v.victimList[0]);
               });
             }
           });
@@ -287,8 +287,9 @@ export default {
                     isshow: isshow
                   });
                   that.caseid = v.obj.id;
-                  that.obj.push(v.obj);
-                  that.victimList.push(v.victimList[0]);
+                  // console.log(that.obj)
+                  // that.obj.push(v.obj);
+                  // that.victimList.push(v.victimList[0]);
               });
             }
           });

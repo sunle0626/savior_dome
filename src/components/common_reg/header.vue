@@ -18,8 +18,8 @@
                 名称：{{insti.name||username}}
             </div>
         </div>
-        <div class="header_set">
-            <div class="language_box" >
+        <div class="header_set pointer_box">
+            <div class="language_box pointer_box" >
                <span @click="languge()">中文</span> 
                 <i class="bottom-arrow"></i>
                 <div class="la_box">
@@ -27,10 +27,10 @@
                   <p @click="lok()">English</p>
                 </div>
             </div>
-            <div class="set_box">
+            <div class="set_box pointer_box">
                 个人设置
             </div>
-            <div class="logout_box" @click="logout">
+            <div class="logout_box pointer_box" @click="logout">
                 注销
             </div>
         </div>

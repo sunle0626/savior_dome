@@ -12,7 +12,8 @@
                     <p>附件<span>*请上传救援方案附件</span></p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
-                            <img :src="v.url" alt="">
+                            <img v-if="v.flag" :src="v.url" alt="">
+                            <img v-else :src="v.icon" alt="">
                             <p>{{v.txt}}</p>
                             <a @click="imgVisible=true" v-if="ind==0">上传附件</a>
                             <!-- <input type="file" name="file" id="filebox" @change="handleGetFile($event)"> -->
@@ -78,14 +79,14 @@
               class="img_dialog"
               width="50%"
               center>
-              <p><span>图片名称</span><el-input
+              <p><span>附件名称</span><el-input
                   type="text"
                   placeholder="上传方案及报价"
                   v-model="txts"
                   ></el-input></p>
                   <p>
                     <span>
-                      图片地址
+                      附件地址
                     </span>
                     <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
                   </p>
@@ -150,14 +151,31 @@ export default {
       }
     },
     up() {
-      // if (this.acc_list.length > 3) {
-      //    Message.error("最多只能上传三个附件哦");
-      // } else {
-      this.acc_list.unshift({
-        url: this.url,
-        txt: this.txts
-      });
-      // }
+      let flag =
+        this.url.endsWith("png") ||
+        this.url.endsWith("jpg") ||
+        this.url.endsWith("jpeg") ||
+        this.url.endsWith("gif");
+      console.log(
+        this.url.endsWith("png") ||
+          this.url.endsWith("jpg") ||
+          this.url.endsWith("jpeg") ||
+          this.url.endsWith("gif")
+      );
+      if (flag) {
+        this.acc_list.push({
+          flag:true,
+          url: this.url,
+          txt: this.txts
+        });
+      } else {
+        this.acc_list.push({
+          flag:false,
+          url: this.url,
+          txt: this.txts,
+          icon: "../../../../static/images/eles_icon.png"
+        });
+      }
     },
     cancel() {
       this.$router.push({
@@ -351,9 +369,12 @@ span {
   color: #df1717;
   margin-left: 2px;
 }
+.acc_box ul {
+  display: flex;
+  justify-content: space-around;
+}
 .acc_box ul li {
-  display: inline-block;
-  width: 20%;
+  width: 23%;
   text-align: center;
 }
 .acc_box ul li p {

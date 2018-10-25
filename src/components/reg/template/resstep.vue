@@ -5,7 +5,7 @@
         返回上一页
         </p>
         <h2>开始救援</h2>
-        <div class="step_box" v-if="!loading">
+        <div class="step_box">
             <p>流程示意</p>
             <el-steps :active="2" align-center>
                 <el-step title="启动当地救援公司" ></el-step>
@@ -13,126 +13,87 @@
                 <el-step title="收集医疗单据" ></el-step>
                 <el-step title="传递相关医疗单据到保险公司" ></el-step>
             </el-steps>
-            <p>救援服务清单</p>
+            <p>服务清单</p>
             <div class="det_box">
-              <p v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===0">
-                  {{v.dict.name}}
-              </p>
-              <el-steps direction="vertical" :active="stid" class="box" :space="180">
-                  <el-step v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
-                  </el-step>
-              </el-steps>
+              <ul>
+                  <li v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
+                    <img v-if="v.obj.state===1" src="../../../../static/images/savior_list_y.png" alt="">
+                    <img v-else src="../../../../static/images/savior_list_n.png" alt="">
+                    {{v.dict.name}}
+                  </li>
+              </ul>
+
             </div>
-            <div class="_box">
-              <div class="a_box" v-for="(v,ind) in stepdata" :key="ind" v-if="v.dict.parentId===1">
-                <div class="f_box f_box_1" ref="fb" v-if="!v.obj.state">
-                  <span @click="st(ind)">开始操作</span>
-                  <span @click="el(ind)">其他</span>
-                </div>
-                <div class="img_box" v-if="v.obj.state==1">
-                  <p>操作说明:{{v.obj.description}}</p>
-                  <img :src="v.url" v-for="(v,i) in imglist[ind-1].list" :key="i"  v-if="v.url">
-                </div>
-              </div>
+                    <el-table
+            :data="tableData"
+            border
+            style="width: 100%">
+            <el-table-column
+            prop="date"
+            label="时间"
+            width="180"
+            align="center">
+            </el-table-column>
+            <el-table-column
+            prop="node"
+            label="操作节点"
+            width="180"
+            align="center">
+            </el-table-column>
+            <el-table-column
+            prop="det"
+            label="操作细节"
+            align="center">
+            </el-table-column>
+            <el-table-column
+            prop="field"
+            label="操作方"
+            align="center">
+            </el-table-column>
+            <el-table-column
+            prop="cost"
+            label="费用"
+            align="center">
+            </el-table-column>
+            <el-table-column
+            prop="corr"
+            label="相关单据及图片"
+            align="center">
+             <template slot-scope="scope">
+               <el-button type="text" @click="centerDialogVisible = true">
+               <div v-for="(item,ind) in scope.row.corr" :key="ind" >
+                  <img :src="item.url" width="40" height="40" class="head_pic"/>
+                  <p>{{item.txt}}</p>
+               </div>
+               </el-button>
+             </template>
+            </el-table-column>
+        </el-table>
+            <div class="offer_box">
+              <p>
+                <small>A、报价</small>
+                <span>
+                  整体报价<b>${{feedata.totalFee||0}}</b>
+                </span>
+                <span>
+                  救援费用：<b>${{feedata.rescueFee||0}}</b>
+                </span>
+                <span>
+                  医疗费用：<b>${{feedata.medicFee||0}}</b>
+                </span>
+                <span>
+                  案件服务费用：<b>${{feedata.caseFee||0}}</b>
+                </span>
+                </p>
             </div>
-            <p class="p acc" v-if="btn_flag"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
         </div>
-      <el-dialog
-        title="案件操作"
-        :visible.sync="centerDialogVisible"
-        width="50%"
-        center>
-        <div class="c_box">
-          <p>添加操作说明</p>
-           <el-input
-            rows="3"
-            type="textarea"
-            placeholder="操作进展"
-            v-model="txt"
-            @input="txtdata"
-            ></el-input>
-        </div>
-        <div class="i_box">
-          <p>相关单据上传</p>
-          <ul>
-            <li v-for="(img,i) in urllist" :key="i">
-              <img class="imgbox"  :src="img.url" alt="">
-              <p>{{img.txt}}</p>
-            </li>
-            <li>
-              <div class="up_box">
-                <span for="upimg" class="upspan" @click="upimg()">+</span>   
-              </div>
-              <P>添加</P>
-            </li>
-          </ul>
-        </div>
-         <p class="p"><el-button center type="button" size="small" @click="ok()">完成该操作</el-button></p>
-      </el-dialog>
-      <el-dialog
-        title="案件操作"
-        :visible.sync="imgVisible"
-        width="50%"
-        center>
-        <p><span>图片名称</span><el-input
-            type="text"
-            placeholder="医疗单据"
-            v-model="txts"
-            @input="txtsdata"
-            ></el-input></p>
-            <p>
-              <span>
-                图片地址
-              </span>
-              <input type="file" name="file" id="filebox" @change="fliedata($event)">
-            </p>
-            <p class="p"><el-button center type="button" size="small" @click="up()">确定</el-button></p>
-      </el-dialog>
-      <el-dialog class="acc_box"
-        title="完成救援案件"
-        :visible.sync="isacc"
-        width="50%"
-        center>
-        <p>A、报价   
-        <span class="span">整体报价 <small v-if="flag">${{feedata.totalFee}}</small></span>
-        <span class="span">医疗垫付 <small v-if="flag">${{feedata.medicFee}}</small></span>
-        <span class="span">案件费用 <small v-if="flag">${{feedata.caseFee}}</small></span>
-        <span class="span">救援费用 <small v-if="flag">${{feedata.rescueFee}}</small></span>
-        </p>
-        <div class="p_box">
-          <p>B、实际费用</p>
-          <label for="zt">整体报价:<input type="text" name="zt" id="zt" v-model="zttxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="yl">医疗垫付:<input type="text" name="yl" id="yl" v-model="yltxt" placeholder='请输入金额($)'></label>
-          <label for="aj">案件费用:<input type="text" name="aj" id="aj" v-model="ajtxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="jy">救援费用:<input type="text" name="jy" id="jy" v-model="jytxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="qt">其他费用:<input type="text" name="qt" id="qt" v-model="qttxt" placeholder='请输入金额($)'></label>
-          <el-input
-            rows="3"
-            type="textarea"
-            placeholder="其他费用说明"
-            v-model="qt"
-            @input="setqt"
-            ></el-input>
-            <p class="p"><el-button center type="button" size="small" @click="accup()">确认提交</el-button></p>
-        </div>
-      </el-dialog>
-      <el-dialog
-        title="案件操作"
-        :visible.sync="elseDialog"
-        width="30%"
-        center>
-        <p class="node" v-for="(v,ind) in nodelist" :key="ind">
-          <span>添加节点</span>
-          <input type="text" placeholder="请添加节点" v-model="v.description">
-          <small v-if="ind==nodelist.length-1" @click="add($event,ind)">添加+</small>
-        </p>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="elseDialog = false,upnode()">完成该操作</el-button>
-        </span>
-      </el-dialog>
-      <div class="loading" v-if="loading">
-        <img src="../../../../static/images/loading.gif" alt="">
-      </div>
+        
+        <el-dialog
+          title="更多"
+          :visible.sync="centerDialogVisible"
+          width="50%"
+          center>
+        </el-dialog>
     </div>
 </template>
 
@@ -141,220 +102,23 @@ import qs from "qs";
 export default {
   data() {
     return {
-      zttxt: "",
-      yltxt: "",
-      ajtxt: "",
-      jytxt: "",
-      qttxt: "",
-      qt: "",
-      nodelist: [{ description: "" }],
-      loading: true,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
       caseId: this.$route.params.caseId,
       stepdata: [],
-      urllist: [],
-      txt: "",
-      txts: "",
-      file: "",
-      fileurl: "",
       centerDialogVisible: false,
-      imgVisible: false,
-      elseDialog: false,
-      id: 0,
-      stid: 0,
-      num: 0,
-      isacc: false,
-      feedata: null,
-      flag: false,
-      imglist: [],
-      btn_flag: false,
-      serviceId: 0
+      feedata: {
+        totalFee:10000,
+        rescueFee:10000,
+        medicFee:10000,
+        caseFee:10000
+      },
+      tableData: [],
+      imageUrl: "",
     };
   },
   methods: {
-    upnode() {
-      let arr = new Array();
-      this.nodelist.map(v => {
-        if (v.description) {
-          arr.push(v);
-        }
-      });
-      console.log(arr);
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/create_svr_point",
-          qs.stringify({
-            token: this.token,
-            solutionSvrPoints: JSON.stringify(arr)
-          })
-        )
-        .then(res => {
-          console.log(res);
-        });
-    },
-    add(e, i) {
-      let parent = e.target.parentNode;
-      this.nodelist[i].solutionSvrId = this.serviceId;
-      this.nodelist.push({
-        description: "",
-        solutionSvrId: this.serviceId
-      });
-      console.log(this.serviceId);
-      console.log(this.nodelist);
-    },
-    el(i) {
-      this.serviceId = this.stepdata[i].obj.id;
-      this.elseDialog = true;
-    },
-    accup() {
-      let that = this;
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/finish",
-          qs.stringify({
-            token: this.token,
-            Id: this.caseId,
-            totalFee: this.zttxt,
-            rescueFee: this.jytxt,
-            medicFee: this.yltxt,
-            caseFee: this.ajtxt,
-            otherFee: this.qttxt,
-            otherFeedesc: this.qt
-          })
-        )
-        .then(res => {
-          if (res.data.code === 0) {
-            this.isacc = false;
-            this.$router.push({
-              name: "RegRescue",
-              params: {
-                token: this.$route.token,
-                caseId: this.$route.params.caseId
-              }
-            });
-          }
-        });
-    },
-    setqt() {},
-    getdata() {},
-    acc() {
-      this.isacc = true;
-    },
-    ok() {
-      let odom = document.querySelectorAll(".a_box")[this.num - 1];
-      let dom = document.querySelectorAll(".a_box")[this.num];
-      odom.style.visibility = "visible";
-      dom.style.visibility = "visible";
-      dom.style.top = odom.offsetTop + 180 + "px";
-      let that = this;
-      let tUploadCnts = [];
-      let obj = {};
-      this.urllist.map(v => {
-        tUploadCnts.push({
-          objType: 3,
-          url: v.url,
-          objId: this.id
-        });
-      });
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/create_upload_cnt",
-          qs.stringify({
-            token: this.token,
-            tUploadCnts: JSON.stringify(tUploadCnts)
-          })
-        )
-        .then(obj => {
-          console.log(obj);
-        });
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/case/conclude_phase",
-          qs.stringify(...obj, {
-            ...this.stepdata[this.num].obj,
-            ...{ description: this.txt, token: this.token }
-          })
-        )
-        .then(obj => {
-          console.log(obj);
-          this.centerDialogVisible = false;
-          this.axios
-            .post(
-              "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
-              qs.stringify({
-                token: that.token,
-                caseId: that.caseId
-              })
-            )
-            .then(res => {
-              console.log(res);
-            });
-        });
-    },
-    up() {
-      this.imglist[this.num - 1].list.push(this.fileurl);
-      this.urllist.push({
-        url: this.fileurl,
-        txt: this.txts
-      });
-      this.imgVisible = false;
-      this.centerDialogVisible = true;
-      console.log(this.urllist);
-    },
-    txtdata() {},
-    txtsdata() {},
-    fliedata(e) {
-      let that = this;
-      this.file = e.target.files[0];
-      var reader = new FileReader();
-      reader.readAsDataURL(this.file);
-      let formdata = new FormData();
-      let config = {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      };
-      formdata.append("token", this.token);
-      reader.onload = function(e) {
-        formdata.append("file", that.file);
-        that.axios
-          .post(
-            "http://api.test.dajiuxing.com.cn/rescue/case/upload_file",
-            formdata,
-            config
-          )
-          .then(res => {
-            that.fileurl = res.data.obj;
-          });
-      };
-    },
-    upimg() {
-      this.imgVisible = true;
-      this.centerDialogVisible = false;
-    },
-    hendnode(e) {
-      console.log(e.target);
-    },
-    handleGetFile(e) {
-      let that = this;
-      this.file = e.target.files[0];
-      var reader = new FileReader();
-      reader.readAsDataURL(this.file);
-      reader.onload = function(e) {
-        that.urllist.push(this.result);
-      };
-    },
-    dialogImageUrl() {},
-    dialogVisible() {},
-    st(i) {
-      this.num = i;
-      this.txt = this.stepdata[i].obj.description;
-      this.id = this.stepdata[i].obj.id;
-      this.centerDialogVisible = true;
-      console.log(this.stepdata[i].obj.id);
-    },
     back() {
       this.$router.push({
         name: "RegRescue",
@@ -365,6 +129,19 @@ export default {
           caseid: this.$route.params.caseid
         }
       });
+    },
+    time(str) {
+      var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "年";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "月";
+      var D = date.getDate() + "日";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
     }
   },
   mounted() {
@@ -382,29 +159,69 @@ export default {
         that.feedata = res.data.obj;
         that.stepdata = res.data.obj2;
         that.loading = false;
-        // that.stepdata.map((v, i) => {
-        //   if (v.obj.state) {
-        //     that.stid = i;
-        //   }
-        //   if (i != 0) {
-        //     that.imglist.push({
-        //       list: v.uploadCntList
-        //     });
-        //     if (v.uploadCntList.length > 0) {
-        //       this.num = i;
-        //     }
-        //   }
-        // });
-        // if (this.num == this.imglist.length) {
-        //   this.btn_flag = true;
-        // }
-        // that.loading = false;
+      });
+    this.axios
+      .post(
+        "http://api.test.dajiuxing.com.cn/rescue/case/case_progress",
+        qs.stringify({
+          token: this.$route.params.token,
+          caseId: this.$route.params.caseId
+        })
+      )
+      .then(data => {
+        data.data.obj.map((v, i) => {
+          console.log(v.obj.operatorType);
+          let type = "";
+          if (v.obj.operatorType === 0) {
+            type = "供应商";
+          } else if (v.obj.operatorType === 1) {
+            type = "指挥中心";
+          } else if (v.obj.operatorType === 2) {
+            type = "监管机构";
+          }
+          that.tableData.push({
+            date: that.time(v.obj.updateAt),
+            node: v.obj.opStateText,
+            det: "",
+            field: type + "",
+            cost: "",
+            corr: [
+              {
+                url: null,
+                txt: ""
+              }
+            ]
+          });
+        });
       });
   }
 };
 </script>
 
 <style scoped>
+.offer_box {
+  line-height: 50px;
+}
+.offer_box p {
+  line-height: 50px;
+  border: 1px solid #eee;
+  border-top: 0;
+  padding-left: 10px;
+}
+.offer_box p small {
+  display: inline-block;
+  width: 140px;
+  font-size: 16px;
+}
+.offer_box span {
+  margin-left: 35px;
+  color: #333;
+  font-size: 16px;
+}
+.offer_box span b {
+  color: #ff7200;
+  margin-left: 3px;
+}
 span {
   font-size: 14px;
 }
@@ -479,6 +296,14 @@ p {
 .det_box {
   box-sizing: border-box;
   padding: 10px 15px;
+}
+.det_box ul {
+  width: 100%;
+}
+.det_box ul li {
+  width: 20%;
+  line-height: 30px;
+  margin-left: 2%;
 }
 .back_box {
   text-align: left;

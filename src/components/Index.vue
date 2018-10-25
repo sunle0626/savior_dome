@@ -319,23 +319,23 @@ export default {
                   "insti",
                   JSON.stringify(data.obj.user.insti)
                 );
-                // that.$router.push({
-                //   name: "FacIndex",
-                //   params: {
-                //     token: data.obj.token,
-                //     insti: data.obj.user.insti
-                //   }
-                // });
-
-                //检验成功直接跳至指挥中心
-
                 that.$router.push({
-                  name: "Com",
+                  name: "FacIndex",
                   params: {
                     token: data.obj.token,
                     insti: data.obj.user.insti
                   }
                 });
+
+                //检验成功直接跳至指挥中心
+
+                // that.$router.push({
+                //   name: "Com",
+                //   params: {
+                //     token: data.obj.token,
+                //     insti: data.obj.user.insti
+                //   }
+                // });
               } else if (data.obj.user.type === 2) {
                 window.localStorage.setItem(
                   "data",

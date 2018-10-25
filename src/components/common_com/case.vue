@@ -20,10 +20,10 @@
                         {{v.tit}}
                     </p>
 
-                    <b v-if="v.num" @click="tocase(ind)">
+                    <b class="pointer_box" v-if="v.num" @click="tocase(ind)">
                         案件管理({{v.num}})
                     </b>
-                    <b v-else @click="tocase(ind)">
+                    <b class="pointer_box" v-else @click="tocase(ind)">
                         案件管理
                     </b>
                 </li>

@@ -19,26 +19,44 @@
                     </ul>
                 </div>
             </div>
-                <div class="rescue_box"  v-for="(item,ind) in checkList" :key="ind">
-                    <p>{{item.name}}</p>
-                    <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
-                        <el-checkbox checked="checked" disabled>
-                            <span class="res_div">{{v.dict.name}}</span>
-                            <br/>
-                            <span class="res_box">说明：{{v.obj.description}}</span>
-                            <br/>
-                            <span class="res_box">回复：{{v.obj.reply}}</span>
-                            <!--br/>
-                            <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span -->
-                        </el-checkbox>
-                        
-                    </el-checkbox-group>
-                </div>
-                        <div class="upbtn_box">
-                        <el-button type="primary" @click="flag=true;apply()">授权通过，启动救援</el-button>
-                        <!-- span @click="toalter">修改报价</span -->
-                        </div>
-                
+            <div class="offer_box">
+              <p>
+                <span>
+                  保险公司收到的价格：<b>${{obj.totalFee||0}}</b>
+                </span>
+                <span>
+                  救援费用：<b>${{obj.rescueFee||0}}</b>
+                </span>
+                <span>
+                  医疗费用：<b>${{obj.medicFee||0}}</b>
+                </span>
+                <span>
+                  案件服务费用：<b>${{obj.caseFee||0}}</b>
+                </span>
+                </p>
+            </div>
+            <div class="rescue_box"  v-for="(item,ind) in checkList" :key="ind">
+                <p>{{ind+1}} 、{{item.name}}</p>
+                <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
+                    <el-checkbox checked="checked" disabled>
+                        <span class="res_div">{{v.dict.name}}</span>
+                        <br/>
+                        <span class="res_box">说明：{{v.obj.description}}</span>
+                        <br/>
+                        <span class="res_box">回复：{{v.obj.reply}}</span>
+                        <!--br/>
+                        <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span -->
+                    </el-checkbox>
+                </el-checkbox-group>
+            </div>
+            <div class="ex_box">
+            <textarea name="exp" id="exp" cols="30" rows="10" v-model="exp" placeholder="添加说明">
+            </textarea>
+            </div>
+            <div class="upbtn_box">
+            <el-button type="primary" @click="flag=true;apply()">授权通过，启动救援</el-button>
+            <!-- span @click="toalter">修改报价</span -->
+            </div>
            </div>
     </div>
 </template>
@@ -48,6 +66,7 @@ import qs from "qs";
 export default {
   data() {
     return {
+      exp:'',
       token: this.$route.params.token,
       caseid: this.$route.params.caseid,
       acc_list: [],
@@ -57,10 +76,19 @@ export default {
       },
       checkList: [],
       parentObj: [],
-      flag: false
+      flag: false,
+      obj:{
+        totalFee:10000,
+        rescueFee:10000,
+        medicFee:10000,
+        caseFee:10000
+      }
     };
   },
   methods: {
+        back() {
+      this.$router.push("/reg/caseindex/offer");
+    },
     apply() {
       let that = this;
       this.axios
@@ -69,7 +97,8 @@ export default {
           qs.stringify({
             token: this.token,
             caseId: this.caseid,
-            status:1
+            status:1,
+            solutionRequest:this.exp
           })
         )
         .then(res => {
@@ -108,7 +137,7 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        //console.log(data.obj2);
+        that.obj = data.obj
         data.obj2.map(v => {
           if (v.dict.parentId == "0") {
             var obj = {};
@@ -151,6 +180,16 @@ export default {
 a {
   text-decoration: none;
   color: #999;
+}
+.ex_box textarea {
+  margin-left: 5%;
+  width: 90%;
+  height: 80px;
+  margin-top: 18px;
+  border: 0;
+  border: 1px solid #d9ddde;
+  border-radius: 5px;
+  font-size: 15px;
 }
 .back_box {
   text-align: left;
@@ -287,5 +326,18 @@ span {
 .upbtn_box span {
   color: #00abfa;
   margin-left: 5px;
+}
+.offer_box{
+  line-height: 44px;
+}
+.offer_box span{
+  margin-left: 35px;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+.offer_box span b{
+  color: #ff7200;
+  margin-left: 3px;
 }
 </style>
