@@ -12,7 +12,7 @@
                     <p>附件({{acc_list.length}})</p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
-                            <img src="" alt="">
+                            <img :src="v.url" alt="">
                             <p>指挥中心上传的文件</p>
                             <a :href="v.url" download="指挥中心上传的文件">下载</a>
                         </li>
@@ -104,28 +104,13 @@ export default {
           } else {
             that.checkList.map(o => {
               if (v.dict.parentId == o.childId) {
-                console.log(v.dict.parentId)
+                console.log(v.dict.parentId);
                 o.list.push(v);
               }
             });
           }
         });
         //获取救援方案
-        fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
-          method: "POST",
-          body: `token=${that.token}&objId=${data.obj.id}&objType=2`,
-          mode: "cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        })
-          .then(function(res) {
-            //console.log(res);
-            return res.json();
-          })
-          .then(function(data) {
-            data.obj.map(v => {
-              that.acc_list.push(v);
-            });
-          });
       });
   }
 };

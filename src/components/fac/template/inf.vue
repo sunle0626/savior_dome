@@ -164,17 +164,21 @@ export default {
       );
       if (flag) {
         this.acc_list.push({
-          flag:true,
+          flag: true,
           url: this.url,
           txt: this.txts
         });
       } else {
-        this.acc_list.push({
-          flag:false,
-          url: this.url,
-          txt: this.txts,
-          icon: "../../../../static/images/eles_icon.png"
-        });
+        if (this.url === "") {
+          Message.error("请上传附件");
+        } else {
+          this.acc_list.push({
+            flag: false,
+            url: this.url,
+            txt: this.txts,
+            icon: "../../../../static/images/eles_icon.png"
+          });
+        }
       }
     },
     cancel() {
@@ -256,6 +260,7 @@ export default {
         Message.error("请完整填写必填项");
       } else {
         if (this.totalFee == this.rescueFee + this.caseFee + this.medicFee) {
+          Message("提交成功");
           this.axios
             .post(
               "http://api.test.dajiuxing.com.cn/rescue/bidding/bid_bill",
@@ -371,10 +376,10 @@ span {
 }
 .acc_box ul {
   display: flex;
-  justify-content: space-around;
 }
 .acc_box ul li {
   width: 23%;
+  margin-left: 2%;
   text-align: center;
 }
 .acc_box ul li p {

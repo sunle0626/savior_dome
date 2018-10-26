@@ -165,6 +165,22 @@ export default {
     } else {
       console.log(0);
     }
+    fetch(
+      "http://api.test.dajiuxing.com.cn/rescue/service_plan/level_service",
+      {
+        method: "POST",
+        body: `token=${this.token}&parentId=0`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        that.case_list = data.obj;
+        console.log(data);
+      });
   }
 };
 </script>

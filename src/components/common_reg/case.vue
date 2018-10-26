@@ -5,7 +5,7 @@
                 尊敬的{{insti.name||username}}，欢迎登录
             </div>
             <div class="num_box">
-              当前服务剩余<b>30</b>天
+              当前服务剩余<b>{{time}}</b>天
               <span>续费</span>
             </div>
             <div class="view_box">
@@ -13,20 +13,20 @@
                 <small class="pointer_box" @click="lookinf">立即查看</small>
             </div>
         </div>
-        <purchase/>
+        <purchase :purchasedata='purchasedata'/>
         <div class="bottom_box">
             <ul class="bottom_ul">
                 <li v-for="(v,ind) in case_list" :key="ind">
                     <img :src="v.icon" alt="">
                     <h3>
-                        {{v.txt}}
+                        {{v.name}}
                     </h3>
                     <p>
-                        {{v.tit}}
+                        {{v.descrition}}
                     </p>
-
-                    <b class="pointer_box" v-if="v.num" @click="tocase(ind)">
-                        案件管理({{v.num}})
+                    <!-- {{v.id}} -->
+                    <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(ind)">
+                        案件管理({{num_list[v.id]}})
                     </b>
                     <b class="pointer_box" v-else @click="tocase(ind)">
                         案件管理
@@ -51,43 +51,10 @@ export default {
       casename: "门诊治疗",
       casenum: 0,
       name: "",
-      case_list: [
-        {
-          txt: "医疗救援",
-          tit: "包含门急诊就医、住院安排医疗转运全流程",
-          num: "",
-          id: 0,
-          icon: "./static/images/com_images/icon_01.png"
-        },
-        {
-          txt: "住院安排",
-          tit: "协助安排当地的住院服务",
-          num: "",
-          id: 1,
-          icon: "./static/images/com_images/icon_03.png"
-        },
-        {
-          txt: "医疗转运/送返",
-          tit: "安排当地门诊及治疗",
-          num: "",
-          id: 2,
-          icon: "./static/images/com_images/icon_04.png"
-        },
-        {
-          txt: "星使服务",
-          tit: "可安排当地向导陪同服务",
-          num: "",
-          id: 3,
-          icon: "./static/images/com_images/icon_05.png"
-        },
-        {
-          txt: "道路救援",
-          tit: "可安排他国医疗一定 额度的费用垫付",
-          num: "",
-          id: 3,
-          icon: "./static/images/com_images/icon_09.png"
-        }
-      ]
+      time: 0,
+      case_list: [],
+      purchasedata: [],
+      num_list: []
     };
   },
   methods: {
@@ -141,6 +108,48 @@ export default {
     // console.log(this.token);
     let that = this;
     let arr = [1, 2, 3, 4, 5];
+    fetch("http://api.test.dajiuxing.com.cn/rescue/user/get_contract", {
+      method: "POST",
+      body: `token=${this.token}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        // console.log(data);
+        let time = data.obj.tsEnd - data.obj.tsStart;
+        that.time = parseInt(time / 86400000000);
+      });
+    fetch("http://api.test.dajiuxing.com.cn/rescue/user/regulator_service", {
+      method: "POST",
+      body: `token=${this.token}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        that.purchasedata = data.obj;
+      });
+    fetch(
+      "http://api.test.dajiuxing.com.cn/rescue/service_plan/level_service",
+      {
+        method: "POST",
+        body: `token=${this.token}&parentId=0`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        that.case_list = data.obj;
+        console.log(data);
+      });
     fetch("http://api.test.dajiuxing.com.cn/rescue/case/batch_case_count", {
       method: "POST",
       body: `token=${this.token}`,
@@ -152,15 +161,8 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        console.log(data.obj);
-        arr.map(function(v) {
-          console.log(data.obj[v]);
-          if (data.obj[v]) {
-            that.case_list[v].num = data.obj[v];
-            that.casenum += data.obj[v];
-          }
-          console.log(data.obj[v]);
-        });
+        that.num_list = data.obj;
+        console.log(that.num_list);
       });
     if (this.name) {
       this.$router.push({
@@ -243,6 +245,8 @@ export default {
   background: #fff;
 }
 .bottom_ul {
+  display: flex;
+  justify-content: space-around;
   width: 76%;
   height: 270px;
   margin-left: 12%;

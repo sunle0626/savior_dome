@@ -129,7 +129,7 @@ export default {
         region: ""
       },
       checkList: [],
-      flag:false
+      flag: false
     };
   },
   methods: {
@@ -276,8 +276,8 @@ span {
 .upbtn_box {
   text-align: center;
 }
-.upbtn_box span{
-    color: #00abfa;
-    margin-left: 5px;
+.upbtn_box span {
+  color: #00abfa;
+  margin-left: 5px;
 }
 </style>

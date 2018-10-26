@@ -14,14 +14,14 @@
                 <li v-for="(v,ind) in case_list" :key="ind">
                     <img :src="v.icon" alt="">
                     <h3>
-                        {{v.txt}}
+                        {{v.name}}
                     </h3>
                     <p>
-                        {{v.tit}}
+                        {{v.descrition}}
                     </p>
 
-                    <b v-if="v.num" @click="tocase(ind)">
-                        案件管理({{v.num}})
+                    <b v-if="num_list[v.id]" @click="tocase(ind)">
+                        案件管理({{num_list[v.id]}})
                     </b>
                     <b v-else @click="tocase(ind)">
                         案件管理
@@ -42,43 +42,8 @@ export default {
       casename: "门诊治疗",
       casenum: 0,
       name: "",
-      case_list: [
-        {
-          txt: "医疗救援",
-          tit: "包含门急诊就医、住院安排医疗转运全流程",
-          num: "",
-          id: 0,
-          icon: "./static/images/com_images/icon_01.png"
-        },
-        {
-          txt: "门急诊就医",
-          tit: "客人门诊急诊就医服务",
-          num: "",
-          id: 1,
-          icon: "./static/images/com_images/icon_02.png"
-        },
-        {
-          txt: "住院安排",
-          tit: "协助安排当地的住院服务",
-          num: "",
-          id: 2,
-          icon: "./static/images/com_images/icon_03.png"
-        },
-        {
-          txt: "医疗转运/送返",
-          tit: "安排当地门诊及治疗",
-          num: "",
-          id: 3,
-          icon: "./static/images/com_images/icon_04.png"
-        },
-        {
-          txt: "星使服务",
-          tit: "可安排当地向导陪同服务",
-          num: "",
-          id: 4,
-          icon: "./static/images/com_images/icon_05.png"
-        }
-      ]
+      num_list: [],
+      case_list: []
     };
   },
   methods: {
@@ -165,6 +130,36 @@ export default {
     } else {
       console.log(0);
     }
+    fetch(
+      "http://api.test.dajiuxing.com.cn/rescue/service_plan/level_service",
+      {
+        method: "POST",
+        body: `token=${this.token}&parentId=0`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        that.case_list = data.obj;
+        console.log(data);
+      });
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/batch_case_count", {
+      method: "POST",
+      body: `token=${this.token}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        console.log(res);
+        return res.json();
+      })
+      .then(function(data) {
+        that.num_list = data.obj;
+        console.log(that.num_list);
+      });
   }
 };
 </script>

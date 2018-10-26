@@ -89,6 +89,7 @@ import qs from "qs";
 export default {
   data() {
     return {
+      solutionState: 0,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
@@ -123,31 +124,22 @@ export default {
         }
       });
       let that = this;
-      this.axios
-        .post(
-          "http://api.test.dajiuxing.com.cn/rescue/bidding/view_insti_solution",
-          qs.stringify({
+
+      if (that.solutionState === 0) {
+        that.$router.push({
+          path: "/fac/caseindex/inf",
+          name: "Inf",
+          params: {
             token: this.token,
+            obj2: this.obj,
+            victimList: this.victimList,
+            init: this.init,
+            obj: this.inf,
+            data: this.obj2,
             caseId: this.obj.id
-          })
-        )
-        .then(res => {
-          if (res.data.code === 101006) {
-            that.$router.push({
-              path: "/fac/caseindex/inf",
-              name: "Inf",
-              params: {
-                token: this.token,
-                obj2: this.obj,
-                victimList: this.victimList,
-                init: this.init,
-                obj: this.inf,
-                data: this.obj2,
-                caseId: this.obj.id
-              }
-            });
           }
         });
+      }
     },
     timestampToTime(timestamp) {
       if (timestamp) {

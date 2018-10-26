@@ -112,6 +112,7 @@
 
 <script>
 import qs from "qs";
+import { Message } from "element-ui";
 export default {
   data() {
     let that = this;
@@ -159,7 +160,7 @@ export default {
         .post(
           "http://api.test.dajiuxing.com.cn/rescue/bidding/author_rescue",
           qs.stringify({
-            token: this.token, //token值     
+            token: this.token, //token值
             caseId: this.caseId, //caseid
             stateText: this.exp //说明
           })
@@ -220,13 +221,17 @@ export default {
           url: this.url,
           txt: this.txts
         });
-      } else {
-        this.up_acc.push({
-          flag: false,
-          url: this.url,
-          txt: this.txts,
-          icon: "../../../../static/images/eles_icon.png"
-        });
+      } else if (!flag) {
+        if (this.url == "") {
+          Message.error("请上传附件");
+        } else {
+          this.up_acc.push({
+            flag: false,
+            url: this.url,
+            txt: this.txts,
+            icon: "../../../../static/images/eles_icon.png"
+          });
+        }
       }
     },
     handleGetFile(e) {
@@ -340,6 +345,7 @@ a {
 }
 .up_span {
   color: #00abfa;
+  cursor:pointer;
 }
 .data_wrap {
   width: 100%;
@@ -475,15 +481,23 @@ a {
 }
 .up_acc ul {
   display: flex;
-  justify-content: space-around;
+  /* justify-content: space-around; */
+  flex-wrap: wrap;
 }
 .up_acc ul li {
   text-align: center;
   width: 22%;
 }
+.up_acc ul li p{
+  line-height: 16px;
+  font-size: 14px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
 .up_acc ul li img {
   display: inline-block;
   width: 90px;
   height: 120px;
+  border: 1px solid #eee
 }
 </style>

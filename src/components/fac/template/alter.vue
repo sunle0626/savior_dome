@@ -15,7 +15,8 @@
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img :src="v.url" alt="">
                             <p>{{v.txt}}</p>
-                            <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+                            <a @click="imgVisible=true" v-if="ind==0">上传附件</a>
+                            <!-- <input type="file" name="file" id="filebox" @change="handleGetFile($event)"> -->
                         </li>
                     </ul>
                 </div>
@@ -71,6 +72,25 @@
                 <el-button type="primary" @click="flag = false;tooffer()">确 定</el-button>
             </span>
             </el-dialog>
+                        <el-dialog
+              title="上传方案"
+              :visible.sync="imgVisible"
+              class="img_dialog"
+              width="50%"
+              center>
+              <p><span>附件名称</span><el-input
+                  type="text"
+                  placeholder="上传方案及报价"
+                  v-model="txts"
+                  ></el-input></p>
+                  <p>
+                    <span>
+                      附件地址
+                    </span>
+                    <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+                  </p>
+                  <p class="p"><el-button center type="button" size="small" @click="up(),imgVisible=false">确定</el-button></p>
+            </el-dialog>
     </div>
 </template>
 
@@ -82,8 +102,7 @@ export default {
     return {
       acc_list: [
         {
-          url:
-            "https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=9db129d85c3d269731d30e5d65fbb24f/64380cd7912397dd9c198c165482b2b7d0a287bb.jpg",
+          url: "",
           txt: "上传方案及报价"
         }
       ],
@@ -105,10 +124,43 @@ export default {
       id: 0,
       txt: [],
       data: null,
-      url: ""
+      url: "",
+      txts: "",
+      imgVisible: false
     };
   },
   methods: {
+        up() {
+      let flag =
+        this.url.endsWith("png") ||
+        this.url.endsWith("jpg") ||
+        this.url.endsWith("jpeg") ||
+        this.url.endsWith("gif");
+      console.log(
+        this.url.endsWith("png") ||
+          this.url.endsWith("jpg") ||
+          this.url.endsWith("jpeg") ||
+          this.url.endsWith("gif")
+      );
+      if (flag) {
+        this.acc_list.push({
+          flag: true,
+          url: this.url,
+          txt: this.txts
+        });
+      } else {
+        if (this.url === "") {
+          Message.error("请上传附件");
+        } else {
+          this.acc_list.push({
+            flag: false,
+            url: this.url,
+            txt: this.txts,
+            icon: "../../../../static/images/eles_icon.png"
+          });
+        }
+      }
+    },
     upnum(val) {
       if (isNaN(val)) {
         Message.error("请输入数字，而非其他");
@@ -178,6 +230,20 @@ export default {
         Message.error("请完整填写必填项");
       } else {
         if (this.totalFee == this.rescueFee + this.caseFee + this.medicFee) {
+          console.log(
+            qs.stringify({
+              token:
+                this.$route.params.token ||
+                JSON.parse(window.localStorage.getItem("data")).data,
+              caseId: this.$route.params.caseid,
+              id: this.id,
+              totalFee: this.totalFee,
+              medicFee: this.medicFee,
+              caseFee: this.caseFee,
+              rescueFee: this.rescueFee,
+              services: JSON.stringify(services)
+            })
+          );
           this.axios
             .post(
               "http://api.test.dajiuxing.com.cn/rescue/bidding/alter_bill_assist",
@@ -214,6 +280,7 @@ export default {
                 )
                 .then(obj => {
                   that.back();
+                  Message("修改成功");
                 });
             });
         } else {
@@ -251,7 +318,6 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        console.log(data);
         that.id = data.obj.id;
         that.rescueFee = data.obj.rescueFee;
         that.medicFee = data.obj.medicFee;
@@ -275,6 +341,23 @@ export default {
             });
           }
         });
+        fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
+          method: "POST",
+          body: `token=${that.token}&objId=${data.obj.id}&objType=2`,
+          mode: "cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+          .then(function(res) {
+            //console.log(res);
+            return res.json();
+          })
+          .then(function(data) {
+            data.obj.map(v => {
+              if (v.url !== "") {
+                that.acc_list.push(v);
+              }
+            });
+          });
       });
   }
 };
@@ -336,9 +419,12 @@ span {
   color: #df1717;
   margin-left: 2px;
 }
+.acc_box ul {
+  display: flex;
+}
 .acc_box ul li {
-  display: inline-block;
-  width: 20%;
+  width: 23%;
+  margin-left: 2%;
   text-align: center;
 }
 .acc_box ul li p {
@@ -347,6 +433,9 @@ span {
   font-size: 14px;
 }
 .acc_box ul li img {
+  margin: 0 auto;
+  display: block;
+  border: #999 1px solid;
   width: 90px;
   height: 120px;
 }
@@ -419,5 +508,22 @@ span {
 .upbtn_box span {
   color: #00abfa;
   margin-left: 5px;
+}
+.img_dialog p {
+  width: 100%;
+  line-height: 48px;
+}
+.img_dialog p .el-input {
+  width: 80%;
+  margin-left: 3%;
+}
+.img_dialog p span {
+  color: #333;
+}
+.img_dialog p input[type="file"] {
+  margin-left: 3%;
+}
+.p {
+  text-align: center;
 }
 </style>
