@@ -96,10 +96,10 @@
 
 		<div class="fjdiv">
 			<div >
-			<img src="images/fj.png" alt="" class="fjimg" >
+			<img src="./images/fj.png" alt="" class="fjimg" >
 			  附件<span class="fjred"><i style="margin-right:5px;">*</i>请上传附件</span>
 			</div>
-			<img src="images/e.png" alt="" class="zh-scfj" >
+			<img src="./images/e.png" alt="" class="zh-scfj" >
 			<div style="margin-left: 25px;">
 			  上传方案及报价
 			</div>
@@ -159,11 +159,8 @@ export default {
 </script>
 
 <style scoped>
-/* @import url("./style.css"); */
+@import url("./style.css");
 /* @import url("./js/elementUI/index.css"); */
-.contentMenu {
-  text-align: start;
-}
 .el-input-group {
   width: 29%;
 }

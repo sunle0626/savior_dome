@@ -14,9 +14,10 @@ html{
     float: left;
 }
 .contentMenu{
-	width: 85%;
+	width:100%;
     background-color: #fff;
-    margin-left: 15%;
+	/* margin-left: 15%; */
+	text-align: start;
 }
 
 

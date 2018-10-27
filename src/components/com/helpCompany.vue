@@ -156,7 +156,15 @@ export default {
 </script>
 
 <style scoped>
-.contentMenu{
-    text-align: start;
-}
+@import url("./style.css");
+	   .el-input-group{
+        width: 29%;
+     }
+     .selecti{
+      text-align: right;
+      margin-right: 5px;
+     }
+     .newTab td{
+     	padding: 10px 0px 10px 40px;
+     }
 </style>

@@ -18,17 +18,31 @@
 					</el-popover>
 				</span>
 			</div>
+			        <router-link to="/com/caseindex/appcase">去创立案件</router-link>
 		</div>
-        <router-link to="/com/appcase">去创立案件</router-link>
     </div>
 </template>
 
 <script>
-    export default {
-        
-    }
+export default {};
 </script>
 
 <style scoped>
-
+.app-aj {
+  height: 130px;
+  border: 2px solid #409eff;
+  box-sizing: border-box;
+  margin: 0 180px;
+  font-size: 15px;
+}
+.app-aj div {
+  padding: 10px;
+}
+.appdc{
+	font-size: 17px;
+    font-weight: bold;
+}
+.clan span{
+	padding:0px 5px;
+}
 </style>

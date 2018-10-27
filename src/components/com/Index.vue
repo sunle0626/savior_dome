@@ -16,20 +16,24 @@ import qs from "qs";
 export default {
   data() {
     return {
-      token: this.$route.params.token,
-      insti: this.$route.params.insti
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      insti:
+        this.$route.params.insti ||
+        JSON.parse(window.localStorage.getItem("insti"))
     };
   },
   components: {
     CaseVue,
     ManageVue,
     BorardVue,
-    FunVue,
+    FunVue
   },
   mounted() {
     //   /1.0/rescue/case/all_ongoing_case
     console.log(this.token);
-    console.log(this.insti)
+    console.log(this.insti);
     // this.axios
     //   .post(
     //     "http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case",
