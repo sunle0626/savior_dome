@@ -9,19 +9,20 @@
                 <small @click="lookinf">立即查看</small>
             </div>
         </div>
+        <addcase/>
         <div class="bottom_box">
             <ul class="bottom_ul">
                 <li v-for="(v,ind) in case_list" :key="ind">
                     <img :src="v.icon" alt="">
                     <h3>
-                        {{v.txt}}
+                        {{v.name}}
                     </h3>
                     <p>
-                        {{v.tit}}
+                        {{v.descrition}}
                     </p>
 
-                    <b class="pointer_box" v-if="v.num" @click="tocase(ind)">
-                        案件管理({{v.num}})
+                    <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(ind)">
+                        案件管理({{num_list[v.id]}})
                     </b>
                     <b class="pointer_box" v-else @click="tocase(ind)">
                         案件管理
@@ -34,51 +35,20 @@
 
 <script>
 import { Message } from "element-ui";
+import addcase from "../common_com/addcase.vue";
 export default {
   props: ["insti", "token"],
+  components: {
+    addcase
+  },
   data() {
     return {
       username: "XXX",
       casename: "门诊治疗",
       casenum: 0,
       name: "",
-      case_list: [
-        {
-          txt: "医疗救援",
-          tit: "包含门急诊就医、住院安排医疗转运全流程",
-          num: "",
-          id: 0,
-          icon: "./static/images/com_images/icon_01.png"
-        },
-        {
-          txt: "门急诊就医",
-          tit: "客人门诊急诊就医服务",
-          num: "",
-          id: 1,
-          icon: "./static/images/com_images/icon_02.png"
-        },
-        {
-          txt: "住院安排",
-          tit: "协助安排当地的住院服务",
-          num: "",
-          id: 2,
-          icon: "./static/images/com_images/icon_03.png"
-        },
-        {
-          txt: "医疗转运/送返",
-          tit: "安排当地门诊及治疗",
-          num: "",
-          id: 3,
-          icon: "./static/images/com_images/icon_04.png"
-        },
-        {
-          txt: "星使服务",
-          tit: "可安排当地向导陪同服务",
-          num: "",
-          id: 4,
-          icon: "./static/images/com_images/icon_05.png"
-        }
-      ]
+      case_list: [],
+      num_list: []
     };
   },
   methods: {
@@ -91,31 +61,31 @@ export default {
           case: "Await"
         })
       );
-      if (this.case_list[ind].num > 0) {
-        this.$router.push({
-          name: "Await",
-          params: {
-            token: token,
-            insti: insti,
-            flag: true
-          }
-        });
-      } else {
-        this.$router.push({
-          name: "Await",
-          params: {
-            token: token,
-            insti: insti,
-            flag: false
-          }
-        });
-      }
+      // if (this.case_list[ind].num > 0) {
+      //   this.$router.push({
+      //     name: "Await",
+      //     params: {
+      //       token: token,
+      //       insti: insti,
+      //       flag: true
+      //     }
+      //   });
+      // } else {
+      this.$router.push({
+        name: "ComAwait",
+        params: {
+          token: token,
+          insti: insti,
+          flag: false
+        }
+      });
+      // }
     },
     lookinf() {
       let token = this.token;
       let insti = this.insti;
       this.$router.push({
-        name: "Await",
+        name: "ComAwait",
         params: {
           token: token,
           insti: insti
@@ -131,7 +101,6 @@ export default {
     this.name = data;
     // console.log(this.token);
     let that = this;
-    let arr = [1, 2, 3, 4, 5];
     fetch("http://api.test.dajiuxing.com.cn/rescue/case/batch_case_count", {
       method: "POST",
       body: `token=${this.token}`,
@@ -144,14 +113,7 @@ export default {
       })
       .then(function(data) {
         console.log(data.obj);
-        arr.map(function(v) {
-          console.log(data.obj[v]);
-          if (data.obj[v]) {
-            that.case_list[v].num = data.obj[v];
-            that.casenum += data.obj[v];
-          }
-          console.log(data.obj[v]);
-        });
+        that.num_list = data.obj;
       });
     if (this.name) {
       this.$router.push({
@@ -234,6 +196,8 @@ export default {
   height: 270px;
   margin-left: 12%;
   margin-right: 12%;
+  display: flex;
+  justify-content: space-around;
 }
 .bottom_ul li {
   width: 20%;

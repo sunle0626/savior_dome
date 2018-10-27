@@ -1,7 +1,6 @@
 <template>
     <div>
         <headerVue :insti="insti"/>
-            指挥中心
         <keep-alive>
           <router-view/>
         </keep-alive>
@@ -25,6 +24,7 @@ export default {
     headerVue,
   },
   mounted() {
+    console.log(this.$route.params)
     let insti = this.insti;
     let token = this.token;
     this.$router.push({

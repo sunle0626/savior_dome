@@ -1,9 +1,6 @@
 <template>
     <div>
         <CaseVue :insti="insti" :token="token"/>
-        <h2>
-          指挥中心
-        </h2>
         <ManageVue :insti="insti" :token="token"/>
         <BorardVue/>
         <FunVue/>
@@ -27,11 +24,12 @@ export default {
     CaseVue,
     ManageVue,
     BorardVue,
-    FunVue
+    FunVue,
   },
   mounted() {
     //   /1.0/rescue/case/all_ongoing_case
     console.log(this.token);
+    console.log(this.insti)
     // this.axios
     //   .post(
     //     "http://api.test.dajiuxing.com.cn/1.0/rescue/case/all_ongoing_case",

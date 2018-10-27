@@ -326,16 +326,6 @@ export default {
                     insti: data.obj.user.insti
                   }
                 });
-
-                //检验成功直接跳至指挥中心
-
-                // that.$router.push({
-                //   name: "Com",
-                //   params: {
-                //     token: data.obj.token,
-                //     insti: data.obj.user.insti
-                //   }
-                // });
               } else if (data.obj.user.type === 2) {
                 window.localStorage.setItem(
                   "data",
@@ -352,6 +342,25 @@ export default {
                   params: {
                     token: data.obj.token,
                     insti: data.obj.user.insti
+                  }
+                });
+              } else if (data.obj.user.type === 1) {
+                window.localStorage.setItem(
+                  "data",
+                  JSON.stringify({
+                    data: data.obj.token
+                  })
+                );
+                window.localStorage.setItem(
+                  "insti",
+                  JSON.stringify(data.obj.user)
+                );
+                console.log(data,data.obj)
+                that.$router.push({
+                  name: "Com",
+                  params: {
+                    token: data.obj.token,
+                    insti: data.obj.user
                   }
                 });
               }

@@ -33,11 +33,25 @@ import Regdr from '@/components/reg/template/dr.vue'
 
 import Com from '@/components/Com.vue'
 import ComIndex from '@/components/com/Index.vue'
+import ComCaseindex from '../components/com/Caseindex.vue'
 import Comset from '@/components/com/set.vue'
 import pact from '@/components/com/pact.vue'
 import serve from '@/components/com/serve.vue'
 import add from '@/components/com/add.vue'
 import dr from '@/components/com/dr.vue'
+import appcase from '@/components/com/appcase.vue'
+import ComAwait from '@/components/com/template/await.vue'
+import ComOffer from '../components/com/template/Offer.vue'
+import ComRescue from '../components/com/template/rescue.vue'
+import ComPar from '../components/com/template/Par.vue'
+import ComInf from '../components/com/template/inf.vue'
+import ComLookinf from '../components/com/template/Lookinf.vue'
+import ComAlter from '../components/com/template/alter.vue'
+import ComResstep from '../components/com/template/resstep.vue'
+import ComParcase from '../components/com/template/Parcase.vue'
+import ComParinf from '../components/com/template/Parinf.vue'
+import helpStart from '../components/com/helpStart.vue'
+import helpCompany from '../components/com/helpCompany.vue'
 
 Vue.use(Router)
 
@@ -132,9 +146,9 @@ export default new Router({
                     component: RegCaseindex,
                     children: [
                         {
-                            path:'dr',
-                            name:'Regdr',
-                            component:Regdr
+                            path: 'dr',
+                            name: 'Regdr',
+                            component: Regdr
                         },
                         {
                             path: 'await',
@@ -196,30 +210,102 @@ export default new Router({
             component: Com,
             children: [
                 {
-                    path: 'ComIndex',
+                    path: 'Index',
                     name: 'ComIndex',
-                    component: ComIndex,
-                },{
-                    path:'Comset',
-                    name:'Comset',
-                    component:Comset,
-                    children:[
+                    component: ComIndex
+                },
+                {
+                    path: 'caseindex',
+                    name: 'ComCaseindex',
+                    component: ComCaseindex,
+                    children: [
                         {
-                            path:'pact',
-                            name:'pact',
-                            component:pact
-                        },{
-                            path:'serve',
-                            name:'serve',
-                            component:serve
-                        },{
-                            path:'add',
-                            name:'add',
-                            component:add
-                        },{
-                            path:'dr',
-                            name:'dr',
-                            component:dr
+                            path: 'ComAwait',
+                            name: 'ComAwait',
+                            component: ComAwait
+                        }, {
+                            path: 'appcase',
+                            name: 'appcase',
+                            component: appcase
+                        },
+                        {
+                            path: 'offer',
+                            name: 'ComOffer',
+                            component: ComOffer,
+                        },
+                        {
+                            path: 'rescue',
+                            name: 'ComRescue',
+                            component: ComRescue,
+                        },
+                        {
+                            path: 'inf',
+                            name: 'ComInf',
+                            component: ComInf,
+                        },
+                        {
+                            path: 'lookinf',
+                            name: 'Comlookinf',
+                            component: ComLookinf,
+                        },
+                        {
+                            path: 'alter',
+                            name: 'Comalter',
+                            component: ComAlter
+                        },
+                        {
+                            path: 'resstep',
+                            name: 'Comresstep',
+                            component: ComResstep
+                        },
+                        {
+                            path:"helpStart",
+                            name:'helpStart',
+                            component:helpStart
+                        },
+                        {
+                            path:'helpCompany',
+                            name:'helpCompany',
+                            component:helpCompany
+                        },
+                        {
+                            path: 'par',
+                            name: 'ComPar',
+                            component: ComPar,
+                            children: [
+                                {
+                                    path: 'parcase',
+                                    name: 'Comparcase',
+                                    component: ComParcase
+                                }, {
+                                    path: 'parinf',
+                                    name: 'Comparinf',
+                                    component: ComParinf
+                                }
+                            ]
+                        }
+                    ]
+                }, {
+                    path: 'Comset',
+                    name: 'Comset',
+                    component: Comset,
+                    children: [
+                        {
+                            path: 'pact',
+                            name: 'pact',
+                            component: pact
+                        }, {
+                            path: 'serve',
+                            name: 'serve',
+                            component: serve
+                        }, {
+                            path: 'add',
+                            name: 'add',
+                            component: add
+                        }, {
+                            path: 'dr',
+                            name: 'dr',
+                            component: dr
                         }
                     ]
                 }]
