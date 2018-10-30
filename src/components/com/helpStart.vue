@@ -75,8 +75,7 @@
 		<span style="font-size: 12px; margin-left: 32px;font-weight: bold;">1、门急诊救援</span>
 		<div style="margin-left: 73px;font-size:13px;padding: 10px 0px;">
 		  <div v-for="(item,index) in serviceLst" :key="item.id">
-			<el-checkbox name="type" v-model="serviceId[index]" checked></el-checkbox> {{item.name}}
-			<span class="zh-xe" v-if="item.fee">限额：{{item.fee}}$</span>
+			<el-checkbox name="type" v-model="serviceId[index]" checked></el-checkbox> {{item.name}}    
 			<div style="margin-left:18px;">
 			  <el-input style="width:90%" type="textarea" v-model="serviceTxt[index]" placeholder="添加说明"></el-input>
 			</div>
@@ -93,10 +92,14 @@
 			<img src="./images/fj.png" alt="" class="fjimg" >
 			  附件<span class="fjred"><i style="margin-right:5px;">*</i>请上传附件</span>
 			</div>
-			<img src="./images/e.png" alt="" class="zh-scfj" >
-			<div style="margin-left: 25px;">
-			  上传方案及报价
-			</div>
+      <ul>
+          <li v-for="(v,ind) in acc_list" :key="ind">
+              <img :src="v.url" alt="">
+              <p>{{v.txt}}</p>
+              <a :href="v.dow">上传附件</a>
+               <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+          </li>
+      </ul>
 		</div>
 		
 		<div style="text-align: center;margin-top:20px;padding-bottom:20px;">
@@ -346,6 +349,12 @@ export default {
         { label: "巴哈马", value: "+001" },
         { label: "斯威士兰", value: "+268" }
       ],
+      acc_list: [
+        {
+          url: "",
+          txt: "要上传的文件"
+        }
+      ],
       assistOptions1: [],
       assistOptions2: [],
       assistOptions3: [],
@@ -370,6 +379,38 @@ export default {
     };
   },
   methods: {
+    handleGetFile(e) {
+      let that = this;
+      this.file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      let formdata = new FormData();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      formdata.append(
+        "token",
+        this.$route.params.token ||
+          JSON.parse(window.localStorage.getItem("data")).data
+      );
+      reader.onload = function(e) {
+        that.avatar = this.result;
+        formdata.append("file", that.file);
+        that.axios
+          .post(
+            "http://api.test.dajiuxing.com.cn/rescue/case/upload_file",
+            formdata,
+            config
+          )
+          .then(res => {
+            that.acc_list[0].url = res.data.obj;
+            that.url = res.data.obj;
+          });
+      };
+      // console.log(that.avatar);
+    },
     back() {
       this.$router.push({
         name: "ComAwait"
@@ -380,7 +421,7 @@ export default {
     },
     search(index) {
       let that = this;
-      console.log("search nation:"+this.value);
+      console.log("search nation:" + this.value);
       var kw = "";
       if (index) {
         if (index == 1) kw = this.kw1;
@@ -390,7 +431,7 @@ export default {
       var nation = encodeURIComponent(this.value);
       fetch("http://api.test.dajiuxing.com.cn/rescue/user/search_assist", {
         method: "POST",
-        body: `token=${this.token}&nation=`+nation+`&kw=` + kw,
+        body: `token=${this.token}&nation=` + nation + `&kw=` + kw,
         mode: "cors",
         headers: { "Content-Type": "application/x-www-form-urlencoded" }
       })
@@ -399,7 +440,7 @@ export default {
           return res.json();
         })
         .then(function(data) {
-          console.log( data.obj);
+          console.log(data.obj);
 
           if (data.obj) {
             if (index) {
@@ -541,5 +582,13 @@ export default {
 .selecti {
   text-align: right;
   margin-right: 5px;
+}
+ul li {
+  width: 23%;
+  margin-left: 2%;
+  text-align: center;
+}
+ul li img {
+ width: 100%;
 }
 </style>

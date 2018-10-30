@@ -68,7 +68,7 @@ export default {
       let that = this;
       console.log(that.token);
       this.$router.push({
-        name: "ComAwait",
+        name: "ComOffer",
         params: {
           token: that.token
         }
@@ -84,7 +84,7 @@ export default {
         time: "报案时间" + that.timestampToTime(that.obj.reportTs),
         user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
-        phone: "报案电话：" + (that.victimList.obj.contact || ""),
+        phone: "报案电话：" + (that.obj.reporterContact || ""),
         instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
         null: "-",
         card: "证件号码：" + (that.victimList.obj.idNo || ""),

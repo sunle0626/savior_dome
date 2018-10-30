@@ -20,9 +20,9 @@
                         <li class="pointer_box">
                             <p class="btn_l" @click="listlogin()">登录</p>
                             <ol class="login">
-                                <li class="login_btn btn" @click="login('fac')">救援机构入口</li>
-                                <li class="login_btn btn" @click="login('ins')">监管机构入口</li>
-                                <li class="login_btn btn" @click="login('par')">指挥中心入口</li>
+                                <li class="login_btn btn" @click="login(0)">救援机构入口</li>
+                                <li class="login_btn btn" @click="login(2)">监管机构入口</li>
+                                <li class="login_btn btn" @click="login(1 )">指挥中心入口</li>
                             </ol>
                         </li>
                     </ul>
@@ -207,9 +207,9 @@
         <footer class="footer">
             <div class="con_box">
                 <div class="nav_box">
-                    <p class="pointer_box btn" @click="login('fac')">救援机构入口</p>
-                    <p class="pointer_box btn" @click="login('ins')">监管机构入口</p>
-                    <p class="pointer_box btn" @click="login('par')">指挥中心入口</p>
+                    <p class="pointer_box btn" @click="login(0)">救援机构入口</p>
+                    <p class="pointer_box btn" @click="login(2)">监管机构入口</p>
+                    <p class="pointer_box btn" @click="login(1)">指挥中心入口</p>
                 </div>
                 <p class="txt pointer_box">机构版APP下载</p>
                 <p class="txt pointer_box">合作查询</p>
@@ -247,7 +247,7 @@
 
 <script>
 import { Message } from "element-ui";
-import PublicControlErrer from './PublicControl/Public_control_errer.vue'
+import PublicControlErrer from "./PublicControl/Public_control_errer.vue";
 export default {
   components: {
     PublicControlErrer
@@ -287,6 +287,7 @@ export default {
       }
     },
     login(v) {
+            console.log(v)
       let login_box = document.querySelector(".login_box");
       login_box.style.display = "block";
       this.usertype = v;
@@ -318,65 +319,85 @@ export default {
           })
           .then(function(data) {
             if (data.code === 0) {
-              Message({
-                message: "登录成功",
-                type: "success"
-              });
-              if (data.obj.user.type === 0) {
-                window.localStorage.setItem(
-                  "data",
-                  JSON.stringify({
-                    data: data.obj.token
-                  })
-                );
-                window.localStorage.setItem(
-                  "insti",
-                  JSON.stringify(data.obj.user.insti)
-                );
-                that.$router.push({
-                  name: "FacIndex",
-                  params: {
-                    token: data.obj.token,
-                    insti: data.obj.user.insti
-                  }
-                });
-              } else if (data.obj.user.type === 2) {
-                window.localStorage.setItem(
-                  "data",
-                  JSON.stringify({
-                    data: data.obj.token
-                  })
-                );
-                window.localStorage.setItem(
-                  "insti",
-                  JSON.stringify(data.obj.user.insti)
-                );
-                that.$router.push({
-                  name: "RegIndex",
-                  params: {
-                    token: data.obj.token,
-                    insti: data.obj.user.insti
-                  }
-                });
-              } else if (data.obj.user.type === 1) {
-                window.localStorage.setItem(
-                  "data",
-                  JSON.stringify({
-                    data: data.obj.token
-                  })
-                );
-                window.localStorage.setItem(
-                  "insti",
-                  JSON.stringify(data.obj.user)
-                );
-                console.log(data, data.obj);
-                that.$router.push({
-                  name: "ComIndex",
-                  params: {
-                    token: data.obj.token,
-                    insti: data.obj.user
-                  }
-                });
+                console.log(that.usertype)
+              if (Number(data.obj.user.type) == Number(that.usertype)) {
+                  
+                if (that.usertype == 0) {
+                  Message({
+                    message: "救援机构登录成功",
+                    type: "success"
+                  });
+                  window.localStorage.setItem(
+                    "data",
+                    JSON.stringify({
+                      data: data.obj.token
+                    })
+                  );
+                  window.localStorage.setItem(
+                    "insti",
+                    JSON.stringify(data.obj.user.insti)
+                  );
+                  that.$router.push({
+                    name: "FacIndex",
+                    params: {
+                      token: data.obj.token,
+                      insti: data.obj.user.insti
+                    }
+                  });
+                } else if (that.usertype === 2) {
+                  Message({
+                    message: "监管机构登录成功",
+                    type: "success"
+                  });
+                  window.localStorage.setItem(
+                    "data",
+                    JSON.stringify({
+                      data: data.obj.token
+                    })
+                  );
+                  window.localStorage.setItem(
+                    "insti",
+                    JSON.stringify(data.obj.user.insti)
+                  );
+                  that.$router.push({
+                    name: "RegIndex",
+                    params: {
+                      token: data.obj.token,
+                      insti: data.obj.user.insti
+                    }
+                  });
+                } else if (that.usertype === 1) {
+                  Message({
+                    message: "指挥中心登录成功",
+                    type: "success"
+                  });
+                  window.localStorage.setItem(
+                    "data",
+                    JSON.stringify({
+                      data: data.obj.token
+                    })
+                  );
+                  window.localStorage.setItem(
+                    "insti",
+                    JSON.stringify(data.obj.user)
+                  );
+                  console.log(data, data.obj);
+                  that.$router.push({
+                    name: "ComIndex",
+                    params: {
+                      token: data.obj.token,
+                      insti: data.obj.user
+                    }
+                  });
+                }
+              } else {
+                if (that.usertype == 0 && data.obj.user.type != 0) {
+                  Message.error("登录失败，该用户不属于救援机构");
+                } else if (that.usertype == 1 && data.obj.user.type != 1) {
+                  Message.error("登录失败，该用户不属于指挥中心");
+                } else if (that.usertype == 2 && data.obj.user.type != 2) {
+                  Message.error("登录失败，该用户不属于监管机构");
+                }
               }
             } else if (data.code === 200026) {
               //   alert("登录失败,用户名或密码错误");

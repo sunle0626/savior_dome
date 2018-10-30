@@ -136,7 +136,7 @@ export default {
           var objNew = {};
           console.log(v.obj);
 
-          objNew.contact = v.obj.victimList[0].obj.contact;
+          objNew.contact = v.obj.obj.reporterContact;
           objNew.name = v.obj.victimList[0].obj.name;
           if (v.obj.obj.incidentType == 1) {
             objNew.typename = "门诊就医";

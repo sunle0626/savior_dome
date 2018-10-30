@@ -52,9 +52,6 @@
           width="50%"
           center>
         </el-dialog>
-         <div class="upbtn_box">
-            <el-button type="primary" @click="close()">关闭详情</el-button>
-        </div>
     </div>
 </template>
 

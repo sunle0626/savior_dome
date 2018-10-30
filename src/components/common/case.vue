@@ -96,28 +96,28 @@ export default {
     this.name = data;
     // console.log(this.token);
     let that = this;
-    let arr = [1, 2, 3, 4, 5];
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/batch_case_count", {
-      method: "POST",
-      body: `token=${this.token}`,
-      mode: "cors",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
-      .then(function(res) {
-        console.log(res);
-        return res.json();
-      })
-      .then(function(data) {
-        console.log(data.obj);
-        arr.map(function(v) {
-          console.log(data.obj[v]);
-          if (data.obj[v]) {
-            that.case_list[v].num = data.obj[v];
-            that.casenum += data.obj[v];
-          }
-          console.log(data.obj[v]);
-        });
-      });
+    // let arr = [1, 2, 3, 4, 5];
+    // fetch("http://api.test.dajiuxing.com.cn/rescue/case/batch_case_count", {
+    //   method: "POST",
+    //   body: `token=${this.token}`,
+    //   mode: "cors",
+    //   headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    // })
+    //   .then(function(res) {
+    //     console.log(res);
+    //     return res.json();
+    //   })
+    //   .then(function(data) {
+    //     console.log(data.obj);
+    //     arr.map(function(v) {
+    //       console.log(data.obj[v]);
+    //       if (data.obj[v]) {
+    //         that.case_list[v].num = data.obj[v];
+    //         that.casenum += data.obj[v];
+    //       }
+    //       console.log(data.obj[v]);
+    //     });
+    //   });
     if (this.name) {
       this.$router.push({
         name: this.name,

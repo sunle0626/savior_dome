@@ -67,7 +67,7 @@ export default {
 }
 .fun_list .fun {
   float: left;
-  margin: 0 35px;
+  margin: 20px 35px;
 }
 .fun img,
 .fun span {

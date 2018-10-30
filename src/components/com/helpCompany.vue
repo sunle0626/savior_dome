@@ -2,48 +2,38 @@
     <div>
 	<div class="contentMenu">
 		<div class="marginl10 padding-10">
-			<img src="images/back.png" alt="" class="zh-back" >
-			<span class="back-page">返回上一页</span>
+			<img src="./images/back.png" alt="" class="zh-back" >
+			<span class="back-page" @click="back()">返回上一页</span>
 		</div>
 		<h4 class="marginl10">转交救援公司获取报价</h4>
 		<h5 class="marginl10">A、案件基本信息<span class="padding-20">案件编号：AJJ293223</span></h5>
     <div>
-		<table class="padding-bj pad-0-10 newTab" cellpadding="8" border="1">
-			<tr>
-				<td>报案时间：2018 09.09 10:00</td>
-				<td>报案客户：朱老板</td>
-				<td>性别：男</td>
-			</tr>
-			<tr>
-				<td>报案电话：＋86 123238437</td>
-				<td>出险时间：2018 09.09 10:00</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>证件号码：3425435356546</td>
-				<td>保单号码：3425435356546</td>
-				<td><span style="color:#00a8fd">保单详情</span></td>
-			</tr>
-			<tr>
-				<td>案件信息来源：一键救命</td>
-				<td>来源说明：一键救命线下创立案件</td>
-				<td></td>
-			</tr>
-		</table>
-
+    <div class="case_box">
+      <ul>
+          <li v-for="(v,ind) in inf" :key="ind">
+              <span v-if="v.flag" class="btn_box">
+                  {{v.data}}
+              </span>
+              <span v-else>
+                  {{v}}
+              </span>
+          </li>
+      </ul>
+    </div>
+    <h5 class="marginl10">B、出险信息</h5>
+    <div class="data_wrap">
+    <ul>
+        <li v-for="(v,ind) in objdata" :key="ind">
+            {{v||''}}
+        </li>
+        <li>
+            <span>事故经过：</span>
+            <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def" disabled="disabled">
+            </textarea>
+        </li>
+      </ul>
     </div>
 
-    <h5 class="marginl10">B、出险信息</h5>
-    <div class="com_2">
-      <div>出险地：中国北京市门头沟平安路江泰保险大厦</div>
-      <div>事故类型：风险灾害</div>
-      <div>是否团险：是</div>
-      <div>受伤部位：腿部</div>
-      <div>天气灾害：气象灾害</div>
-      <div>
-	  <span style="vertical-align:top">事故经过</span>
-		<el-input style="width: 88%;padding: 0px 10px;" type="textarea" value="根据该病人的情况，我们建议立即启动当地救援机构开始救援"></el-input>
-	  </div>
     </div>
     <h5 class="marginl10">C、服务清单</h5>
     <div class="rescue_box"  v-for="(item,ind) in checkList" :key="ind">
@@ -106,7 +96,7 @@
 	</div>
 
 	<el-dialog title="获取报价" :visible.sync="centerDialogVisible" width="30%" center>
-	  <span>您正在向三家救援机构获取报价，确认转发</span>
+	  <span>您正在向救援机构获取报价，确认转发</span>
 	  <span slot="footer" class="dialog-footer">
 	    <el-button @click="centerDialogVisible = false" size="medium" style="width:170px;">取 消</el-button>
 	    <el-button type="primary" @click="centerDialogVisible = false;tooffer()" size="medium" style="width:170px;">确 定</el-button>
@@ -141,13 +131,18 @@ export default {
   data() {
     return {
       imgVisible: false,
+       def: "",
       txts: "",
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
       caseid: this.$route.params.caseid,
+      obj: this.$route.params.obj[this.$route.params.index],
+      victimList: this.$route.params.victimList[this.$route.params.index],
       checkList: [],
       data: null,
+      inf: null,
+      objdata:[],
       acc_list: [
         {
           url: "",
@@ -181,8 +176,38 @@ export default {
     };
   },
   mounted: function() {
-    console.log(this.$route.params);
     let that = this;
+    console.log(that.obj);
+    this.inf = {
+      time: "报案时间" + that.timestampToTime(that.obj.reportTs),
+      user: "报案客户：" + (that.obj.reportUser || ""),
+      sex: "性别：男",
+      phone: "报案电话：" + (that.obj.reporterContact || ""),
+      instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
+      null: "-",
+      card: "证件号码：" + (that.victimList.obj.idNo || ""),
+      number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),
+      pardata: {
+        flag: true,
+        data: "保单详情"
+      },
+      belong: "所属保险公司：" + (that.victimList.insuranceCompany || ""),
+      source: "案件信息来源：" + (that.obj.caseSrc || ""),
+      exp: "来源说明：" + (that.obj.caseSrcDesc || "")
+    };
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/detail_case", {
+      method: "POST",
+      body: `token=${this.token}&caseId=${that.victimList.obj.caseId}`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        that.init = data.obj;
+        that.setdata();
+      });
     fetch(
       "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
       {
@@ -219,6 +244,34 @@ export default {
       });
   },
   methods: {
+        back() {
+      let that = this;
+      console.log(that.token);
+      this.$router.push({
+        name: "ComOffer",
+        params: {
+          token: that.token
+        }
+      });
+    },
+    setdata() {
+      let that = this;
+      let addr = "";
+      if (that.init.generalLocation) {
+        addr = that.init.generalLocation.addr;
+      }
+      this.objdata = {
+        add:
+          "出险地:" +
+          (that.init.caseCountry || "") +
+          (that.init.caseCity || "") +
+          addr,
+        type: "事故类型：" + (that.init.obj.accidentType || ""),
+        part: "受伤部位：" + (that.init.victimList[0].obj.injuredPart || ""),
+        weather: "天气灾害：" + (that.init.obj.weatherTag || "无")
+      };
+      this.def = that.init.obj.incidentDesc;
+    },
     tooffer() {
       this.axios
         .post(
@@ -231,8 +284,8 @@ export default {
         .then(res => {
           console.log(res);
           this.$router.push({
-            name:'ComOffer'
-          })
+            name: "ComOffer"
+          });
         });
     },
     handleGetFile(e) {
@@ -286,6 +339,23 @@ export default {
           });
       };
     },
+    timestampToTime(timestamp) {
+      if (timestamp) {
+        var date = new Date(timestamp);
+        var Y = date.getFullYear() + "-";
+        var M =
+          (date.getMonth() + 1 < 10
+            ? "0" + (date.getMonth() + 1)
+            : date.getMonth() + 1) + "-";
+        var D = date.getDate() + " ";
+        var h = date.getHours() + ":";
+        var m = date.getMinutes() + ":";
+        var s = date.getSeconds();
+        return Y + M + D + h + m + s;
+      } else {
+        return "";
+      }
+    },
     up() {
       let flag =
         this.url.endsWith("png") ||
@@ -326,6 +396,28 @@ export default {
 
 <style scoped>
 @import url("./style.css");
+.case_box ul {
+  border: 1px solid #d9ddde;
+}
+.case_box ul li {
+  width: 33%;
+  text-align: center;
+  overflow: hidden;
+  display: inline-block;
+  line-height: 42px;
+  border-right: #d9ddde 1px solid;
+  border-top: #d9ddde 1px solid;
+}
+.case_box ul li:nth-child(3n) {
+  text-align: center;
+  text-indent: 0;
+  border-right: 0;
+}
+.case_box ul li:first-child,
+.case_box ul li:nth-child(2),
+.case_box ul li:nth-child(3) {
+  border-top: 0;
+}
 .el-input-group {
   width: 29%;
 }
@@ -363,5 +455,29 @@ export default {
 }
 .p {
   text-align: center;
+}
+.data_wrap {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px 40px;
+}
+.data_wrap ul {
+  width: 100%;
+}
+.data_wrap ul li {
+  height: 50px;
+  line-height: 50px;
+}
+.data_wrap ul li:last-child textarea {
+  width: 80%;
+  height: 80px;
+  border: 0;
+  border: 1px solid #d9ddde;
+  border-radius: 5px;
+  font-size: 15px;
+}
+.data_wrap ul li:last-child span,
+.data_wrap ul li:last-child textarea {
+  float: left;
 }
 </style>

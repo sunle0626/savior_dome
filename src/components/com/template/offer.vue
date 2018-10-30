@@ -66,7 +66,7 @@
                  <span class="span_box" @click="pass(props.row.caseid)" v-if="props.row.state==160">授权该救援机构开始救援</span>
                 <span class="span_box" @click="adopt(v.bidding.solutionNo,props.row)" v-if="props.row.state==140&&typeof v.solution !='undefined'">
                   同意该公司报价转交保险授权</span>
-                <span class="span_box" @click="toplook(props.row.caseid,i)">报价详情</span>
+                <span class="span_box" @click="toplook(props.row.caseid,i)" v-if="typeof v.solution !='undefined'">报价详情</span>
                 <span class="span_box" @click="reject(v.bidding.solutionNo,props.row)" v-if="props.row.state==140&&typeof v.solution !='undefined'">
                   关闭报价</span> 
                 <span class="span_box" @click="exp(props.row.stateText);expVisible=true" v-if="props.row.state==160">授权说明</span>
@@ -131,7 +131,7 @@
                 width="160">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="topinf(scope.row.caseid)">案件详情</el-button>
-                    <el-button  v-if="scope.row.state==130" type="text" size="small" @click="topar(scope.row.caseid)">转交救援公司获取报价</el-button>
+                    <el-button  v-if="scope.row.state==130" type="text" size="small" @click="topar(scope.row.caseid,scope.$index)">转交救援公司获取报价</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -317,15 +317,19 @@ export default {
         }
       });
     },
-    topar(obj) {
+    topar(obj, index) {
       console.log();
+      let taht = this;
       //this.$router.push("lookinf");
       console.log(obj);
       this.$router.push({
         name: "helpCompany",
         params: {
           caseid: obj,
-          token: this.token
+          token: this.token,
+          index,
+          obj: this.obj,
+          victimList: this.victimList
         }
       });
     },
@@ -370,6 +374,38 @@ export default {
           .then(function(data) {
             console.log(data);
             data.obj.map((v, i) => {
+              async function getout(state, plan) {
+                that.axios
+                  .post(
+                    "http://api.test.dajiuxing.com.cn/rescue/bidding/list_bidding",
+                    qs.stringify({
+                      token: that.token,
+                      caseId: v.obj.id
+                    })
+                  )
+                  .then(res => {
+                    list = res.data.obj;
+                    that.tableData.push({
+                      state: state,
+                      caseid: v.obj.id,
+                      number: i + 1, //序号
+                      casenumber: v.obj.caseNo, //案件编号
+                      address: v.generalLocation.addr, //地址
+                      username:
+                        v.victimList[0].obj.victimName +
+                        (v.obj.reporterContact || ""), //用户信息
+                      papers: v.victimList[0].obj.idNo, //身份证号
+                      plan: plan, //状态
+                      open: v.obj.caseSrc,
+                      node: "等待报价",
+                      get_time: that.time(v.obj.incidentTs),
+                      op: "查看并操作",
+                      insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
+                      isshow: isshow,
+                      list: list
+                    });
+                  });
+              }
               console.log(v);
               if (v.victimList[0].obj.gender == "1") {
                 sex = "男";
@@ -386,14 +422,14 @@ export default {
               }
               if (v.obj.caseState == 120) {
                 that.tableData.push({
-                  state: 0,
+                  state: 120,
                   caseid: v.obj.id,
                   number: i + 1, //序号
                   casenumber: v.obj.caseNo, //案件编号
-                  address: v.obj.locId, //地址
+                  address: v.generalLocation.addr, //地址
                   username:
                     v.victimList[0].obj.victimName +
-                    (v.victimList[0].obj.contact || ""), //用户信息
+                    (v.obj.reporterContact || ""), //用户信息
                   papers: v.victimList[0].obj.idNo, //身份证号
                   plan: "等待客户授权", //状态
                   open: v.obj.caseSrc,
@@ -405,14 +441,14 @@ export default {
                 });
               } else if (v.obj.caseState == 130) {
                 that.tableData.push({
-                  state: 1,
+                  state: 130,
                   caseid: v.obj.id,
                   number: i + 1, //序号
                   casenumber: v.obj.caseNo, //案件编号
-                  address: v.obj.locId, //地址
+                  address: v.generalLocation.addr, //地址
                   username:
                     v.victimList[0].obj.victimName +
-                    (v.victimList[0].obj.contact || ""), //用户信息
+                    (v.obj.reporterContact || ""), //用户信息
                   papers: v.victimList[0].obj.idNo, //身份证号
                   plan: "客户授权通过", //状态
                   open: v.obj.caseSrc,
@@ -424,14 +460,14 @@ export default {
                 });
               } else if (v.obj.caseState == 112) {
                 that.tableData.push({
-                  state: 0,
+                  state: 112,
                   caseid: v.obj.id,
                   number: i + 1, //序号
                   casenumber: v.obj.caseNo, //案件编号
-                  address: v.obj.locId, //地址
+                  address: v.generalLocation.addr, //地址
                   username:
                     v.victimList[0].obj.victimName +
-                    (v.victimList[0].obj.contact || ""), //用户信息
+                    (v.obj.reporterContact || ""), //用户信息
                   papers: v.victimList[0].obj.idNo, //身份证号
                   plan: "客户拒绝请求", //状态
                   open: v.obj.caseSrc,
@@ -442,106 +478,13 @@ export default {
                   isshow: isshow
                 });
               } else if (v.obj.caseState == 140) {
-                that.axios
-                  .post(
-                    "http://api.test.dajiuxing.com.cn/rescue/bidding/list_bidding",
-                    qs.stringify({
-                      token: that.token,
-                      caseId: v.obj.id
-                    })
-                  )
-                  .then(res => {
-                    list = res.data.obj;
-                  });
-                setTimeout(function() {
-                  that.tableData.push({
-                    state: 5,
-                    caseid: v.obj.id,
-                    number: i + 1, //序号
-                    casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
-                    username:
-                      v.victimList[0].obj.victimName +
-                      (v.victimList[0].obj.contact || ""), //用户信息
-                    papers: v.victimList[0].obj.idNo, //身份证号
-                    plan: "等待救援公司报价", //状态
-                    open: v.obj.caseSrc,
-                    node: "等待报价",
-                    get_time: that.time(v.obj.incidentTs),
-                    op: "查看并操作",
-                    insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
-                    isshow: isshow,
-                    list: list
-                  });
-                }, 500);
+                getout(140, "等待救援公司报价");
               } else if (v.obj.caseState == 150) {
-                that.axios
-                  .post(
-                    "http://api.test.dajiuxing.com.cn/rescue/bidding/list_bidding",
-                    qs.stringify({
-                      token: that.token,
-                      caseId: v.obj.id
-                    })
-                  )
-                  .then(res => {
-                    list = res.data.obj;
-                  });
-                setTimeout(function() {
-                  that.tableData.push({
-                    state: 2,
-                    caseid: v.obj.id,
-                    number: i + 1, //序号
-                    casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
-                    username:
-                      v.victimList[0].obj.victimName +
-                      (v.victimList[0].obj.contact || ""), //用户信息
-                    papers: v.victimList[0].obj.idNo, //身份证号
-                    plan: "等待费用审核", //状态
-                    open: v.obj.caseSrc,
-                    node: "等待报价",
-                    get_time: that.time(v.obj.incidentTs),
-                    op: "查看并操作",
-                    insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
-                    isshow: isshow,
-                    list: list
-                  });
-                }, 500);
+                getout(150, "等待费用审核");
               } else if (v.obj.caseState == 160) {
-                that.axios
-                  .post(
-                    "http://api.test.dajiuxing.com.cn/rescue/bidding/list_bidding",
-                    qs.stringify({
-                      token: that.token,
-                      caseId: v.obj.id
-                    })
-                  )
-                  .then(res => {
-                    list = res.data.obj;
-                  });
-                setTimeout(function() {
-                  that.tableData.push({
-                    state: 4,
-                    caseid: v.obj.id,
-                    number: i + 1, //序号
-                    casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
-                    username:
-                      v.victimList[0].obj.victimName +
-                      (v.victimList[0].obj.contact || ""), //用户信息
-                    papers: v.victimList[0].obj.idNo, //身份证号
-                    plan: "费用审核通过", //状态
-                    open: v.obj.caseSrc,
-                    node: "等待报价",
-                    get_time: that.time(v.obj.incidentTs),
-                    op: "查看并操作",
-                    insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
-                    isshow: isshow,
-                    list: list
-                  });
-                }, 500);
+                getout(160, "费用审核通过");
               }
-              console.log(v.obj.caseState);
+              console.log(that.tableData);
               console.log(v.obj);
               that.caseid = v.obj.id;
               that.obj.push(v.obj);
@@ -562,10 +505,10 @@ export default {
             return res.json();
           })
           .then(function(data) {
-            console.log("请求了offer no start data:" + data.obj);
+            console.log(data.obj);
             if (data.obj) {
               data.obj.map((v, i) => {
-                async function getout(state,plan) {
+                async function getout(state, plan) {
                   that.axios
                     .post(
                       "http://api.test.dajiuxing.com.cn/rescue/bidding/list_bidding",
@@ -581,10 +524,10 @@ export default {
                         caseid: v.obj.id,
                         number: i + 1, //序号
                         casenumber: v.obj.caseNo, //案件编号
-                        address: v.obj.locId, //地址
+                        address: v.generalLocation.addr, //地址
                         username:
                           v.victimList[0].obj.victimName +
-                          (v.victimList[0].obj.contact || ""), //用户信息
+                          (v.obj.reporterContact || ""), //用户信息
                         papers: v.victimList[0].obj.idNo, //身份证号
                         plan: plan, //状态
                         open: v.obj.caseSrc,
@@ -617,10 +560,10 @@ export default {
                     caseid: v.obj.id,
                     number: i + 1, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username:
                       v.victimList[0].obj.victimName +
-                      (v.victimList[0].obj.contact || ""), //用户信息
+                      (v.obj.reporterContact || ""), //用户信息
                     papers: v.victimList[0].obj.idNo, //身份证号
                     plan: "等待客户授权", //状态
                     open: v.obj.caseSrc,
@@ -636,10 +579,10 @@ export default {
                     caseid: v.obj.id,
                     number: i + 1, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username:
                       v.victimList[0].obj.victimName +
-                      (v.victimList[0].obj.contact || ""), //用户信息
+                      (v.obj.reporterContact || ""), //用户信息
                     papers: v.victimList[0].obj.idNo, //身份证号
                     plan: "客户授权通过", //状态
                     open: v.obj.caseSrc,
@@ -655,10 +598,10 @@ export default {
                     caseid: v.obj.id,
                     number: i + 1, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username:
                       v.victimList[0].obj.victimName +
-                      (v.victimList[0].obj.contact || ""), //用户信息
+                      (v.obj.reporterContact || ""), //用户信息
                     papers: v.victimList[0].obj.idNo, //身份证号
                     plan: "客户拒绝请求", //状态
                     open: v.obj.caseSrc,
@@ -669,11 +612,11 @@ export default {
                     isshow: isshow
                   });
                 } else if (v.obj.caseState == 140) {
-                  getout(140,'等待救援公司报价');
+                  getout(140, "等待救援公司报价");
                 } else if (v.obj.caseState == 150) {
-                  getout(150,'等待费用审核');
+                  getout(150, "等待费用审核");
                 } else if (v.obj.caseState == 160) {
-                  getout(160,'费用审核通过');
+                  getout(160, "费用审核通过");
                 }
                 console.log(that.tableData);
                 console.log(v.obj);

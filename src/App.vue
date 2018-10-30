@@ -3,6 +3,7 @@
     <keep-alive>
       <router-view/>
     </keep-alive>
+    <!-- <img src="../static/images/loader_flash_of_light.gif" alt=""> -->
   </div>
 </template>
 

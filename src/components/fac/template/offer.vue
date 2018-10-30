@@ -47,7 +47,7 @@
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="70">
+                width="140">
             </el-table-column>
             <el-table-column
                 prop="username"
@@ -195,9 +195,9 @@ export default {
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username: v.victimList[0].obj.victimName, //姓名
-                    phone: v.victimList[0].obj.contact, //联系方式
+                    phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间
@@ -248,9 +248,9 @@ export default {
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username: v.victimList[0].obj.victimName, //姓名
-                    phone: v.victimList[0].obj.contact, //联系方式
+                    phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间

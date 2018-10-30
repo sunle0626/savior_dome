@@ -16,7 +16,7 @@
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="50%">
+                width="100%">
             </el-table-column>
             <el-table-column
                 prop="username"
@@ -91,6 +91,7 @@
 <script>
 import qs from "qs";
 import { Message } from "element-ui";
+import err from "../../../static/error2msg.js";
 export default {
   props: ["token", "st_time", "en_time", "sereen"],
   data() {
@@ -104,6 +105,11 @@ export default {
     };
   },
   methods: {
+    error2msg(errcode){
+      var errmsg = new err();
+      var msg = errmsg.tomsg(errcode);
+      Message.error(msg);
+    },
     tostatr(index) {
       this.$router.push({
         name: "helpStart",
@@ -141,9 +147,16 @@ export default {
         .then(res => {
           console.log(res.data);
           if (res.data.code === 0) {
-            //getData(that.st_time,that.en_time);
+            Message({
+                message: "关闭案件成功",
+                type: "success"
+              });
+          }else{
+            that.error2msg(res.data.code);
           }
         });
+        console.log(111)
+        this.$router.go(0)
     },
     time(str) {
       var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -205,9 +218,9 @@ export default {
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username: v.victimList[0].obj.victimName, //姓名
-                    phone: v.victimList[0].obj.contact, //联系方式
+                    phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间
@@ -259,9 +272,9 @@ export default {
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
+                    address: v.generalLocation.addr, //地址
                     username: v.victimList[0].obj.victimName, //姓名
-                    phone: v.victimList[0].obj.contact, //联系方式
+                    phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间

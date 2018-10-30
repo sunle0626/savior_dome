@@ -47,7 +47,7 @@
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="70">
+                width="140">
             </el-table-column>
             <el-table-column
                 prop="username"
@@ -190,7 +190,7 @@ export default {
           method: "POST",
           body: `token=${
             this.token
-          }&typeId=1&status=160&startTs=${stTime}&endTs=${enTime}`,
+          }&typeId=1&status=160&status=180&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -220,9 +220,9 @@ export default {
                     caseid:v.obj.id,
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
-                    username: v.victimList[0].obj.name, //姓名
-                    phone: v.victimList[0].obj.contact, //联系方式
+                    address: v.generalLocation.addr, //地址
+                    username: v.victimList[0].obj.victimName, //姓名
+                    phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间
@@ -242,7 +242,7 @@ export default {
       } else {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
-          body: `token=${this.token}&typeId=1&status=160`,
+          body: `token=${this.token}&typeId=1&status=160&status=180`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -272,9 +272,9 @@ export default {
                     caseid:v.obj.id,
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.obj.locId, //地址
-                    username: v.victimList[0].obj.name, //姓名
-                    phone: v.victimList[0].obj.contact, //联系方式
+                    address: v.generalLocation.addr, //地址
+                    username: v.victimList[0].obj.victimName, //姓名
+                    phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间

@@ -102,17 +102,6 @@
 						</td>
 						<td></td>
 					</tr>
-					<tr>
-						<td colspan = "2">
-							<span class="">是否团险:</span>
-							<el-radio-group v-model="radio10" size="mini">
-								<el-radio label="1" border>是</el-radio>
-								<el-radio label="2" border>否</el-radio>
-							</el-radio-group>
-							<span class="must">*</span>
-						</td>
-						<td></td>
-					</tr>
 				</table>
 				</div>
 		<div class="marginl10">

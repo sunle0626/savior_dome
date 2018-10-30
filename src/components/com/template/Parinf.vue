@@ -7,7 +7,7 @@
                 </li>
                 <li>
                     <span>事故经过：</span>
-                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def">
+                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def" disabled="disabled">
                     </textarea>
                 </li>
             </ul>
@@ -33,7 +33,6 @@ export default {
       objdata: {
         add: "出险地:",
         type: "事故类型：风险灾害 ",
-        no: "是否团险：是",
         part: "受伤部位：腿部 ",
         weather: "天气灾害：气象灾害 "
       },
@@ -73,7 +72,6 @@ export default {
         (that.init.caseCity || "") +
         addr,
       type: "事故类型：" + (that.init.obj.accidentType || ""),
-      no: "是否团险：" + (that.init.obj.caseInsured ? "是" : "无"),
       part: "受伤部位：" + (that.init.victimList[0].obj.injuredPart || ""),
       weather: "天气灾害：" + (that.init.obj.weatherTag || "无")
     };
