@@ -49,12 +49,10 @@
                     </el-checkbox>
                 </el-checkbox-group>
             </div>
-            <div class="ex_box">
-            <textarea name="exp" id="exp" cols="30" rows="10" v-model="exp" placeholder="添加说明">
-            </textarea>
-            </div>
             <div class="upbtn_box">
-            <el-button type="primary" @click="flag=true;apply()">授权通过，启动救援</el-button>
+              <a href="#" @click="reject(obj.solutionNo)">不选择此家报价</a>
+            <el-button type="primary" @click="flag=true;back()">关闭报价详情</el-button>
+            <el-button type="primary" @click="flag=true;solutionNo(objsolutionNo)">同意该公司报价，转交保险公司授权</el-button>
             <!-- span @click="toalter">修改报价</span -->
             </div>
            </div>
@@ -66,7 +64,7 @@ import qs from "qs";
 export default {
   data() {
     return {
-      exp:'',
+      exp: "",
       token: this.$route.params.token,
       caseid: this.$route.params.caseid,
       acc_list: [],
@@ -77,17 +75,58 @@ export default {
       checkList: [],
       parentObj: [],
       flag: false,
-      obj:{
-        totalFee:10000,
-        rescueFee:10000,
-        medicFee:10000,
-        caseFee:10000
+      obj: {
+        totalFee: 10000,
+        rescueFee: 10000,
+        medicFee: 10000,
+        caseFee: 10000
       }
     };
   },
   methods: {
-        back() {
-      this.$router.push("/reg/caseindex/offer");
+    reject(solutionNo) {
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/update_bidding_state",
+          qs.stringify({
+            token: this.token,
+            solutionNo,
+            status: 2
+          })
+        )
+        .then(res => {
+          console.log(res);
+          this.$router.push({
+            name: "ComOffer",
+            params: {
+              time: new Date()
+            }
+          });
+        });
+    },
+    adopt(solutionNo) {
+      console.log(solutionNo);
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/update_bidding_state",
+          qs.stringify({
+            token: this.token,
+            solutionNo,
+            status: 1
+          })
+        )
+        .then(res => {
+          console.log(res);
+          this.$router.push({
+            name: "ComOffer",
+            params: {
+              time: new Date()
+            }
+          });
+        });
+    },
+    back() {
+      this.$router.push({ name: "ComOffer" });
     },
     apply() {
       let that = this;
@@ -97,22 +136,22 @@ export default {
           qs.stringify({
             token: this.token,
             caseId: this.caseid,
-            status:1,
-            solutionRequest:this.exp
+            status: 1,
+            solutionRequest: this.exp
           })
         )
         .then(res => {
           console.log(res.data);
-         if (res.data.code === 0) {
-          that.$router.push({
-            path: "/reg/caseindex/offer",
-            name: "RegOffer",
-            params: {
-              token: this.token,
-              obj: this.inf,
-              data: this.obj
-            }
-          });
+          if (res.data.code === 0) {
+            that.$router.push({
+              path: "/reg/caseindex/offer",
+              name: "RegOffer",
+              params: {
+                token: this.token,
+                obj: this.inf,
+                data: this.obj
+              }
+            });
           }
         });
     },
@@ -137,7 +176,7 @@ export default {
         return res.json();
       })
       .then(function(data) {
-        that.obj = data.obj
+        that.obj = data.obj;
         data.obj2.map(v => {
           if (v.dict.parentId == "0") {
             var obj = {};
@@ -327,16 +366,16 @@ span {
   color: #00abfa;
   margin-left: 5px;
 }
-.offer_box{
+.offer_box {
   line-height: 44px;
 }
-.offer_box span{
+.offer_box span {
   margin-left: 35px;
   color: #333;
   font-size: 16px;
   font-weight: 600;
 }
-.offer_box span b{
+.offer_box span b {
   color: #ff7200;
   margin-left: 3px;
 }

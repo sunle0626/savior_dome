@@ -171,8 +171,9 @@ a {
 }
 .case_box ul li {
   width: 33%;
-  text-indent: 3em;
   display: inline-block;
+  text-align: center;
+  overflow: hidden;
   line-height: 42px;
   border-right: #d9ddde 1px solid;
   border-top: #d9ddde 1px solid;

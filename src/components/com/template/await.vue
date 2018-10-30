@@ -44,6 +44,8 @@ export default {
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
       st_time: "",
+      typeid: this.$route.params.typeId ||
+        JSON.parse(window.localStorage.getItem("typeid")).id,
       en_time: "",
       flag: this.$route.params.flag,
       pickerOptions1: {
@@ -80,7 +82,7 @@ export default {
     window.localStorage.setItem(
       "case",
       JSON.stringify({
-        case: "RegAwait"
+        case: "ComAwait"
       })
     );
   }

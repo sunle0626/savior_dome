@@ -9,7 +9,7 @@
                 <small @click="lookinf">立即查看</small>
             </div>
         </div>
-        <addcase/>
+        <addcase :token="token"/>
         <div class="bottom_box">
             <ul class="bottom_ul">
                 <li v-for="(v,ind) in case_list" :key="ind">
@@ -21,7 +21,7 @@
                         {{v.descrition}}
                     </p>
 
-                    <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(ind)">
+                    <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(v.id)">
                         案件管理({{num_list[v.id]}})
                     </b>
                     <b class="pointer_box" v-else @click="tocase(ind)">
@@ -52,15 +52,16 @@ export default {
     };
   },
   methods: {
-    tocase(ind) {
+    tocase(id) {
       let token = this.token;
       let insti = this.insti;
       window.localStorage.setItem(
         "case",
         JSON.stringify({
-          case: "Await"
+          case: "ComAwait"
         })
       );
+      window.localStorage.setItem("typeid", JSON.stringify({id}));
       // if (this.case_list[ind].num > 0) {
       //   this.$router.push({
       //     name: "Await",
@@ -76,7 +77,8 @@ export default {
         params: {
           token: token,
           insti: insti,
-          flag: false
+          flag: false,
+          typeId: id
         }
       });
       // }

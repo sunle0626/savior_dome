@@ -49,13 +49,24 @@ export default {
   },
   methods: {
     logout() {
+      fetch("http://api.test.dajiuxing.com.cn/rescue/user/logout", {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      })
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log("logout:"+data);
+      });
       this.$router.push({
         name: "Index",
         params: {
           time: new Date().getTime()
         }
       });
-      localStorage.clear();
+      window.localStorage.clear();
       console.log("注销");
     },
     languge() {

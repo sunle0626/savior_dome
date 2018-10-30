@@ -31,7 +31,7 @@ import RegParcase from '../components/reg/template/Parcase.vue'
 import RegParinf from '../components/reg/template/Parinf.vue'
 import Regdr from '@/components/reg/template/dr.vue'
 
-import Com from '@/components/Com.vue'
+import Com from '@/components/com.vue'
 import ComIndex from '@/components/com/Index.vue'
 import ComCaseindex from '../components/com/Caseindex.vue'
 import Comset from '@/components/com/set.vue'

@@ -310,6 +310,7 @@ export default {
       })
       .then(function(data) {
         that.inf = data.obj;
+        console.log(data.obj)
         that.objId = data.obj.id;
         if (that.obj.length <= 0) {
           that.obj = data.obj2;

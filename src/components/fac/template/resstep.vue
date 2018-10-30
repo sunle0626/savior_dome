@@ -210,6 +210,13 @@ export default {
       } else {
         Message.error("请不要输入过多节点，默认显示五条");
       }
+      this.$router.push({
+        name: "resstep",
+        params: {
+          token: this.token,
+          caseId: this.caseId
+        }
+      });
     },
     add(e, i) {
       let parent = e.target.parentNode;
@@ -309,6 +316,13 @@ export default {
               console.log(res);
             });
         });
+      this.$router.push({
+        name: "resstep",
+        params: {
+          token: this.token,
+          caseId: this.caseId
+        }
+      });
     },
     up() {
       this.imglist[this.num - 1].list.push(this.fileurl);
@@ -318,7 +332,13 @@ export default {
       });
       this.imgVisible = false;
       this.centerDialogVisible = true;
-      console.log(this.urllist);
+      this.$router.push({
+        name: "resstep",
+        params: {
+          token: this.token,
+          caseId: this.caseId
+        }
+      });
     },
     txtdata() {},
     txtsdata() {},
@@ -385,6 +405,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$route.params)
     let that = this;
     this.axios
       .post(
@@ -411,7 +432,7 @@ export default {
             }
           }
         });
-        if (this.num == this.imglist.length) {
+        if (this.num == this.urllist.length) {
           this.btn_flag = true;
         }
         that.loading = false;
@@ -590,7 +611,7 @@ p {
   display: block;
 }
 .acc {
-  margin-top: 80px;
+  margin-top: 50px;
 }
 .imgbox {
   width: 80px;

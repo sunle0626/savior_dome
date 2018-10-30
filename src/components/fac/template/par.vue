@@ -299,7 +299,8 @@ a {
 }
 .case_box ul li {
   width: 33%;
-  text-indent: 3em;
+  text-align: center;
+  overflow: hidden;
   display: inline-block;
   line-height: 42px;
   border-right: #d9ddde 1px solid;

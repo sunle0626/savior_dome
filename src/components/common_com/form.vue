@@ -72,7 +72,7 @@
                 label="其他"
                 width="90%">
                 <template slot-scope="scope">
-                    <el-button  type="text" size="small" @click="topar(scope.$index)">关闭当前案件</el-button>
+                    <el-button  type="text" size="small" @click="close(scope.$index)">关闭当前案件</el-button>
                 </template>
             </el-table-column>
             <el-table-column
@@ -89,11 +89,15 @@
 </template>
 
 <script>
+import qs from "qs";
 import { Message } from "element-ui";
 export default {
   props: ["token", "st_time", "en_time", "sereen"],
   data() {
     return {
+      typeid:
+        this.$route.params.typeId ||
+        JSON.parse(window.localStorage.getItem("typeid")).id,
       tableData: [],
       obj: [],
       victimList: []
@@ -105,6 +109,7 @@ export default {
         name: "helpStart",
         params: {
           token: this.token,
+          caseid: this.obj[index].id
         }
       });
     },
@@ -121,6 +126,24 @@ export default {
           index
         }
       });
+    },
+    close(index) {
+      let that = this;
+      console.log(that.obj);
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/case/close",
+          qs.stringify({
+            token: that.token,
+            caseId: that.obj[index].id
+          })
+        )
+        .then(res => {
+          console.log(res.data);
+          if (res.data.code === 0) {
+            //getData(that.st_time,that.en_time);
+          }
+        });
     },
     time(str) {
       var date = new Date(str); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -151,7 +174,7 @@ export default {
           method: "POST",
           body: `token=${this.token ||
             JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=140&startTs=${stTime}&endTs=${enTime}`,
+              .obj}&typeId=${this.typeid}&status=100&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -178,17 +201,18 @@ export default {
                   } else {
                     isshow = false;
                   }
+                  console.log(v.victimList)
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
                     address: v.obj.locId, //地址
-                    username: v.victimList[0].obj.name, //姓名
+                    username: v.victimList[0].obj.victimName, //姓名
                     phone: v.victimList[0].obj.contact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间
-                    par: "等待救援公司报价中", //状态
-                    plan: "等待救援公司报价中",
+                    par: "等待启动救援", //状态
+                    plan: "等待启动救援",
                     node: "等待报价",
                     get_time: that.time(v.obj.incidentTs),
                     op: "查看并操作"
@@ -205,7 +229,7 @@ export default {
           method: "POST",
           body: `token=${this.token ||
             JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=140`,
+              .obj}&typeId=1&status=100`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -236,7 +260,7 @@ export default {
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
                     address: v.obj.locId, //地址
-                    username: v.victimList[0].obj.name, //姓名
+                    username: v.victimList[0].obj.victimName, //姓名
                     phone: v.victimList[0].obj.contact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别

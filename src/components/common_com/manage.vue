@@ -13,7 +13,7 @@
                     <span>{{v.contact}}</span>
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
-                    <span class="op">当前操作方：保险公司</span>
+                    <span class="op">当前操作方：指挥中心</span>
                     <b @click="lookinf()">查看并处理</b>
                 </li>
             </ul>
@@ -119,7 +119,7 @@ export default {
     let that = this;
     let nodeName = "";
     //console.log(this.token);
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/all_ongoing_case", {
+    fetch("http://api.test.dajiuxing.com.cn/rescue/case/allGoingCase", {
       method: "POST",
       body: `token=${this.token}`,
       mode: "cors",

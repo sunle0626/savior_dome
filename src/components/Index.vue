@@ -240,22 +240,36 @@
             </form>
           </div>  
         </div>
+        <button @click="errer()">点击这里弹出提示函框</button>
+        <PublicControlErrer :flag='Errerflag' :content='Errercontent' :t='time'/>
     </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
+import PublicControlErrer from './PublicControl/Public_control_errer.vue'
 export default {
+  components: {
+    PublicControlErrer
+  },
   data() {
     return {
       flag: true,
       usertype: "",
       user: "",
       pwd: "",
-      loginflag: false
+      loginflag: false,
+      Errercontent: "", //提示框显示的字符串
+      Errerflag: false, //决定提示框是否显示的flag
+      time: new Date() * 1 //时间，用来监听
     };
   },
   methods: {
+    errer() {
+      this.Errerflag = true;
+      this.Errercontent = "这就是一个普通的报错";
+      this.time = new Date() * 1;
+    },
     removelogin() {
       let login_box = document.querySelector(".login_box");
       if (login_box && this.loginflag) {
@@ -355,9 +369,9 @@ export default {
                   "insti",
                   JSON.stringify(data.obj.user)
                 );
-                console.log(data,data.obj)
+                console.log(data, data.obj);
                 that.$router.push({
-                  name: "Com",
+                  name: "ComIndex",
                   params: {
                     token: data.obj.token,
                     insti: data.obj.user

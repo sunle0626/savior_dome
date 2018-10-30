@@ -158,7 +158,7 @@ export default {
         //获取救援方案
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
           method: "POST",
-          body: `token=${that.token}&objId=${data.obj.id}&objType=2`,
+          body: `token=${that.token}&objId=${data.obj.id}&objType=1`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })

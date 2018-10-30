@@ -45,30 +45,21 @@
 		<el-input style="width: 88%;padding: 0px 10px;" type="textarea" value="根据该病人的情况，我们建议立即启动当地救援机构开始救援"></el-input>
 	  </div>
     </div>
-
     <h5 class="marginl10">C、服务清单</h5>
-    <span class="yljy">1、医疗救援</span>
-    <div style="margin-left: 65px;font-size: 12px;">
-      <el-checkbox name="type" disabled checked></el-checkbox> 医疗机构推介
-      <div class="czsm">
-        说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家
-      </div>
-      <div>
-        <el-checkbox name="type" disabled checked></el-checkbox> 出诊服务
-        <div class="czsm">
-          说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家
-        </div>
-      </div>
+    <div class="rescue_box"  v-for="(item,ind) in checkList" :key="ind">
+        <p>{{ind+1}} 、{{item.name}}</p>
+        <el-checkbox-group v-for="(v,ind) in item.list" :key="ind">
+            <el-checkbox checked="checked" disabled>
+                <span class="res_div">{{v.dict.name}}</span>
+                <br/>
+                <span class="res_box">说明：{{v.obj.description}}</span>
+                <br/>
+                <span class="res_box">回复：{{v.obj.reply}}</span>
+                <br/>
+                <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span>
+            </el-checkbox>
+        </el-checkbox-group>
     </div>
-    <span class="yljy">2、费用担保</span>
-    <div style="margin-left: 65px;font-size: 12px; ">
-      <div style="">
-        <el-checkbox name="type" disabled checked></el-checkbox>
-        医疗费用担保或非医疗费用担保
-        <span style="margin-left:50px;">限额：<span style="color:#f97709">$200</span></span>
-      </div>
-    </div>
-
     <h5 class="marginl10">D、保险公司授权说明及文件</h5>
 	<div class="fjdiv" style="margin: 10px 25px;">
 			<div >
@@ -97,7 +88,15 @@
 			</div>
 			<img src="images/e.png" alt="" class="zh-scfj" >
 			<div class="ddcx" style="margin-left: 42px;">
-			  上传附件
+          <ul>
+            <li v-for="(v,ind) in acc_list" :key="ind">
+                <img v-if="v.flag" :src="v.url" alt="">
+                <img v-else :src="v.icon" alt="">
+                <p>{{v.txt}}</p>
+                <a @click="imgVisible=true" v-if="ind==0">上传附件</a>
+                <!-- <input type="file" name="file" id="filebox" @change="handleGetFile($event)"> -->
+            </li>
+        </ul>
 			</div>
 		</div>
 
@@ -110,16 +109,51 @@
 	  <span>您正在向三家救援机构获取报价，确认转发</span>
 	  <span slot="footer" class="dialog-footer">
 	    <el-button @click="centerDialogVisible = false" size="medium" style="width:170px;">取 消</el-button>
-	    <el-button type="primary" @click="centerDialogVisible = false" size="medium" style="width:170px;">确 定</el-button>
+	    <el-button type="primary" @click="centerDialogVisible = false;tooffer()" size="medium" style="width:170px;">确 定</el-button>
 	  </span>
 	</el-dialog>
+  <el-dialog
+  title="上传方案"
+  :visible.sync="imgVisible"
+  class="img_dialog"
+  width="50%"
+  center>
+  <p><span>附件名称</span><el-input
+      type="text"
+      placeholder="上传方案及报价"
+      v-model="txts"
+      ></el-input></p>
+      <p>
+        <span>
+          附件地址
+        </span>
+        <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+      </p>
+      <p class="p"><el-button center type="button" size="small" @click="up(),imgVisible=false">确定</el-button></p>
+</el-dialog>
     </div>
 </template>
 
 <script>
+import qs from "qs";
+import { Message } from "element-ui";
 export default {
   data() {
     return {
+      imgVisible: false,
+      txts: "",
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      caseid: this.$route.params.caseid,
+      checkList: [],
+      data: null,
+      acc_list: [
+        {
+          url: "",
+          txt: ""
+        }
+      ],
       options: [
         {
           value: "选项1",
@@ -146,8 +180,143 @@ export default {
       centerDialogVisible: false
     };
   },
-  mounted: function() {},
+  mounted: function() {
+    console.log(this.$route.params);
+    let that = this;
+    fetch(
+      "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
+      {
+        method: "POST",
+        body: `token=${this.token}&caseId=${this.caseid}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      }
+    )
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        that.data = data;
+        data.obj2.map(v => {
+          if (v.dict.parentId == "0") {
+            var obj = {};
+            obj.id = v.dict.parentId;
+            obj.childId = v.dict.id;
+            obj.name = v.dict.name;
+            obj.list = [];
+            that.checkList.push(obj);
+          } else {
+            that.checkList.map(o => {
+              if (v.dict.parentId == o.childId) {
+                //console.log(v.dict.parentId)
+                o.list.push(v);
+              }
+            });
+          }
+        });
+        console.log(data);
+        // that.upload();
+      });
+  },
   methods: {
+    tooffer() {
+      this.axios
+        .post(
+          "http://api.test.dajiuxing.com.cn/rescue/bidding/submit_bidding",
+          qs.stringify({
+            token: this.token,
+            caseId: this.caseid
+          })
+        )
+        .then(res => {
+          console.log(res);
+          this.$router.push({
+            name:'ComOffer'
+          })
+        });
+    },
+    handleGetFile(e) {
+      let that = this;
+      this.file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      let formdata = new FormData();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      formdata.append(
+        "token",
+        this.$route.params.token ||
+          JSON.parse(window.localStorage.getItem("data")).data
+      );
+      reader.onload = function(e) {
+        that.avatar = this.result;
+        formdata.append("file", that.file);
+        that.axios
+          .post(
+            "http://api.test.dajiuxing.com.cn/rescue/case/upload_file",
+            formdata,
+            config
+          )
+          .then(res => {
+            // that.acc_list.push({
+            //   url: res.data.obj,
+            //   txt: ""
+            // });
+            fetch("http://api.test.dajiuxing.com.cn/rescue/case/upload_cnts", {
+              method: "POST",
+              body: `token=${that.token}&objId=${that.data.obj.id}&objType=1`,
+              mode: "cors",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+              .then(function(res) {
+                //console.log(res);
+                return res.json();
+              })
+              .then(function(data) {
+                data.obj.map(v => {
+                  that.acc_list.push(v);
+                });
+              });
+            console.log(that.acc_list);
+            // that.acc_list[0].url = res.data.obj;
+            that.url = res.data.obj;
+          });
+      };
+    },
+    up() {
+      let flag =
+        this.url.endsWith("png") ||
+        this.url.endsWith("jpg") ||
+        this.url.endsWith("jpeg") ||
+        this.url.endsWith("gif");
+      console.log(
+        this.url.endsWith("png") ||
+          this.url.endsWith("jpg") ||
+          this.url.endsWith("jpeg") ||
+          this.url.endsWith("gif")
+      );
+      if (flag) {
+        this.acc_list.push({
+          flag: true,
+          url: this.url,
+          txt: this.txts
+        });
+      } else {
+        if (this.url === "") {
+          Message.error("请上传附件");
+        } else {
+          this.acc_list.push({
+            flag: false,
+            url: this.url,
+            txt: this.txts,
+            icon: "../../../../static/images/eles_icon.png"
+          });
+        }
+      }
+    },
     onSubmit() {
       console.log("submit!");
     }
@@ -157,14 +326,42 @@ export default {
 
 <style scoped>
 @import url("./style.css");
-	   .el-input-group{
-        width: 29%;
-     }
-     .selecti{
-      text-align: right;
-      margin-right: 5px;
-     }
-     .newTab td{
-     	padding: 10px 0px 10px 40px;
-     }
+.el-input-group {
+  width: 29%;
+}
+.selecti {
+  text-align: right;
+  margin-right: 5px;
+}
+.newTab td {
+  padding: 10px 0px 10px 40px;
+}
+.rescue_box {
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+.rescue_box > p {
+  line-height: 40px;
+  font-size: 14px;
+}
+.el-checkbox__inner {
+  margin-bottom: 60px;
+}
+.img_dialog p {
+  width: 100%;
+  line-height: 48px;
+}
+.img_dialog p .el-input {
+  width: 80%;
+  margin-left: 3%;
+}
+.img_dialog p span {
+  color: #333;
+}
+.img_dialog p input[type="file"] {
+  margin-left: 3%;
+}
+.p {
+  text-align: center;
+}
 </style>

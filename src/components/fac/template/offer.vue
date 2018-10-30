@@ -196,7 +196,7 @@ export default {
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
                     address: v.obj.locId, //地址
-                    username: v.victimList[0].obj.name, //姓名
+                    username: v.victimList[0].obj.victimName, //姓名
                     phone: v.victimList[0].obj.contact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
@@ -249,7 +249,7 @@ export default {
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
                     address: v.obj.locId, //地址
-                    username: v.victimList[0].obj.name, //姓名
+                    username: v.victimList[0].obj.victimName, //姓名
                     phone: v.victimList[0].obj.contact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
