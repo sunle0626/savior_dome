@@ -210,13 +210,14 @@ export default {
       } else {
         Message.error("请不要输入过多节点，默认显示五条");
       }
-      this.$router.push({
-        name: "resstep",
-        params: {
-          token: this.token,
-          caseId: this.caseId
-        }
-      });
+      // this.$router.push({
+      //   name: "resstep",
+      //   params: {
+      //     token: this.token,
+      //     caseId: this.caseId
+      //   }
+      // });
+      this.$router.go(0)
     },
     add(e, i) {
       let parent = e.target.parentNode;
@@ -316,13 +317,14 @@ export default {
               console.log(res);
             });
         });
-      this.$router.push({
-        name: "resstep",
-        params: {
-          token: this.token,
-          caseId: this.caseId
-        }
-      });
+      // this.$router.push({
+      //   name: "resstep",
+      //   params: {
+      //     token: this.token,
+      //     caseId: this.caseId
+      //   }
+      // });
+      this.$router.go(0)
     },
     up() {
       this.imglist[this.num - 1].list.push(this.fileurl);
@@ -332,13 +334,14 @@ export default {
       });
       this.imgVisible = false;
       this.centerDialogVisible = true;
-      this.$router.push({
-        name: "resstep",
-        params: {
-          token: this.token,
-          caseId: this.caseId
-        }
-      });
+      // this.$router.push({
+      //   name: "resstep",
+      //   params: {
+      //     token: this.token,
+      //     caseId: this.caseId
+      //   }
+      // });
+      this.$router.go(0)
     },
     txtdata() {},
     txtsdata() {},
@@ -405,7 +408,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.params)
+    console.log(this.$route.params);
     let that = this;
     this.axios
       .post(
@@ -419,9 +422,13 @@ export default {
         that.flag = true;
         that.feedata = res.data.obj;
         that.stepdata = res.data.obj2;
+        let n = 0;
+        let arr = [];
         that.stepdata.map((v, i) => {
+          arr.push(v.obj.state);
           if (v.obj.state) {
             that.stid = i;
+            console.log(v.obj.state);
           }
           if (i != 0) {
             that.imglist.push({
@@ -432,7 +439,14 @@ export default {
             }
           }
         });
-        if (this.num == this.urllist.length) {
+        for (let index = 0; index < arr.length; index++) {
+          if (arr[index] != 0) {
+            
+          } else {
+            n = index + 1;
+          }
+        }
+        if(n==0){
           this.btn_flag = true;
         }
         that.loading = false;
