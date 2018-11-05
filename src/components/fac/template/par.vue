@@ -21,8 +21,8 @@
             <div class="swi_box">
                 <div class="top_box">
                     <p>
-                        <router-link :to="{name:'parinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
-                        <router-link :to="{name :'parcase',params:{token:token,caseId:obj.id}}">案件进展</router-link>
+                        <router-link :to="{name:'parinf',params:{token:token,init:init,caseId:obj.id,obj:obj2},query: {typeId:this.$route.query.typeId}}">出险信息</router-link>
+                        <router-link :to="{name :'parcase',params:{token:token,caseId:obj.id},query: {typeId:this.$route.query.typeId}}">案件进展</router-link>
                     </p>
                 </div>
                 <div class="bottom_box">
@@ -37,9 +37,9 @@
                    <li>
                    </li>
                    <li>
-                       <b>B、服务清单</b>
+                       <b>服务清单</b>
                        <div class="acc_box">
-                           <p>相关附件({{acc_list.length}})</p>
+                           <p><img class="fj_box" src="../../../../static/images/fj.png" alt="">相关附件({{acc_list.length}})</p>
                            <ul>
                                <li v-for="(v,ind) in acc_list" :key="ind">
                                    <img :src="v.url" alt="">
@@ -50,7 +50,7 @@
                        </div>
                        <div class="rescue_box">
                          <div class="box" v-for="(v,ind) in obj2" :key="ind">
-                        <p v-if="v.dict&&v.dict.parentId===0">{{v.dict.name}}</p>
+                        <p v-if="v.dict&&v.dict.parentId===0">{{ind+1}}、{{v.dict.name}}</p>
                          <div v-if="v.dict&&v.dict.parentId===0" class="box">
                            <el-checkbox-group v-model="checkList">
                               <el-checkbox label="医疗机构推介" disabled checked v-for="(v,ind) in obj2" :key="ind" v-if="ind>0&&v.dict">
@@ -137,7 +137,10 @@ export default {
             obj: this.inf,
             data: this.obj2,
             caseId: this.obj.id
-          }
+          },
+        query: {
+          typeId:this.$route.query.typeId
+        }
         });
       }
     },
@@ -166,6 +169,9 @@ export default {
         name: "Await",
         params: {
           token: that.token
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     },
@@ -222,6 +228,9 @@ export default {
           init: this.init,
           caseId: this.obj.id,
           obj: this.obj2
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     }
@@ -285,6 +294,12 @@ a {
   font-weight: 600;
   line-height: 45px;
 }
+.box_req {
+  margin-left: 32px;
+}
+.box_req ul li b {
+  font-size: 14px;
+}
 .case_box {
   width: 100%;
 }
@@ -298,18 +313,20 @@ a {
   border: 1px solid #d9ddde;
 }
 .case_box ul li {
-  width: 33%;
-  text-align: center;
+  width: 39%;
+  text-align: start;
+  text-indent: 1em;
+  font-size: 14px;
   overflow: hidden;
+  height: 42px;
   display: inline-block;
   line-height: 42px;
   border-right: #d9ddde 1px solid;
   border-top: #d9ddde 1px solid;
 }
 .case_box ul li:nth-child(3n) {
-  text-align: center;
-  text-indent: 0;
   border-right: 0;
+  width: 20%;
 }
 .case_box ul li:first-child,
 .case_box ul li:nth-child(2),
@@ -385,6 +402,17 @@ a {
 .rescue_box {
   box-sizing: border-box;
   padding: 0 20px;
+}
+.rescue_box>.box > p {
+  line-height: 40px;
+  font-size: 14px;
+}
+.rescue_box .box .el-checkbox-group{
+  margin-left: 10px;
+}
+.rescue_box>.el-checkbox-group{
+  margin-left: 10px;
+  margin-top: 10px;
 }
 .rescue_box > p {
   line-height: 40px;

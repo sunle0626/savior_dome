@@ -37,47 +37,47 @@
             <el-table-column
                 prop="number"
                 label="序号"
-                width="50">
+                min-width="50">
             </el-table-column>
             <el-table-column
                 prop="casenumber"
                 label="案件编号"
-                width="70">
+                min-width="70">
             </el-table-column>
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="140">
+                min-width="70">
             </el-table-column>
             <el-table-column
                 prop="username"
                 label="用户姓名"
-                width="60">
+                min-width="60">
             </el-table-column>
             <el-table-column
                 prop="phone"
                 label="用户手机号"
-                width="70">
+                min-width="70">
             </el-table-column>
             <el-table-column
                 prop="papers"
                 label="证件信息"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="sex"
                 label="性别"
-                width="50">
+                min-width="50">
             </el-table-column>
             <el-table-column
                 prop="time"
                 label="出险时间"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="par"
                 label="用户保险详情"
-                width="90">
+                min-width="90">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
                     <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button> 
@@ -86,22 +86,22 @@
             <el-table-column
                 prop="plan"
                 label="当前进度"
-                width="60">
+                min-width="60">
             </el-table-column>
             <el-table-column
                 prop="node"
                 label="当前节点"
-                width="60">
+                min-width="60">
             </el-table-column>
             <el-table-column
                 prop="get_time"
                 label="回复时间"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="op"
                 label="操作"
-                width="100">
+                min-width="100">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="tores(scope.$index)">开始救援</el-button>
                 </template>
@@ -131,7 +131,8 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      caseId: []
+      caseId: [],
+      typeId: this.$route.query.typeId
     };
   },
   methods: {
@@ -166,7 +167,7 @@ export default {
           method: "POST",
           body: `token=${
             this.token
-          }&typeId=1&status=180&startTs=${stTime}&endTs=${enTime}`,
+          }&typeId=${this.typeId}&status=180&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -180,7 +181,6 @@ export default {
             if (data.obj) {
               data.obj.map(v => {
                 that.caseId.push(v.obj.id);
-                if (v.solutionState && v.solutionState == "2") {
                   n = n + 1;
                   if (v.victimList[0].obj.gender == "1") {
                     sex = "男";
@@ -196,10 +196,13 @@ export default {
                   } else {
                     isshow = false;
                   }
+                  var addr = "";
+                  if(v.generalLocation && v.generalLocation.addr)
+                    addr = v.generalLocation.addr;
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username: v.victimList[0].obj.victimName, //姓名
                     phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
@@ -213,14 +216,14 @@ export default {
                   });
                   //   that.obj.push(v.obj);
                   //   that.victimList.push(v.victimList[0]);
-                }
+                
               });
             }
           });
       } else {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
-          body: `token=${this.token}&typeId=1&status=180`,
+          body: `token=${this.token}&typeId=${this.typeId}&status=180`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -235,7 +238,6 @@ export default {
               data.obj.map(v => {
                 that.caseId.push(v.obj.id);
                 console.log(v.obj);
-                if (v.solutionState && v.solutionState == "2") {
                   n = n + 1;
                   if (v.victimList[0].obj.gender == "1") {
                     sex = "男";
@@ -251,10 +253,13 @@ export default {
                   } else {
                     isshow = false;
                   }
+                  var addr = "";
+                  if(v.generalLocation && v.generalLocation.addr)
+                    addr = v.generalLocation.addr;
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username: v.victimList[0].obj.victimName, //姓名
                     phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
@@ -268,7 +273,7 @@ export default {
                   });
                   //   that.obj.push(v.obj);
                   //   that.victimList.push(v.victimList[0]);
-                }
+                
               });
             }
           });
@@ -278,11 +283,13 @@ export default {
       console.log(this.caseId);
       this.$router.push({
         name: "resstep",
-        path: "http://api.test.dajiuxing.com.cn/fac/caseindex/resstep",
         params: {
           token:
             this.$route.params.token ||
-            JSON.parse(window.localStorage.getItem("data")).data,
+            JSON.parse(window.localStorage.getItem("data")).data
+        },
+        query: {
+          typeId:this.typeId,
           caseId: this.caseId[i]
         }
       });

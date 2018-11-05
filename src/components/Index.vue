@@ -1,7 +1,7 @@
 <template>
     <div class="wrap" @click="removelogin()">
         <header class="header">
-            <img src="../../static/images/banner_bg.png" alt="">
+            <img src="../../static/images/banner_bg.jpg" alt="">
             <div class="nav">
                 <div class="nav_left">
                     <img src="../../static/images/logo.png" alt="">
@@ -20,6 +20,7 @@
                         <li class="pointer_box">
                             <p class="btn_l" @click="listlogin()">登录</p>
                             <ol class="login">
+                                <span></span>
                                 <li class="login_btn btn" @click="login(0)">救援机构入口</li>
                                 <li class="login_btn btn" @click="login(2)">监管机构入口</li>
                                 <li class="login_btn btn" @click="login(1 )">指挥中心入口</li>
@@ -28,12 +29,18 @@
                     </ul>
                 </div>
             </div>
+                            <div class="dbox">
+                    <h2>
+                        大救星云平台
+                    </h2>
+                    <p>有求必应，全球救援服务第一平台</p>
+                </div>
             <div class="points_box">
                 <ul>
                     <li>
                         <div class="points_list_box">
                             <p>覆盖全球救援范围</p>
-                            <p>救援机构遍布全球，支持全球救援(除开南极及朝鲜)</p>
+                            <p>救援机构遍布全球，支持全球救援</p>
                         </div>
                     </li>
                     <li>
@@ -111,7 +118,7 @@
                 <div class="middle_details">
                     <ul>
                         <li class="pointer_box">
-                            <h3>Medical rescue</h3>
+                            <h3>Medical Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_08.png" alt="">
                             </div>
@@ -240,8 +247,8 @@
             </form>
           </div>  
         </div>
-        <button @click="errer()">点击这里弹出提示函框</button>
-        <PublicControlErrer :flag='Errerflag' :content='Errercontent' :t='time'/>
+        <!-- <button @click="errer()">点击这里弹出提示函框</button>
+        <PublicControlErrer :flag='Errerflag' :content='Errercontent' :t='time'/> -->
     </div>
 </template>
 

@@ -9,7 +9,7 @@
             <div class="req_box">
                 <b>救援方案</b>
                 <div class="acc_box">
-                    <p>附件({{acc_list.length}})</p>
+                    <p><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件({{acc_list.length}})</p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img src="" alt="">
@@ -63,6 +63,8 @@
 
 <script>
 import qs from "qs";
+import { Message } from "element-ui";
+import err from "../../../../static/error2msg.js";
 export default {
   data() {
     return {
@@ -86,8 +88,13 @@ export default {
     };
   },
   methods: {
-        back() {
-      this.$router.push("/reg/caseindex/offer");
+    error2msg(errcode){
+      var errmsg = new err();
+      var msg = errmsg.tomsg(errcode);
+      Message.error(msg);
+    },
+    back() {
+      this.$router.push("/reg/caseindex/offer?typeId="+this.$route.query.typeId);
     },
     apply() {
       let that = this;
@@ -104,20 +111,29 @@ export default {
         .then(res => {
           console.log(res.data);
          if (res.data.code === 0) {
-          that.$router.push({
-            path: "/reg/caseindex/offer",
-            name: "RegOffer",
-            params: {
-              token: this.token,
-              obj: this.inf,
-              data: this.obj
+          Message({
+                message: "授权成功",
+                type: "success"
+              });
+            that.$router.push({
+              path: "/reg/caseindex/offer",
+              name: "RegOffer",
+              params: {
+                token: that.token,
+                obj: that.inf,
+                data: that.obj
+              },
+            query: {
+              typeId:that.$route.query.typeId
             }
-          });
+            });
+          }else{
+            that.error2msg(res.data.code);
           }
         });
     },
     toalter() {
-      this.$router.push("/reg/caseindex/alter");
+      this.$router.push("/reg/caseindex/alter?typeId="+this.$route.query.typeId);
     }
   },
   mounted() {
@@ -185,7 +201,7 @@ a {
   margin-left: 5%;
   width: 90%;
   height: 80px;
-  margin-top: 18px;
+  margin-top: 38px;
   border: 0;
   border: 1px solid #d9ddde;
   border-radius: 5px;
@@ -277,6 +293,9 @@ span {
 .rescue_box > p {
   line-height: 40px;
   font-size: 14px;
+}
+.rescue_box>.el-checkbox-group{
+  margin-left: 40px;
 }
 .res_div {
   position: relative;

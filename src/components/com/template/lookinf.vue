@@ -9,7 +9,7 @@
             <div class="req_box">
                 <b>救援方案</b>
                 <div class="acc_box">
-                    <p>附件({{acc_list.length}})</p>
+                    <p><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件({{acc_list.length}})</p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img src="" alt="">
@@ -80,7 +80,8 @@ export default {
         rescueFee: 10000,
         medicFee: 10000,
         caseFee: 10000
-      }
+      },
+      typeId:this.$route.query.typeId
     };
   },
   methods: {
@@ -100,6 +101,9 @@ export default {
             name: "ComOffer",
             params: {
               time: new Date()
+            },
+            query: {
+              typeId:this.typeId
             }
           });
         });
@@ -121,12 +125,15 @@ export default {
             name: "ComOffer",
             params: {
               time: new Date()
+            },
+            query: {
+              typeId:this.typeId
             }
           });
         });
     },
     back() {
-      this.$router.push({ name: "ComOffer" });
+      this.$router.push({ name: "ComOffer" , query:{typeId:this.typeId}});
     },
     apply() {
       let that = this;
@@ -150,13 +157,16 @@ export default {
                 token: this.token,
                 obj: this.inf,
                 data: this.obj
+              },
+              query: {
+                typeId:this.typeId
               }
             });
           }
         });
     },
     toalter() {
-      this.$router.push("/reg/caseindex/alter");
+      this.$router.push("/reg/caseindex/alter?typeId="+this.typeId);
     }
   },
   mounted() {

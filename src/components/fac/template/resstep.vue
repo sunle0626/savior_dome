@@ -47,7 +47,7 @@
                 </div>
               </div>
             </div>
-            <p class="p acc" v-if="btn_flag"><el-button center type="button" size="small" @click="acc()">救援完成</el-button></p>
+            <p class="p acc" v-if="btn_flag"><el-button center type="primary"  @click="acc()">救援完成</el-button></p>
         </div>
       <el-dialog
         title="案件操作"
@@ -55,7 +55,7 @@
         width="50%"
         center>
         <div class="c_box">
-          <p>添加操作说明</p>
+          <p style="font-weight: 600;">添加操作说明</p>
            <el-input
             rows="3"
             type="textarea"
@@ -65,7 +65,7 @@
             ></el-input>
         </div>
         <div class="i_box">
-          <p>相关单据上传</p>
+          <p style="font-weight: 600;">相关单据上传</p>
           <ul>
             <li v-for="(img,i) in urllist" :key="i">
               <img class="imgbox"  :src="img.url" alt="">
@@ -79,14 +79,14 @@
             </li>
           </ul>
         </div>
-         <p class="p"><el-button center type="button" size="small" @click="ok()">完成该操作</el-button></p>
+         <p class="p"><el-button center type="primary"  @click="ok()">完成该操作</el-button></p>
       </el-dialog>
       <el-dialog
         title="案件操作"
         :visible.sync="imgVisible"
         width="50%"
         center>
-        <p><span>图片名称</span><el-input
+        <p><span>图片名称:</span><el-input
             type="text"
             placeholder="医疗单据"
             v-model="txts"
@@ -94,11 +94,11 @@
             ></el-input></p>
             <p>
               <span>
-                图片地址
+                图片地址:
               </span>
               <input type="file" name="file" id="filebox" @change="fliedata($event)">
             </p>
-            <p class="p"><el-button center type="button" size="small" @click="up()">确定</el-button></p>
+            <p class="p"><el-button center type="primary"  @click="up()">确定</el-button></p>
       </el-dialog>
       <el-dialog class="acc_box"
         title="完成救援案件"
@@ -113,11 +113,11 @@
         </p>
         <div class="p_box">
           <p>B、实际费用</p>
-          <label for="zt">整体报价:<input type="text" name="zt" id="zt" v-model="zttxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="yl">医疗垫付:<input type="text" name="yl" id="yl" v-model="yltxt" placeholder='请输入金额($)'></label>
-          <label for="aj">案件费用:<input type="text" name="aj" id="aj" v-model="ajtxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="jy">救援费用:<input type="text" name="jy" id="jy" v-model="jytxt" placeholder='请输入金额($)'><span class="rspan">*</span></label>
-          <label for="qt">其他费用:<input type="text" name="qt" id="qt" v-model="qttxt" placeholder='请输入金额($)'></label>
+          <label for="zt">整体报价:<el-input type="text" name="zt" id="zt" v-model="zttxt" placeholder='请输入金额($)'></el-input><span class="rspan">*</span></label>
+          <label for="yl">医疗垫付:<el-input type="text" name="yl" id="yl" v-model="yltxt" placeholder='请输入金额($)'></el-input></label>
+          <label for="aj">案件费用:<el-input type="text" name="aj" id="aj" v-model="ajtxt" placeholder='请输入金额($)'></el-input><span class="rspan">*</span></label>
+          <label for="jy">救援费用:<el-input type="text" name="jy" id="jy" v-model="jytxt" placeholder='请输入金额($)'></el-input><span class="rspan">*</span></label>
+          <label for="qt">其他费用:<el-input type="text" name="qt" id="qt" v-model="qttxt" placeholder='请输入金额($)'></el-input></label>
           <el-input
             rows="3"
             type="textarea"
@@ -125,7 +125,7 @@
             v-model="qt"
             @input="setqt"
             ></el-input>
-            <p class="p"><el-button center type="button" size="small" @click="accup()">确认提交</el-button></p>
+            <p class="p"><el-button center type="primary"  @click="accup()">确认提交</el-button></p>
         </div>
       </el-dialog>
       <el-dialog
@@ -135,8 +135,8 @@
         center>
         <p class="node" v-for="(v,ind) in nodelist" :key="ind">
           <span>添加节点</span>
-          <input type="text" placeholder="请添加节点" v-model="v.description">
-          <small v-if="ind==nodelist.length-1" @click="add($event,ind)">添加+</small>
+          <el-input class="input_box" type="text" placeholder="请添加节点" v-model="v.description"></el-input>
+          <small class="add_span" v-if="ind==nodelist.length-1" @click="add($event,ind)"><span>+</span> 添加</small>
         </p>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="elseDialog = false,upnode()">完成该操作</el-button>
@@ -165,7 +165,7 @@ export default {
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
-      caseId: this.$route.params.caseId,
+      caseId: this.$route.query.caseId,
       stepdata: [],
       urllist: [],
       txt: "",
@@ -215,9 +215,13 @@ export default {
       //   params: {
       //     token: this.token,
       //     caseId: this.caseId
+      //   },
+      //   query: {
+      //     typeId:this.$route.query.typeId
       //   }
       // });
-      this.$router.go(0)
+      // this.$router.go(0);
+      window.location.reload();
     },
     add(e, i) {
       let parent = e.target.parentNode;
@@ -256,8 +260,11 @@ export default {
               name: "Rescue",
               params: {
                 token: this.$route.token,
-                caseId: this.$route.params.caseId
-              }
+                caseId: this.$route.query.caseId
+              },
+        query: {
+          typeId:this.$route.query.typeId
+        }
             });
           }
         });
@@ -317,14 +324,7 @@ export default {
               console.log(res);
             });
         });
-      // this.$router.push({
-      //   name: "resstep",
-      //   params: {
-      //     token: this.token,
-      //     caseId: this.caseId
-      //   }
-      // });
-      this.$router.go(0)
+      window.location.reload();
     },
     up() {
       this.imglist[this.num - 1].list.push(this.fileurl);
@@ -334,14 +334,16 @@ export default {
       });
       this.imgVisible = false;
       this.centerDialogVisible = true;
-      // this.$router.push({
-      //   name: "resstep",
-      //   params: {
-      //     token: this.token,
-      //     caseId: this.caseId
-      //   }
-      // });
-      this.$router.go(0)
+      this.$router.push({
+        name: "resstep",
+        params: {
+          token: this.token,
+          caseId: this.caseId
+        },
+        query: {
+          typeId:this.$route.query.typeId
+        }
+      });
     },
     txtdata() {},
     txtsdata() {},
@@ -390,7 +392,7 @@ export default {
     dialogVisible() {},
     st(i) {
       this.num = i;
-      this.txt = this.stepdata[i].obj.description;
+      // this.txt = this.stepdata[i].obj.description;
       this.id = this.stepdata[i].obj.id;
       this.centerDialogVisible = true;
       console.log(this.stepdata[i].obj.id);
@@ -403,6 +405,9 @@ export default {
             this.$route.params.token ||
             JSON.parse(window.localStorage.getItem("data")).data,
           caseid: this.$route.params.caseid
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     }
@@ -468,6 +473,7 @@ span small {
 }
 .rspan {
   color: #df1717;
+  margin-left: 5px
 }
 .upspan {
   font-size: 64px;
@@ -510,6 +516,7 @@ label input {
 }
 .p {
   text-align: center;
+  margin: 40px 0 10px;
 }
 .a-upload {
   padding: 4px 10px;
@@ -669,4 +676,34 @@ ul > li p {
   position: absolute;
   top: -20px;
 }
+.el-dialog__body .el-input{
+  width: 60%;
+  margin-left: 15px;
+}
+.el-dialog__body>p{
+  line-height: 42px;
+}
+input[type="file"]{
+  margin-left: 12px;
+} 
+.i_box{
+  margin-top: 18px;
+}
+.el-input.input_box{
+  width: 70%;
+}
+.add_span{
+  color: #00abfa;
+}
+
+/*.add_span span{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  font-size: 10px;
+  line-height: 42p;
+  color: #00abfa;
+  border: 1px solid #00abfa;
+  border-radius: 50%
+} */
 </style>

@@ -6,23 +6,26 @@
         </p>
         <h2>开始救援</h2>
         <div class="step_box">
-            <p>流程示意</p>
+            <p style="font-weight: 600;">流程示意</p>
             <el-steps :active="2" align-center>
                 <el-step title="启动当地救援公司" ></el-step>
                 <el-step title="医疗费用担保" ></el-step>
                 <el-step title="收集医疗单据" ></el-step>
                 <el-step title="传递相关医疗单据到保险公司" ></el-step>
             </el-steps>
-            <p>服务清单</p>
+            <p style="font-weight: 600;">服务清单</p>
             <div class="det_box">
               <ul>
-                  <li v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===1">
+                  <li v-for="(v,ind) in stepdata" :key="ind" :title="v.dict.name" v-if="v.dict.parentId===0">
+                      {{v.dict.name}}:
+                  </li>
+                  <li  v-else-if="v.dict.parentId===1">
                     <img v-if="v.obj.state===1" src="../../../../static/images/savior_list_y.png" alt="">
                     <img v-else src="../../../../static/images/savior_list_n.png" alt="">
                     {{v.dict.name}}
                   </li>
               </ul>
-
+            <p style="font-weight: 600;">案件结点流程</p>
             </div>
                     <el-table
             :data="tableData"
@@ -127,6 +130,9 @@ export default {
             this.$route.params.token ||
             JSON.parse(window.localStorage.getItem("data")).data,
           caseid: this.$route.params.caseid
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     },
@@ -156,6 +162,7 @@ export default {
       )
       .then(res => {
         that.flag = true;
+        console.log(res.data)
         that.feedata = res.data.obj;
         that.stepdata = res.data.obj2;
         that.loading = false;
@@ -300,11 +307,11 @@ p {
 .det_box ul {
   width: 100%;
 }
-.det_box ul li {
+/* .det_box ul li {
   width: 20%;
   line-height: 30px;
   margin-left: 2%;
-}
+} */
 .back_box {
   text-align: left;
   font-size: 14px;
@@ -329,42 +336,6 @@ p {
   left: 700px;
   height: 100px;
 }
-._box .a_box:not(:first-child) {
-  visibility: hidden;
-  top: 630px;
-}
-._box .a_box:nth-child(2) {
-  visibility: visible;
-  top: 510px;
-}
-._box .a_box:nth-child(3) {
-  visibility: visible;
-  top: 690px;
-}
-._box .a_box:nth-child(4) {
-  visibility: visible;
-  top: 870px;
-}
-._box .a_box:nth-child(5) {
-  visibility: visible;
-  top: 1050px;
-}
-._box .a_box:nth-child(6) {
-  visibility: visible;
-  top: 510px;
-}
-._box .a_box:nth-child(7) {
-  visibility: visible;
-  top: 690px;
-}
-._box .a_box:nth-child(8) {
-  visibility: visible;
-  top: 870px;
-}
-._box .a_box:nth-child(9) {
-  visibility: visible;
-  top: 1050px;
-}
 .f_box {
   position: absolute;
   width: 300px;
@@ -388,13 +359,17 @@ p {
   margin-left: 18px;
 }
 ul {
-  height: 150px;
+  height: 50px;
 }
 ul > li {
-  width: 80px;
   text-align: center;
   float: left;
   margin-left: 10px;
+  width: 15%;
+}
+ul > li:first-child{
+  width: 10%;
+    font-weight: 600;
 }
 ul > li p {
   width: 100%;

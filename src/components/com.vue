@@ -24,16 +24,16 @@ export default {
     headerVue,
   },
   mounted() {
-    console.log(this.$route.params)
-    let insti = this.insti;
-    let token = this.token;
-    this.$router.push({
-      name: "ComIndex",
-      params: {
-        insti,
-        token
-      }
-    });
+    // console.log(this.$route.params)
+    // let insti = this.insti;
+    // let token = this.token;
+    // this.$router.push({
+    //   name: "ComIndex",
+    //   params: {
+    //     insti,
+    //     token
+    //   }
+    // });
   }
 };
 </script>

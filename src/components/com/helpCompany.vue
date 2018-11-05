@@ -35,6 +35,7 @@
     </div>
 
     </div>
+    <br/>
     <h5 class="marginl10">C、服务清单</h5>
     <div class="rescue_box"  v-for="(item,ind) in checkList" :key="ind">
         <p>{{ind+1}} 、{{item.name}}</p>
@@ -44,20 +45,18 @@
                 <br/>
                 <span class="res_box">说明：{{v.obj.description}}</span>
                 <br/>
-                <span class="res_box">回复：{{v.obj.reply}}</span>
-                <br/>
                 <span class="res_box" v-show="v.obj.fee!=0">限额：{{v.obj.fee}}</span>
             </el-checkbox>
         </el-checkbox-group>
     </div>
     <h5 class="marginl10">D、保险公司授权说明及文件</h5>
-	<div class="fjdiv" style="margin: 10px 25px;">
+	<div class="fjdiv" style="margin: 10px 50px;">
 			<div >
 			<div class="fjred">同意启动，附件是授权文件</div>
-			<img src="images/fj.png" alt="" class="fjimg fjns" >
+			<img src="../../../static/images/fj.png" alt="" class="fjimg fjns" >
 			  附件(1)
 			</div>
-			<img src="images/r.png" alt="" class="zh-scfj" >
+			<img src="../../../static/images/eles_icon.png" alt="" class="zh-scfj" >
 			<div style="margin-left: 15px;">
 			  指挥中心上传的文件
 			</div>
@@ -68,12 +67,12 @@
 
     <h5 class="marginl10">E、相关救援说明(指挥中心添加)</h5>
     <div>
-      <el-input style="margin: 10px 45px;width: 90%;" type="textarea" placeholder="请抓紧报价，非常感谢，附件是说明文件"></el-input>
+      <el-input style="margin: 10px 60px;width: 90%;" type="textarea" placeholder="请抓紧报价，非常感谢，附件是说明文件"></el-input>
     </div>
 	
-	<div class="fjdiv" style="margin-left: 5%;">
+	<div class="fjdiv" style="margin-left: 6%;">
 			<div >
-			<img src="images/fj.png" alt="" class="fjimg" >
+			<img src="../../../static/images/fj.png" alt="" class="fjimg" >
 			  附件
 			</div>
 			<img src="images/e.png" alt="" class="zh-scfj" >
@@ -95,8 +94,8 @@
     </div>
 	</div>
 
-	<el-dialog title="获取报价" :visible.sync="centerDialogVisible" width="30%" center>
-	  <span>您正在向救援机构获取报价，确认转发</span>
+	<el-dialog title="获取报价" :visible.sync="centerDialogVisible" width="30%"  center>
+	  <p style="text-align: center;"><span>您正在向救援机构获取报价，确认转发</span></p> 
 	  <span slot="footer" class="dialog-footer">
 	    <el-button @click="centerDialogVisible = false" size="medium" style="width:170px;">取 消</el-button>
 	    <el-button type="primary" @click="centerDialogVisible = false;tooffer()" size="medium" style="width:170px;">确 定</el-button>
@@ -127,11 +126,12 @@
 <script>
 import qs from "qs";
 import { Message } from "element-ui";
+import err from "../../../static/error2msg.js";
 export default {
   data() {
     return {
       imgVisible: false,
-       def: "",
+      def: "",
       txts: "",
       token:
         this.$route.params.token ||
@@ -142,7 +142,7 @@ export default {
       checkList: [],
       data: null,
       inf: null,
-      objdata:[],
+      objdata: [],
       acc_list: [
         {
           url: "",
@@ -172,42 +172,14 @@ export default {
         }
       ],
       value: "",
-      centerDialogVisible: false
+      url:'',
+      centerDialogVisible: false,
+      typeId:this.$route.query.typeId
     };
   },
   mounted: function() {
     let that = this;
-    console.log(that.obj);
-    this.inf = {
-      time: "报案时间" + that.timestampToTime(that.obj.reportTs),
-      user: "报案客户：" + (that.obj.reportUser || ""),
-      sex: "性别：男",
-      phone: "报案电话：" + (that.obj.reporterContact || ""),
-      instime: "出险时间：" + that.timestampToTime(that.obj.incidentTs),
-      null: "-",
-      card: "证件号码：" + (that.victimList.obj.idNo || ""),
-      number: "保单号码：" + (that.victimList.obj.insurancePolicyNo || ""),
-      pardata: {
-        flag: true,
-        data: "保单详情"
-      },
-      belong: "所属保险公司：" + (that.victimList.insuranceCompany || ""),
-      source: "案件信息来源：" + (that.obj.caseSrc || ""),
-      exp: "来源说明：" + (that.obj.caseSrcDesc || "")
-    };
-    fetch("http://api.test.dajiuxing.com.cn/rescue/case/detail_case", {
-      method: "POST",
-      body: `token=${this.token}&caseId=${that.victimList.obj.caseId}`,
-      mode: "cors",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
-      .then(function(res) {
-        return res.json();
-      })
-      .then(function(data) {
-        that.init = data.obj;
-        that.setdata();
-      });
+    that.setdata();
     fetch(
       "http://api.test.dajiuxing.com.cn/rescue/bidding/view_case_solution",
       {
@@ -244,7 +216,7 @@ export default {
       });
   },
   methods: {
-        back() {
+    back() {
       let that = this;
       console.log(that.token);
       this.$router.push({
@@ -257,20 +229,60 @@ export default {
     setdata() {
       let that = this;
       let addr = "";
-      if (that.init.generalLocation) {
-        addr = that.init.generalLocation.addr;
-      }
-      this.objdata = {
-        add:
-          "出险地:" +
-          (that.init.caseCountry || "") +
-          (that.init.caseCity || "") +
-          addr,
-        type: "事故类型：" + (that.init.obj.accidentType || ""),
-        part: "受伤部位：" + (that.init.victimList[0].obj.injuredPart || ""),
-        weather: "天气灾害：" + (that.init.obj.weatherTag || "无")
-      };
-      this.def = that.init.obj.incidentDesc;
+      console.log(this.caseid);
+      fetch("http://api.test.dajiuxing.com.cn/rescue/case/detail_case", {
+        method: "POST",
+        body: `token=${this.token}&caseId=${that.caseid}`,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      })
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          that.init = data.obj;
+          that.obj = data.obj;
+          that.victimList = data.obj.victimList;
+          console.log(data)
+          if (that.init.generalLocation) {
+            addr = that.init.generalLocation.addr;
+          }
+          that.objdata = {
+            add:
+              "出险地:" +
+              (that.init.caseCountry || "") +
+              (that.init.caseCity || "") +
+              addr,
+            type: "事故类型：" + (that.init.obj.accidentType || ""),
+            part:
+              "受伤部位：" + (that.victimList[0].obj.injuredPart || ""),
+            weather: "天气灾害：" + (that.init.obj.weatherTag || "无")
+          };
+          that.def = that.init.obj.incidentDesc;
+          that.inf = {
+            time: "报案时间" + that.timestampToTime(that.init.obj.reportTs),
+            user: "报案客户：" + (that.init.obj.reportUser || ""),
+            sex: "性别：男",
+            phone: "报案电话：" + (that.init.obj.reporterContact || ""),
+            instime: "出险时间：" + that.timestampToTime(that.init.obj.incidentTs),
+            null: "-",
+            card: "证件号码：" + (that.victimList[0].obj.idNo || ""),
+            number:
+              "保单号码：" + (that.victimList[0].obj.insurancePolicyNo || ""),
+            pardata: {
+              flag: true,
+              data: "保单详情"
+            },
+            belong: "所属保险公司：" + (that.victimList.insuranceCompany || ""),
+            source: "案件信息来源：" + (that.obj.caseSrc || ""),
+            exp: "来源说明：" + (that.obj.caseSrcDesc || "")
+          };
+        });
+    },
+    error2msg(errcode){
+      var errmsg = new err();
+      var msg = errmsg.tomsg(errcode);
+      Message.error(msg);
     },
     tooffer() {
       this.axios
@@ -283,9 +295,21 @@ export default {
         )
         .then(res => {
           console.log(res);
-          this.$router.push({
-            name: "ComOffer"
-          });
+          if(res.data.code == 0){
+            Message({
+                message: "操作成功",
+                type: "success"
+              });
+            this.$router.push({
+              name:'ComOffer',
+              query: {
+                typeId:this.typeId
+              }
+              
+            })
+          }else{
+            this.error2msg(res.data.code);
+          }
         });
     },
     handleGetFile(e) {
@@ -357,6 +381,7 @@ export default {
       }
     },
     up() {
+      console.log(this.url)
       let flag =
         this.url.endsWith("png") ||
         this.url.endsWith("jpg") ||
@@ -396,22 +421,33 @@ export default {
 
 <style scoped>
 @import url("./style.css");
+.case_box {
+  width: 100%;
+}
+.case_box p {
+  line-height: 45px;
+}
+.case_box p span {
+  margin-left: 20px;
+}
 .case_box ul {
   border: 1px solid #d9ddde;
 }
 .case_box ul li {
-  width: 33%;
-  text-align: center;
+  width: 39%;
+  text-align: start;
+  text-indent: 1em;
+  font-size: 14px;
   overflow: hidden;
+  height: 42px;
   display: inline-block;
   line-height: 42px;
   border-right: #d9ddde 1px solid;
   border-top: #d9ddde 1px solid;
 }
 .case_box ul li:nth-child(3n) {
-  text-align: center;
-  text-indent: 0;
   border-right: 0;
+  width: 20%;
 }
 .case_box ul li:first-child,
 .case_box ul li:nth-child(2),
@@ -430,11 +466,14 @@ export default {
 }
 .rescue_box {
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 0 50px;
 }
 .rescue_box > p {
   line-height: 40px;
   font-size: 14px;
+}
+.rescue_box .el-checkbox-group{
+  padding-left: 28px;
 }
 .el-checkbox__inner {
   margin-bottom: 60px;
@@ -459,14 +498,16 @@ export default {
 .data_wrap {
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 40px;
+  padding: 0 40px;
 }
 .data_wrap ul {
   width: 100%;
+  height: 250px;
 }
 .data_wrap ul li {
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
 }
 .data_wrap ul li:last-child textarea {
   width: 80%;
@@ -475,6 +516,7 @@ export default {
   border: 1px solid #d9ddde;
   border-radius: 5px;
   font-size: 15px;
+  margin-top: 15px
 }
 .data_wrap ul li:last-child span,
 .data_wrap ul li:last-child textarea {

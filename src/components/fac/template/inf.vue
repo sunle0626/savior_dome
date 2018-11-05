@@ -9,7 +9,7 @@
             <div class="req_box">
                 <b>救援方案</b>
                 <div class="acc_box">
-                    <p>附件<span>*请上传救援方案附件</span></p>
+                    <p><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件<span>*请上传救援方案附件</span></p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img v-if="v.flag" :src="v.url" alt="">
@@ -67,10 +67,10 @@
             :visible.sync="flag"
             width="30%"
             center>
-            <p>确认提交后，不可修改，是否确认提交</p>
+            <p style="text-align:center">确认提交后，不可修改，是否确认提交</p>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="flag = false">修改一下</el-button>
-                <el-button type="primary" @click="flag = false;tooffer()">确 定</el-button>
+                <el-button class="button" style="border-clock:#409EFF" @click="flag = false">修改一下</el-button>
+                <el-button class="button" type="primary"  @click="flag = false;tooffer()">确 定</el-button>
             </span>
             </el-dialog>
             <el-dialog
@@ -126,7 +126,8 @@ export default {
       file: null,
       avatar: null,
       url: "",
-      imgVisible: false
+      imgVisible: false,
+      typeId:this.$route.query.typeId
     };
   },
   methods: {
@@ -186,6 +187,9 @@ export default {
         name: "Await",
         params: {
           token: this.token
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     },
@@ -234,6 +238,9 @@ export default {
           caseId: this.$route.params.obj.caseId,
           obj: this.obj,
           victimList: this.victimList
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     },
@@ -303,6 +310,9 @@ export default {
                 params: {
                   token: this.$route.params.token,
                   caseId: this.$route.params.obj.caseId
+                },
+                query: {
+                  typeId:this.$route.query.typeId
                 }
               });
             });
@@ -451,7 +461,7 @@ span {
 }
 .el-textarea {
   display: block;
-  width: 160%;
+  width: 350%;
   margin-top: 20px;
 }
 .upbtn_box {
@@ -477,5 +487,12 @@ span {
 }
 .p {
   text-align: center;
+}
+.el-button.el-button--default{
+  border-color: #409EFF;
+  color: #409EFF
+}
+.el-button.el-button--default.button,.el-button.el-button--primary.button{
+  width: 100px;
 }
 </style>

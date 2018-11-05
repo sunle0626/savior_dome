@@ -6,7 +6,7 @@
         <div class="box">
             <h2>查看并操作</h2>
             <div class="case_box">
-                <p><b>A、案件基本信息</b> <span>案件编号：{{casenumber}}</span></p>
+                <p><b>案件基本信息</b> <span>案件编号：{{casenumber}}</span></p>
                 <ul>
                     <li v-for="(v,ind) in inf" :key="ind">
                         <span v-if="v.flag" class="btn_box">
@@ -21,8 +21,8 @@
             <div class="swi_box">
                 <div class="top_box">
                     <p>
-                        <router-link :to="{name:'Comparinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
-                        <router-link :to="{name :'Comparcase',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">案件进展</router-link>
+                        <router-link :to="{name:'Comparinf',params:{token:token,init:init,caseId:obj.id,obj:obj2},query: {typeId:this.$route.query.typeId}}">出险信息</router-link>
+                        <router-link :to="{name :'Comparcase',params:{token:token,init:init,caseId:obj.id,obj:obj2},query: {typeId:this.$route.query.typeId}}">案件进展</router-link>
                     </p>
                 </div>
                 <div class="bottom_box">
@@ -43,7 +43,8 @@ export default {
       casenumber: "AJ200101",
       inf: null,
       init: null,
-      obj2: null
+      obj2: null,
+      typeId:this.$route.query.typeId
     };
   },
   methods: {
@@ -71,6 +72,9 @@ export default {
         name: "ComOffer",
         params: {
           token: that.token
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     },
@@ -104,6 +108,9 @@ export default {
           init: that.init,
           caseId: that.obj.id,
           obj: that.obj2
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     }
@@ -169,18 +176,20 @@ a {
   border: 1px solid #d9ddde;
 }
 .case_box ul li {
-  width: 33%;
-  text-align: center;
+  width: 39%;
+  text-align: start;
+  text-indent: 1em;
+  font-size: 14px;
   overflow: hidden;
+  height: 42px;
   display: inline-block;
   line-height: 42px;
   border-right: #d9ddde 1px solid;
   border-top: #d9ddde 1px solid;
 }
 .case_box ul li:nth-child(3n) {
-  text-align: center;
-  text-indent: 0;
   border-right: 0;
+  width: 20%;
 }
 .case_box ul li:first-child,
 .case_box ul li:nth-child(2),

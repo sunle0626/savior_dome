@@ -24,15 +24,15 @@ export default {
     headerVue
   },
   mounted() {
-    let insti = this.insti;
-    let token = this.token;
-    this.$router.push({
-      name: "RegIndex",
-      params: {
-        insti,
-        token
-      }
-    });
+    // let insti = this.insti;
+    // let token = this.token;
+    // this.$router.push({
+    //   name: "RegIndex",
+    //   params: {
+    //     insti,
+    //     token
+    //   }
+    // });
   }
 };
 </script>

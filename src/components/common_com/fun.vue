@@ -28,21 +28,22 @@
 
 <script>
 export default {
+  data() {
+    return {
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data
+    };
+  },
   methods: {
     toadd() {
-      this.$router.push({
-        name: "add"
-      });
+      window.location.href = "/rescue/user/wListRegulators";
     },
     toserve() {
-      this.$router.push({
-        name: "serve"
-      });
+      window.location.href = "/rescue/user/wToService";
     },
     todr() {
-      this.$router.push({
-        name: "dr"
-      });
+      window.location.href = "/rescue/user/wToService";
     }
   }
 };
@@ -50,10 +51,12 @@ export default {
 
 <style scoped>
 .fun_box {
-  margin-top: 25px;
+  margin-top: 10px;
   box-sizing: border-box;
-  padding: 0 180px;
+  padding: 20px 180px;
   float: left;
+  width: 100%;
+  background: #fff;
 }
 .fun_box h2 {
   font-size: 20px;

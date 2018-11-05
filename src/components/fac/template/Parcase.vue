@@ -7,34 +7,38 @@
             <el-table-column
             prop="date"
             label="时间"
-            width="180"
+            min-width="180"
             align="center">
             </el-table-column>
             <el-table-column
             prop="node"
             label="操作节点"
-            width="180"
+            min-width="180"
             align="center">
             </el-table-column>
             <el-table-column
             prop="det"
             label="操作细节"
-            align="center">
+            align="center"
+            min-width="100">
             </el-table-column>
             <el-table-column
             prop="field"
             label="操作方"
-            align="center">
+            align="center"
+            min-width="100">
             </el-table-column>
             <el-table-column
             prop="cost"
             label="费用"
-            align="center">
+            align="center"
+            min-width="100">
             </el-table-column>
             <el-table-column
             prop="corr"
             label="相关单据及图片"
-            align="center">
+            align="center"
+            min-width="100">
              <template slot-scope="scope">
               <div class="box" v-for="(item,ind) in scope.row.corr" :key="ind" >
               <img :src="item.url" width="40" height="40" class="head_pic"/>
@@ -82,7 +86,7 @@ export default {
   },
   methods: {
     close() {
-      this.$router.push("/fac/caseindex/par/parinf");
+      this.$router.push("/fac/caseindex/par/parinf?typeId="+this.route.query.typeId);
     },
     centerDialog(i) {
       this.ind = i;

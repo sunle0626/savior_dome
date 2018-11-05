@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- <formVue v-if="sereen" :token="token"></formVue> -->
-        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen"/>
+        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen" :typeId="typeId"/>
         
     </div>
 </template>
@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       sereen: false,
+      typeId: this.$route.query.typeId,
       token:
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,

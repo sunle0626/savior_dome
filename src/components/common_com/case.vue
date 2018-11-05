@@ -9,7 +9,7 @@
                 <small @click="lookinf">立即查看</small>
             </div>
         </div>
-        <addcase :token="token"/>
+        <addcase :token="token" :typeId="typeId"/>
         <div class="bottom_box">
             <ul class="bottom_ul">
                 <li v-for="(v,ind) in case_list" :key="ind">
@@ -24,9 +24,10 @@
                     <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(v.id)">
                         案件管理({{num_list[v.id]}})
                     </b>
-                    <b class="pointer_box" v-else @click="tocase(ind)">
+                    <b class="pointer_box" v-else @click="tocase(v.id)">
                         案件管理
                     </b>
+                    <b style="margin-left:20px;color:#00abfa" class="pointer_box" @click="toadd()">创立案件</b>
                 </li>
             </ul>
         </div>
@@ -48,7 +49,8 @@ export default {
       casenum: 0,
       name: "",
       case_list: [],
-      num_list: []
+      num_list: [],
+      typeId: 1
     };
   },
   methods: {
@@ -61,7 +63,8 @@ export default {
           case: "ComAwait"
         })
       );
-      window.localStorage.setItem("typeid", JSON.stringify({id}));
+
+      //window.localStorage.setItem("typeid", JSON.stringify({id}));
       // if (this.case_list[ind].num > 0) {
       //   this.$router.push({
       //     name: "Await",
@@ -72,12 +75,17 @@ export default {
       //     }
       //   });
       // } else {
+      this.typeId = id;
+      console.log("typeId:" + id);
       this.$router.push({
+        path: "/com/Index/caseindex/ComAwait",
         name: "ComAwait",
         params: {
           token: token,
           insti: insti,
-          flag: false,
+          flag: false
+        },
+        query: {
           typeId: id
         }
       });
@@ -88,6 +96,17 @@ export default {
       let insti = this.insti;
       this.$router.push({
         name: "ComAwait",
+        params: {
+          token: token,
+          insti: insti
+        }
+      });
+    },
+    toadd() {
+      let token = this.token;
+      let insti = this.insti;
+      this.$router.push({
+        name: "appcase",
         params: {
           token: token,
           insti: insti
@@ -117,18 +136,18 @@ export default {
         console.log(data.obj);
         that.num_list = data.obj;
       });
-    if (this.name) {
-      this.$router.push({
-        name: this.name,
-        params: {
-          token: this.token,
-          insti: this.insti
-        }
-      });
-      window.localStorage.removeItem("case");
-    } else {
-      console.log(0);
-    }
+    // if (this.name) {
+    //   this.$router.push({
+    //     name: this.name,
+    //     params: {
+    //       token: this.token,
+    //       insti: this.insti
+    //     }
+    //   });
+    //   window.localStorage.removeItem("case");
+    // } else {
+    //   console.log(0);
+    // }
     fetch(
       "http://api.test.dajiuxing.com.cn/rescue/service_plan/level_service",
       {
@@ -161,24 +180,26 @@ export default {
 .wel_box {
   float: left;
   margin-left: 200px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
 }
 .view_box {
   float: right;
   margin-right: 180px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
 }
 .view_box b:first-child {
   font-weight: 500;
   color: #000;
-  font-size: 20px;
+  font-size: 18px;
+  margin-left: 10px;
 }
 .view_box b:last-child {
   font-weight: 500;
   font-size: 18px;
   color: #ff8e32;
+  margin-right: 10px;
 }
 .view_box small {
   display: inline-block;
@@ -198,6 +219,7 @@ export default {
   height: 270px;
   margin-left: 12%;
   margin-right: 12%;
+  padding-top: 40px;
   display: flex;
   justify-content: space-around;
 }
@@ -214,7 +236,7 @@ export default {
 .bottom_ul li p {
   box-sizing: border-box;
   margin-top: 10px;
-  height: 50px;
+  height: 80px;
   padding: 0 15px;
   color: #999;
 }
@@ -222,5 +244,13 @@ export default {
   color: #ff7200;
   font-size: 16px;
   text-decoration: underline;
+}
+@media screen and (min-width: 1280px) and (max-width: 1366px){
+  .bottom_ul li p {
+    font-size: 16px;
+  }
+  .bottom_ul li b {
+    font-size: 12px;
+  }
 }
 </style>

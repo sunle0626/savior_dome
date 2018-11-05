@@ -9,7 +9,7 @@
             <div class="req_box">
                 <b>救援方案</b>
                 <div class="acc_box">
-                    <p>附件({{acc_list.length}})</p>
+                    <p><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件({{acc_list.length}})</p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img :src="v.url" alt="">
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     back() {
-      this.$router.push("/fac/caseindex/offer");
+      this.$router.push("/fac/caseindex/offer?typeId="+this.$route.query.typeId);
     },
     toalter() {
       this.$router.push({
@@ -71,6 +71,9 @@ export default {
         params: {
           caseid: this.caseid,
           token: this.token
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     }

@@ -24,10 +24,12 @@ export default {};
 
 <style scoped>
 .fun_box {
-  margin-top: 25px;
+    margin-top: 10px;
   box-sizing: border-box;
-  padding: 0 180px;
+  padding: 20px 180px;
   float: left;
+  width: 100%;
+  background: #fff;
 }
 .fun_box h2 {
   font-size: 20px;
@@ -37,14 +39,15 @@ export default {};
 .fun_box .fun_list {
   width: 100%;
   float: left;
-  margin: 30px 0;
+  margin: 16px 0;
 }
 .fun_list .fun {
   float: left;
-  margin:0 35px;
+  margin: 0 35px;
 }
-.fun img,.fun span{
-    float: left;
+.fun img,
+.fun span {
+  float: left;
 }
 .fun img {
   height: 72px;
@@ -52,6 +55,6 @@ export default {};
 }
 .fun span {
   line-height: 72px;
-  margin-left: 10px
+  margin-left: 10px;
 }
 </style>

@@ -26,16 +26,16 @@ export default {
     IndexVue
   },
   mounted() {
-    let insti = this.insti;
-    let token = this.token;
-    this.$router.push({
-      path: "/fac/index",
-      name: "FacIndex",
-      params: {
-        insti,
-        token
-      }
-    });
+    // let insti = this.insti;
+    // let token = this.token;
+    // this.$router.push({
+    //   path: "/fac/index",
+    //   name: "FacIndex",
+    //   params: {
+    //     insti,
+    //     token
+    //   }
+    // });
   }
 };
 </script>

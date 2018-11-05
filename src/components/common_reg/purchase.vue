@@ -41,17 +41,20 @@ ul{
     height: 100%;
     display: flex;
     flex-wrap: wrap;
-    margin-top: 30px;
-    justify-content: space-between;
+    margin-top: 10px;
 }
 li{
     height: 80px;
     background: #fff;
-    margin-top: 10px;
+    margin: 20px 0;
     border-radius: 10px;
     border: 1px solid #e6e6e6;
     line-height: 80px;
     color: #666666;
     width: 21%;
+    margin-right: 5%;
+}
+li:nth-child(4n){
+    margin-right: 0;
 }
 </style>

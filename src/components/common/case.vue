@@ -20,10 +20,10 @@
                         {{v.descrition}}
                     </p>
 
-                    <b v-if="num_list[v.id]" @click="tocase(ind)">
+                    <b v-if="num_list[v.id]" @click="tocase(v.id)">
                         案件管理({{num_list[v.id]}})
                     </b>
-                    <b v-else @click="tocase(ind)">
+                    <b v-else @click="tocase(v.id)">
                         案件管理
                     </b>
                 </li>
@@ -43,38 +43,43 @@ export default {
       casenum: 0,
       name: "",
       num_list: [],
-      case_list: []
+      case_list: [],
+      typeId: 1
     };
   },
   methods: {
-    tocase(ind) {
+    tocase(id) {
       let token = this.token;
       let insti = this.insti;
+      this.typeId = id;
       window.localStorage.setItem(
         "case",
         JSON.stringify({
           case: "Await"
         })
       );
-      if (this.case_list[ind].num > 0) {
-        this.$router.push({
-          name: "Await",
-          params: {
-            token: token,
-            insti: insti,
-            flag: true
-          }
-        });
-      } else {
-        this.$router.push({
-          name: "Await",
-          params: {
-            token: token,
-            insti: insti,
-            flag: false
-          }
-        });
-      }
+      // if (this.case_list[ind].num > 0) {
+      //   this.$router.push({
+      //     name: "Await",
+      //     params: {
+      //       token: token,
+      //       insti: insti,
+      //       flag: true
+      //     }
+      //   });
+      // } else {
+      this.$router.push({
+        name: "Await",
+        params: {
+          token: token,
+          insti: insti,
+          flag: false
+        },
+        query: {
+          typeId: id
+        }
+      });
+      // }
     },
     lookinf() {
       let token = this.token;
@@ -118,18 +123,18 @@ export default {
     //       console.log(data.obj[v]);
     //     });
     //   });
-    if (this.name) {
-      this.$router.push({
-        name: this.name,
-        params: {
-          token: this.token,
-          insti: this.insti
-        }
-      });
-      window.localStorage.removeItem("case");
-    } else {
-      console.log(0);
-    }
+    // if (this.name) {
+    //   this.$router.push({
+    //     name: this.name,
+    //     params: {
+    //       token: this.token,
+    //       insti: this.insti
+    //     }
+    //   });
+    //   window.localStorage.removeItem("case");
+    // } else {
+    //   console.log(0);
+    // }
     fetch(
       "http://api.test.dajiuxing.com.cn/rescue/service_plan/level_service",
       {
@@ -176,24 +181,26 @@ export default {
 .wel_box {
   float: left;
   margin-left: 200px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
 }
 .view_box {
   float: right;
   margin-right: 180px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
 }
 .view_box b:first-child {
   font-weight: 500;
   color: #000;
-  font-size: 20px;
+  font-size: 18px;
+  margin-left: 10px;
 }
 .view_box b:last-child {
   font-weight: 500;
   font-size: 18px;
   color: #ff8e32;
+  margin-right: 10px;
 }
 .view_box small {
   display: inline-block;
@@ -213,6 +220,9 @@ export default {
   height: 270px;
   margin-left: 12%;
   margin-right: 12%;
+  padding-top: 40px;
+  display: flex;
+  justify-content: space-around;
 }
 .bottom_ul li {
   width: 20%;
@@ -227,7 +237,7 @@ export default {
 .bottom_ul li p {
   box-sizing: border-box;
   margin-top: 10px;
-  height: 50px;
+  height: 80px;
   padding: 0 15px;
   color: #999;
 }
@@ -235,5 +245,13 @@ export default {
   color: #ff7200;
   font-size: 16px;
   text-decoration: underline;
+}
+@media screen and (min-width: 1280px) and (max-width: 1366px){
+  .bottom_ul li p {
+    font-size: 14px;
+  }
+  .bottom_ul li b {
+    font-size: 12px;
+  }
 }
 </style>

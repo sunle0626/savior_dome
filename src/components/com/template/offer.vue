@@ -63,7 +63,10 @@
                 <span v-if="props.row.state==140&&typeof v.solution =='undefined'">
                   等待报价
                 </span>
-                 <span class="span_box" @click="pass(props.row.caseid)" v-if="props.row.state==160">授权该救援机构开始救援</span>
+                <span v-if="props.row.state==160&&typeof v.solution =='undefined'">
+                  已开始救援
+                </span>
+                 <span class="span_box" @click="pass(props.row.caseid,v)" v-if="props.row.state==160">授权该救援机构开始救援</span>
                 <span class="span_box" @click="adopt(v.bidding.solutionNo,props.row)" v-if="props.row.state==140&&typeof v.solution !='undefined'">
                   同意该公司报价转交保险授权</span>
                 <span class="span_box" @click="toplook(props.row.caseid,i)" v-if="typeof v.solution !='undefined'">报价详情</span>
@@ -77,44 +80,44 @@
             <el-table-column
                 prop="number"
                 label="序号"
-                width="50"
+                min-width="50"
                 type="index"
                 :index='1'>
             </el-table-column>
             <el-table-column
                 prop="casenumber"
                 label="案件编号"
-                width="80">
+                min-width="80">
             </el-table-column>
             <el-table-column
                 prop="address"
                 label="案件地点"
-                width="80">
+                min-width="80">
             </el-table-column>
             <el-table-column
                 prop="username"
                 label="用户信息"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="papers"
                 label="证件信息"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="open"
                 label="案件来源"
-                width="50">
+                min-width="50">
             </el-table-column>
             <el-table-column
                 prop="plan"
                 label="案件状态"
-                width="100">
+                min-width="100">
             </el-table-column>
             <el-table-column
                 prop="par"
                 label="用户是否投保"
-                width="90">
+                min-width="90">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
                     <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button>                   
@@ -123,12 +126,12 @@
             <el-table-column
                 prop="get_time"
                 label="启动救援时间"
-                width="110">
+                min-width="110">
             </el-table-column>
             <el-table-column
                 prop="op"
                 label="操作"
-                width="160">
+                min-width="160">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="topinf(scope.row.caseid)">案件详情</el-button>
                     <el-button  v-if="scope.row.state==130" type="text" size="small" @click="topar(scope.row.caseid,scope.$index)">转交救援公司获取报价</el-button>
@@ -143,7 +146,7 @@
           width="50%"
           center
           >
-          <p>{{exptxt}}</p>
+          <p style="text-align:center">{{exptxt}}</p>
         </el-dialog>
     </div>
 </template>
@@ -151,12 +154,12 @@
 <script>
 import qs from "qs";
 import funVue from "../../common_com/fun.vue";
+import { Message } from "element-ui";
+import err from "../../../../static/error2msg.js";
 export default {
   data() {
     return {
-      typeid:
-        this.$route.params.typeId ||
-        JSON.parse(window.localStorage.getItem("typeid")).id,
+      typeId:this.$route.query.typeId,
       tableData: [
         {
           number: 0,
@@ -224,10 +227,16 @@ export default {
     };
   },
   methods: {
+    error2msg(errcode){
+      var errmsg = new err();
+      var msg = errmsg.tomsg(errcode);
+      Message.error(msg);
+    },
     exp(txt) {
       this.exptxt = txt;
     },
-    pass(caseid) {
+    pass(caseid,v) {
+      v.state=160;
       console.log(caseid);
       this.axios
         .post(
@@ -239,13 +248,26 @@ export default {
         )
         .then(res => {
           console.log(res);
-          this.$router.push({
-            name: "ComOffer",
-            params: {
-              time: new Date()
-            }
-          });
+          if(res.data.code == 0){
+            Message({
+                message: "操作成功",
+                type: "success"
+              });
+            // this.$router.push({
+            //   name: "ComOffer",
+            //   params: {
+            //     time: new Date()
+            //   },
+            //   query: {
+            //     typeId:this.typeId
+            //   }
+            // });
+            window.location.reload();
+          }else{
+            this.error2msg(res.data.code);
+          }
         });
+        // this.$router.go(0)
     },
     adopt(solutionNo, v) {
       v.state = 150;
@@ -261,12 +283,23 @@ export default {
         )
         .then(res => {
           console.log(res);
-          this.$router.push({
-            name: "ComOffer",
-            params: {
-              time: new Date()
-            }
-          });
+          if(res.data.code == 0){
+            Message({
+                message: "操作成功",
+                type: "success"
+              });
+            this.$router.push({
+              name: "ComOffer",
+              params: {
+                time: new Date()
+              },
+              query: {
+                typeId:this.typeId
+              }
+            });
+          }else{
+            this.error2msg(res.data.code);
+          }
         });
     },
     reject(solutionNo, v) {
@@ -282,12 +315,23 @@ export default {
         )
         .then(res => {
           console.log(res);
-          this.$router.push({
-            name: "ComOffer",
-            params: {
-              time: new Date()
-            }
-          });
+          if(res.data.code == 0){
+            Message({
+                message: "操作成功",
+                type: "success"
+              });
+            this.$router.push({
+              name: "ComOffer",
+              params: {
+                time: new Date()
+              },
+              query: {
+                typeId:this.typeId
+              }
+            });
+          }else{
+            this.error2msg(res.data.code);
+          }
         });
     },
     topinf(obj) {
@@ -303,7 +347,11 @@ export default {
               obj: that.obj,
               victimList: that.victimList,
               index: i
+            },
+            query: {
+              typeId:this.typeId
             }
+            
           });
         }
       });
@@ -314,6 +362,9 @@ export default {
         params: {
           caseid: obj,
           token: this.token
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     },
@@ -330,6 +381,9 @@ export default {
           index,
           obj: this.obj,
           victimList: this.victimList
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     },
@@ -362,7 +416,7 @@ export default {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
           body: `token=${this.token}&typeId=${
-            this.typeid
+            this.typeId
           }&status=120&status=130&status=112&status=114&status=120&status=150&status=160&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
@@ -390,7 +444,7 @@ export default {
                       caseid: v.obj.id,
                       number: i + 1, //序号
                       casenumber: v.obj.caseNo, //案件编号
-                      address: v.generalLocation.addr, //地址
+                      address: v.generalLocation?v.generalLocation.addr:'', //地址
                       username:
                         v.victimList[0].obj.victimName +
                         (v.obj.reporterContact || ""), //用户信息
@@ -426,7 +480,7 @@ export default {
                   caseid: v.obj.id,
                   number: i + 1, //序号
                   casenumber: v.obj.caseNo, //案件编号
-                  address: v.generalLocation.addr, //地址
+                  address: v.generalLocation?v.generalLocation.addr:'', //地址
                   username:
                     v.victimList[0].obj.victimName +
                     (v.obj.reporterContact || ""), //用户信息
@@ -445,7 +499,7 @@ export default {
                   caseid: v.obj.id,
                   number: i + 1, //序号
                   casenumber: v.obj.caseNo, //案件编号
-                  address: v.generalLocation.addr, //地址
+                  address: v.generalLocation?v.generalLocation.addr:'', //地址
                   username:
                     v.victimList[0].obj.victimName +
                     (v.obj.reporterContact || ""), //用户信息
@@ -464,7 +518,7 @@ export default {
                   caseid: v.obj.id,
                   number: i + 1, //序号
                   casenumber: v.obj.caseNo, //案件编号
-                  address: v.generalLocation.addr, //地址
+                  address: v.generalLocation?v.generalLocation.addr:'', //地址
                   username:
                     v.victimList[0].obj.victimName +
                     (v.obj.reporterContact || ""), //用户信息
@@ -495,7 +549,7 @@ export default {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
           body: `token=${this.token}&typeId=${
-            this.typeid
+            this.typeId
           }&status=120&status=130&status=112&status=140&status=150&status=160`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
@@ -524,7 +578,7 @@ export default {
                         caseid: v.obj.id,
                         number: i + 1, //序号
                         casenumber: v.obj.caseNo, //案件编号
-                        address: v.generalLocation.addr, //地址
+                        address: v.generalLocation?v.generalLocation.addr:'', //地址
                         username:
                           v.victimList[0].obj.victimName +
                           (v.obj.reporterContact || ""), //用户信息
@@ -560,7 +614,7 @@ export default {
                     caseid: v.obj.id,
                     number: i + 1, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username:
                       v.victimList[0].obj.victimName +
                       (v.obj.reporterContact || ""), //用户信息
@@ -579,7 +633,7 @@ export default {
                     caseid: v.obj.id,
                     number: i + 1, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username:
                       v.victimList[0].obj.victimName +
                       (v.obj.reporterContact || ""), //用户信息
@@ -598,7 +652,7 @@ export default {
                     caseid: v.obj.id,
                     number: i + 1, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username:
                       v.victimList[0].obj.victimName +
                       (v.obj.reporterContact || ""), //用户信息
@@ -695,5 +749,8 @@ export default {
   /* display: inline-block;
   width: 100px; */
   text-align: center;
+}
+.el-button+.el-button{
+  margin: 0;
 }
 </style>

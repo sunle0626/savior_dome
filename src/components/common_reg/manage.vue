@@ -9,6 +9,7 @@
         <div class="manage_case_box">
             <ul>
                 <li >
+                  <span>{{ind+1}}、</span>
                     <span>{{v.name}}</span>
                     <span>{{v.contact}}</span>
                     <span>{{v.typename}}</span>
@@ -137,7 +138,7 @@ export default {
           console.log(v.obj);
 
           objNew.contact = v.obj.obj.reporterContact;
-          objNew.name = v.obj.victimList[0].obj.name;
+          objNew.name = v.obj.victimList[0].obj.victimName;
           if (v.obj.obj.incidentType == 1) {
             objNew.typename = "门诊就医";
           }
@@ -208,7 +209,7 @@ export default {
   float: left;
 }
 .manage_case_box ul li span {
-  margin-left: 45px;
+  margin-left: 80px;
 }
 .manage_case_box ul li span:first-child {
   margin-left: 15px;
@@ -228,13 +229,16 @@ export default {
   margin-top: 10px;
   line-height: 24px;
   font-size: 15px;
+  margin-bottom: 20px;
 }
 /* 步骤条、表格样式暂时无法修改，有空回来改 */
 .time_box {
-  height: 48px;
-  font-size: 24px;
-  line-height: 48px;
+  height: 64px;
+  font-size: 18px;
+  line-height: 64px;
   color: #444;
+  background: #fff;
+  padding-left: 12px;
   border-bottom: 1px solid #eee;
 }
 .time_box span {

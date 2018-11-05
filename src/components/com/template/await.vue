@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen"/>
+        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen" :typeId="typeId"/>
     </div>
 </template>
 
@@ -44,8 +44,7 @@ export default {
         this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
       st_time: "",
-      typeid: this.$route.params.typeId ||
-        JSON.parse(window.localStorage.getItem("typeid")).id,
+      typeId: this.$route.query.typeId,
       en_time: "",
       flag: this.$route.params.flag,
       pickerOptions1: {

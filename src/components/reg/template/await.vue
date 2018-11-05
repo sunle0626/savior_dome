@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen"/>
+        <formVue :token="token" :st_time="st_time" :en_time="en_time" :flag="flag" :sereen="sereen" :typeId="typeId"/>
     </div>
 </template>
 
@@ -46,6 +46,7 @@ export default {
       st_time: "",
       en_time: "",
       flag: this.$route.params.flag,
+      typeId: this.$route.query.typeId,
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();

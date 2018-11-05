@@ -6,7 +6,7 @@
 			<span @click="back()" class="back-page">返回上一页</span>
 		</div>
 		<h4 class="marginl10">启动救援机构</h4>
-		<h5 class="marginl10">A、案件基本信息<span class="padding-20">案件编号：{{obj.casenum}}</span></h5>
+		<h5 class="marginl10">A、案件基本信息<span class="padding-20 span_node">案件编号：{{obj.casenum}}</span></h5>
 		<div v-for="item in obj.victimLst"  :key="item.id" class="yh_cb padding-5">用户承保信息：<span v-if="item.insurancePolicyNo">已承保</span><span v-else>未承保</span><span class="padding-40">保单号码：{{item.insurancePolicyNo}}</span><span class="bd_de" @click="toUrl(item.insurancePaper)">保单详情</span></div>
 		
 		<div >
@@ -76,14 +76,14 @@
 		<div style="margin-left: 73px;font-size:13px;padding: 10px 0px;">
 		  <div v-for="(item,index) in serviceLst" :key="item.id">
 			<el-checkbox name="type" v-model="serviceId[index]" checked></el-checkbox> {{item.name}}    
-			<div style="margin-left:18px;">
+			<div style="margin-left:18px;margin-top:15px;margin-bottom:15px">
 			  <el-input style="width:90%" type="textarea" v-model="serviceTxt[index]" placeholder="添加说明"></el-input>
 			</div>
 		  </div>
 		</div>
 
 		<h5 class="marginl10">C、启动救援整体说明</h5>
-		<div style="margin-left: 91px; ">
+		<div style="margin-left: 91px; margin-top:20px">
 		  <el-input style="width: 90%;" type="textarea" v-model="stateText" placeholder="根据该病人的情况，我们建议立即启动当地救援机构开始救援"></el-input>
 		</div>
 
@@ -92,16 +92,37 @@
 			<img src="./images/fj.png" alt="" class="fjimg" >
 			  附件<span class="fjred"><i style="margin-right:5px;">*</i>请上传附件</span>
 			</div>
+      <div class="acc_box">
       <ul>
           <li v-for="(v,ind) in acc_list" :key="ind">
               <img :src="v.url" alt="">
               <p>{{v.txt}}</p>
-              <a :href="v.dow">上传附件</a>
-               <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+              <p><a @click="imgVisible=true" v-if="ind==0">上传附件</a></p>
+              
+               <!-- <input type="file" name="file" id="filebox" @change="handleGetFile($event)"> -->
           </li>
       </ul>
+      </div>
 		</div>
-		
+    <el-dialog
+      title="上传附件"
+      :visible.sync="imgVisible"
+      class="img_dialog"
+      width="50%"
+      center>
+      <p><span>附件名称</span><el-input
+          type="text"
+          placeholder="上传方案及报价"
+          v-model="txts"
+          ></el-input></p>
+          <p>
+            <span>
+              附件地址
+            </span>
+            <input type="file" name="file" id="filebox" @change="handleGetFile($event)">
+          </p>
+          <p class="p"><el-button center type="button" size="small" @click="up(),imgVisible=false">确定</el-button></p>
+    </el-dialog>
 		<div style="text-align: center;margin-top:20px;padding-bottom:20px;">
 		  <el-button type="primary" style="width: 200px;" @click="onSubmit()">确认提交</el-button>
 		  <span style="margin-left: 10px; color: #399cff;font-size: 13px;">暂无保险公司，授权通过</span>
@@ -113,10 +134,14 @@
 <script>
 import qs from "qs";
 // import "./js/elementUI/index.js";
+import { Message } from "element-ui";
+import err from "../../../static/error2msg.js";
 import "./js/jquery-2.1.1.min.js";
 export default {
   data() {
     return {
+      imgVisible:false,
+      txts:'',
       countries: [
         { label: "美国", value: "+1" },
         { label: "加拿大", value: "+01" },
@@ -352,7 +377,7 @@ export default {
       acc_list: [
         {
           url: "",
-          txt: "要上传的文件"
+          txt: ""
         }
       ],
       assistOptions1: [],
@@ -375,10 +400,16 @@ export default {
         casenum: "AJJ293223",
         incidentType: 1,
         victimLst: []
-      }
+      },
+      typeId:this.$route.query.typeId
     };
   },
   methods: {
+    error2msg(errcode){
+      var errmsg = new err();
+      var msg = errmsg.tomsg(errcode);
+      Message.error(msg);
+    },
     handleGetFile(e) {
       let that = this;
       this.file = e.target.files[0];
@@ -414,6 +445,10 @@ export default {
     back() {
       this.$router.push({
         name: "ComAwait"
+        ,
+        query: {
+          typeId:this.typeId
+        }
       });
     },
     toUrl(url) {
@@ -486,6 +521,14 @@ export default {
           services.push(s);
         }
       }
+      if(instituteIds.length == 0){
+        Message.error("请选择启动的机构");
+        return;
+      }
+      if(services.length == 0){
+        Message.error("请选择服务清单");
+        return;
+      }
       var instituteIdStr = JSON.stringify(instituteIds);
       var servicesStr = JSON.stringify(services);
       console.log(
@@ -512,15 +555,53 @@ export default {
         .then(res => {
           console.log(res.data);
           if (res.data.code === 0) {
+            Message({
+                message: "操作成功",
+                type: "success"
+              });
             this.$router.push({
               name: "ComAwait",
               params: {
                 token: this.token
+              },
+              query: {
+                typeId:this.typeId
               }
             });
           }
         });
-    }
+    },
+     up() {
+      let flag =
+        this.url.endsWith("png") ||
+        this.url.endsWith("jpg") ||
+        this.url.endsWith("jpeg") ||
+        this.url.endsWith("gif");
+      console.log(
+        this.url.endsWith("png") ||
+          this.url.endsWith("jpg") ||
+          this.url.endsWith("jpeg") ||
+          this.url.endsWith("gif")
+      );
+      if (flag) {
+        this.acc_list.push({
+          flag: true,
+          url: this.url,
+          txt: this.txts
+        });
+      } else {
+        if (this.url === "") {
+          Message.error("请上传附件");
+        } else {
+          this.acc_list.push({
+            flag: false,
+            url: this.url,
+            txt: this.txts,
+            icon: "../../../../static/images/eles_icon.png"
+          });
+        }
+      }
+    },
   },
   mounted: function() {
     let that = this;
@@ -590,5 +671,38 @@ ul li {
 }
 ul li img {
  width: 100%;
+}
+.span_node{
+  font-weight: normal;
+}
+ul li.el-select-dropdown__item{
+  width: 100%;
+}
+.acc_box {
+  box-sizing: border-box;
+  padding: 10px 10px;
+}
+.acc_box > p {
+  color: #333;
+  line-height: 40px;
+  font-size: 15px;
+}
+.acc_box ul li {
+  display: inline-block;
+  width: 20%;
+  text-align: center;
+}
+.acc_box ul li p {
+  text-align: center;
+  line-height: 36px;
+  font-size: 14px;
+}
+.acc_box ul li img {
+  width: 90px;
+  height: 120px;
+}
+.acc_box ul li a {
+  color: #00abfa;
+  font-size: 14px;
 }
 </style>

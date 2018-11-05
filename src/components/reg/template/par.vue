@@ -21,8 +21,8 @@
             <div class="swi_box">
                 <div class="top_box">
                     <p>
-                        <router-link :to="{name:'Regparinf',params:{token:token,init:init,caseId:obj.id,obj:obj2}}">出险信息</router-link>
-                        <router-link :to="{name :'Regparcase',params:{token:token,caseId:obj.id}}">案件进展</router-link>
+                        <router-link :to="{name:'Regparinf',params:{token:token,init:init,caseId:obj.id,obj:obj2},query: {typeId:this.$route.query.typeId}}">出险信息</router-link>
+                        <router-link :to="{name :'Regparcase',params:{token:token,caseId:obj.id},query: {typeId:this.$route.query.typeId}}">案件进展</router-link>
                     </p>
                 </div>
                 <div class="bottom_box">
@@ -72,6 +72,9 @@ export default {
         name: "RegAwait",
         params: {
           token: that.token
+        },
+        query: {
+          typeId:this.$route.query.typeId
         }
       });
     },
@@ -82,7 +85,7 @@ export default {
       console.log(this.$route.params.obj);
       let that = this;
       this.inf = {
-        time: "报案时间" + that.timestampToTime(that.obj.reportTs),
+        time: "报案时间:" + that.timestampToTime(that.obj.reportTs),
         user: "报案客户：" + (that.obj.reportUser || ""),
         sex: "性别：男",
         phone: "报案电话：" + (that.obj.reporterContact || ""),
@@ -105,6 +108,9 @@ export default {
           init: that.init,
           caseId: that.obj.id,
           obj: that.obj2
+        },
+        query: {
+          typeId:that.$route.query.typeId
         }
       });
     }
@@ -170,18 +176,20 @@ a {
   border: 1px solid #d9ddde;
 }
 .case_box ul li {
-  width: 33%;
-  display: inline-block;
-  text-align: center;
+  width: 39%;
+  text-align: start;
+  text-indent: 1em;
+  font-size: 14px;
   overflow: hidden;
+  height: 42px;
+  display: inline-block;
   line-height: 42px;
   border-right: #d9ddde 1px solid;
   border-top: #d9ddde 1px solid;
 }
 .case_box ul li:nth-child(3n) {
-  text-align: center;
-  text-indent: 0;
   border-right: 0;
+  width: 20%;
 }
 .case_box ul li:first-child,
 .case_box ul li:nth-child(2),

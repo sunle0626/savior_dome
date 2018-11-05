@@ -7,7 +7,7 @@
                 </li>
                 <li>
                     <span>事故经过：</span>
-                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def">
+                    <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def" disabled='disabled'>
                     </textarea>
                 </li>
             </ul>
@@ -19,15 +19,17 @@
                    <li>
                        <b>A、已申请报价服务机构</b>
                        <div class="org_box">
-                            <p v-for="(v,ind) in bid" :key="ind">
-                             {{v.instiCountry}} ------{{v.insti.category}}------{{v.insti.name}}</p>
+                            <p v-for="(v,ind) in bid" :key="ind" 
+                            style="font-size:14px"
+                            >
+                            {{ind+1}}、 {{v.instiCountry}}&emsp;&emsp;&emsp;&emsp;{{v.insti.category}}&emsp;&emsp;&emsp;&emsp;{{v.insti.name}}</p>
                        </div>
                    </li>
                    <li>
                        <b>B、服务清单</b>
                        <div class="rescue_box">
                          <div class="box" v-for="(v,ind) in obj" :key="ind">
-                          <p v-if="v.dict.parentId===0">{{v.dict.name}}</p>
+                          <p style="line-height: 30px;font-size: 14px;" v-if="v.dict.parentId===0">1、{{v.dict.name}}</p>
                          </div>
                          <div class="box">
                            <el-checkbox-group v-model="checkList">
@@ -40,7 +42,7 @@
                          </div>
                            <p></p>
                             <p>2、费用担保</p>
-                            <el-checkbox-group v-model="checkList">
+                            <el-checkbox-group v-model="checkList" style="margin-top:10px">
                                 <el-checkbox label="医疗机构推介" disabled checked>
                                     <span class="db_div">医疗费用担保或非医疗费用担保</span>
                                     <span class="db_box">限额<b>$10000</b></span>
@@ -54,7 +56,7 @@
            <div class="box_exp">
              <p><span class="res_box_exp">说明：请帮助推荐最近的一流医院，需要骨科牛逼的专家</span></p>
              <div class="exp_box">
-                <span>附件({{acc_list.length}})</span>
+                <span style="font-size:14px"><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件({{acc_list.length}})</span>
                   <div class="acc_box">
                       <ul>
                           <li v-for="(v,ind) in acc_list" :key="ind">
@@ -70,8 +72,8 @@
            <div class="com_exp">
               <textarea name="exp" id="exp" cols="30" rows="10" v-model="exp">
             </textarea>
-             <div class="exp_box">
-                <span>附件</span>
+             <div class="exp_box2">
+                <span><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件</span>
                 <div class="up_acc">
                   <ul>
                     <li v-for="(v,i) in up_acc" :key="i">
@@ -196,6 +198,9 @@ export default {
                 token: this.token,
                 obj: this.inf,
                 data: this.obj
+              },
+              query: {
+                typeId: this.$route.query.typeId
               }
             });
           }
@@ -308,7 +313,7 @@ export default {
       })
       .then(function(data) {
         that.inf = data.obj;
-        console.log(data.obj)
+        console.log(data.obj);
         that.objId = data.obj.id;
         if (that.obj.length <= 0) {
           that.obj = data.obj2;
@@ -317,7 +322,7 @@ export default {
         // that.upload();
       });
   }
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+};
 </script>
 
 <style scoped>
@@ -344,19 +349,21 @@ a {
 }
 .up_span {
   color: #00abfa;
-  cursor:pointer;
+  cursor: pointer;
 }
 .data_wrap {
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 40px;
+  padding: 0 40px;
 }
 .data_wrap ul {
   width: 100%;
+  height: 250px;
 }
 .data_wrap ul li {
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
 }
 .data_wrap ul li:last-child textarea {
   width: 80%;
@@ -365,6 +372,7 @@ a {
   border: 1px solid #d9ddde;
   border-radius: 5px;
   font-size: 15px;
+  margin-top: 15px;
 }
 .data_wrap ul li:last-child span,
 .data_wrap ul li:last-child textarea {
@@ -389,12 +397,19 @@ a {
   font-size: 14px;
   color: #999;
 }
-.req_box > p > b {
-  font-size: 14px;
+.box_exp {
+  padding-left: 20px;
 }
 .exp_box {
   box-sizing: border-box;
-  padding: 10px 32px;
+  padding: 10px 35px;
+}
+.exp_box2 {
+  box-sizing: border-box;
+  padding: 10px 45px;
+}
+.box_req {
+  margin-left: 32px;
 }
 .box_req ul li b {
   font-size: 14px;
@@ -487,7 +502,7 @@ a {
   text-align: center;
   width: 22%;
 }
-.up_acc ul li p{
+.up_acc ul li p {
   line-height: 16px;
   font-size: 14px;
   box-sizing: border-box;
@@ -497,6 +512,6 @@ a {
   display: inline-block;
   width: 90px;
   height: 120px;
-  border: 1px solid #eee
+  border: 1px solid #eee;
 }
 </style>

@@ -37,47 +37,47 @@
             <el-table-column
                 prop="number"
                 label="序号"
-                width="50">
+                min-width="50">
             </el-table-column>
             <el-table-column
                 prop="casenumber"
                 label="案件编号"
-                width="70">
+                min-width="70">
             </el-table-column>
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="140">
+                min-width="140">
             </el-table-column>
             <el-table-column
                 prop="username"
                 label="用户姓名"
-                width="60">
+                min-width="60">
             </el-table-column>
             <el-table-column
                 prop="phone"
                 label="用户手机号"
-                width="70">
+                min-width="70">
             </el-table-column>
             <el-table-column
                 prop="papers"
                 label="证件信息"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="sex"
                 label="性别"
-                width="50">
+                min-width="50">
             </el-table-column>
             <el-table-column
                 prop="time"
                 label="出险时间"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="par"
                 label="用户保险详情"
-                width="90">
+                min-width="90">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
                     <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button>                   
@@ -86,22 +86,22 @@
             <el-table-column
                 prop="plan"
                 label="当前进度"
-                width="60">
+                min-width="60">
             </el-table-column>
             <el-table-column
                 prop="node"
                 label="当前节点"
-                width="60">
+                min-width="60">
             </el-table-column>
             <el-table-column
                 prop="get_time"
                 label="到达时间"
-                width="90">
+                min-width="90">
             </el-table-column>
             <el-table-column
                 prop="op"
                 label="操作"
-                width="100">
+                min-width="100">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="topar(scope.row.caseid)">查看报价及方案</el-button>
                 </template>
@@ -120,6 +120,7 @@ export default {
       obj: [],
       victimList: [],
       token: this.$route.params.token,
+      typeId:this.$route.query.typeId,
       shortcuts: [
         {
           text: "今天",
@@ -161,7 +162,10 @@ export default {
          params: {
           caseid: obj,
           token:this.token
-         }
+         },
+        query: {
+          typeId:this.typeId
+        }
         })
     },
     toUrl(url){
@@ -192,7 +196,7 @@ export default {
           method: "POST",
           body: `token=${
             this.token
-          }&typeId=1&status=150&startTs=${stTime}&endTs=${enTime}`,
+          }&typeId=${this.typeId}&status=150&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -222,7 +226,7 @@ export default {
                     caseid:v.obj.id,
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username: v.victimList[0].obj.victimName, //姓名
                     phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
@@ -244,7 +248,7 @@ export default {
       } else {
         fetch("http://api.test.dajiuxing.com.cn/rescue/case/list_case", {
           method: "POST",
-          body: `token=${this.token}&typeId=1&status=150`,
+          body: `token=${this.token}&typeId=${this.typeId}&status=150`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -275,7 +279,7 @@ export default {
                     caseid:v.obj.id,
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username: v.victimList[0].obj.victimName, //姓名
                     phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号

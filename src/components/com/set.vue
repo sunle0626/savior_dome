@@ -59,7 +59,7 @@ a {
 }
 .case_wrap {
   box-sizing: border-box;
-  padding: 0 180px;
+  padding:0 180px 40px;
   background: #f6f6f6;
 }
 .nav_box {

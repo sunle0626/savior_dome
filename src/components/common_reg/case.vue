@@ -5,8 +5,8 @@
                 尊敬的{{insti.name||username}}，欢迎登录
             </div>
             <div class="num_box">
-              当前服务剩余<b>{{time}}</b>天
-              <span>续费</span>
+              当前服务剩余<b style="margin:0 5px">{{time}}</b>天
+              <span style="margin:0 10px">续费</span>
             </div>
             <div class="view_box">
                 <span>进行中案件:<b>{{casename}}</b><b>({{casenum}})</b></span>
@@ -25,10 +25,10 @@
                         {{v.descrition}}
                     </p>
                     <!-- {{v.id}} -->
-                    <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(ind)">
+                    <b class="pointer_box" v-if="num_list[v.id]" @click="tocase(v.id)">
                         案件管理({{num_list[v.id]}})
                     </b>
-                    <b class="pointer_box" v-else @click="tocase(ind)">
+                    <b class="pointer_box" v-else @click="tocase(v.id)">
                         案件管理
                     </b>
                 </li>
@@ -54,11 +54,12 @@ export default {
       time: 0,
       case_list: [],
       purchasedata: [],
-      num_list: []
+      num_list: [],
+      typeId:1
     };
   },
   methods: {
-    tocase(ind) {
+    tocase(id) {
       let token = this.token;
       let insti = this.insti;
       window.localStorage.setItem(
@@ -67,25 +68,29 @@ export default {
           case: "RegAwait"
         })
       );
-      if (this.case_list[ind].num > 0) {
-        this.$router.push({
-          name: "RegAwait",
-          params: {
-            token: token,
-            insti: insti,
-            flag: true
-          }
-        });
-      } else {
+      // if (this.case_list[ind].num > 0) {
+      //   this.$router.push({
+      //     name: "RegAwait",
+      //     params: {
+      //       token: token,
+      //       insti: insti,
+      //       flag: true
+      //     }
+      //   });
+      // } else {
+        this.typeId = id;
         this.$router.push({
           name: "RegAwait",
           params: {
             token: token,
             insti: insti,
             flag: false
+          },
+          query: {
+            typeId:id
           }
         });
-      }
+      // }
     },
     lookinf() {
       let token = this.token;
@@ -164,18 +169,18 @@ export default {
         that.num_list = data.obj;
         console.log(that.num_list);
       });
-    if (this.name) {
-      this.$router.push({
-        name: this.name,
-        params: {
-          token: this.token,
-          insti: this.insti
-        }
-      });
-      window.localStorage.removeItem("case");
-    } else {
-      console.log(0);
-    }
+    // if (this.name) {
+    //   this.$router.push({
+    //     name: this.name,
+    //     params: {
+    //       token: this.token,
+    //       insti: this.insti
+    //     }
+    //   });
+    //   window.localStorage.removeItem("case");
+    // } else {
+    //   console.log(0);
+    // }
   }
 };
 </script>
@@ -192,13 +197,13 @@ export default {
 .wel_box {
   float: left;
   margin-left: 200px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
 }
 .view_box {
   float: right;
   margin-right: 180px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
 }
 .num_box {
@@ -222,12 +227,14 @@ export default {
 .view_box b:first-child {
   font-weight: 500;
   color: #000;
-  font-size: 20px;
+  font-size: 18px;
+  margin-left: 10px;
 }
 .view_box b:last-child {
   font-weight: 500;
   font-size: 18px;
   color: #ff8e32;
+  margin-right: 10px;
 }
 .view_box small {
   display: inline-block;
@@ -245,12 +252,13 @@ export default {
   background: #fff;
 }
 .bottom_ul {
-  display: flex;
-  justify-content: space-around;
   width: 76%;
   height: 270px;
   margin-left: 12%;
   margin-right: 12%;
+  padding-top: 40px;
+  display: flex;
+  justify-content: space-around;
 }
 .bottom_ul li {
   width: 18%;
@@ -265,7 +273,7 @@ export default {
 .bottom_ul li p {
   box-sizing: border-box;
   margin-top: 10px;
-  height: 50px;
+  height: 80px;
   padding: 0 15px;
   color: #999;
 }
@@ -273,5 +281,13 @@ export default {
   color: #ff7200;
   font-size: 16px;
   text-decoration: underline;
+}
+@media screen and (min-width: 1280px) and (max-width: 1366px){
+  .bottom_ul li p {
+    font-size: 16px;
+  }
+  .bottom_ul li b {
+    font-size: 12px;
+  }
 }
 </style>

@@ -3,7 +3,7 @@
         <div class="contentMenu">
             <div style="height:5px"></div>
             <div v-if="apptodo>0" class="app-aj">
-                <div class="appdc" style="padding-left: 20px;">待处理案件:({{apptodo}}) <span class="app-ba">此处案件为大救星APP用户报案，请尽快处理</span></div>
+                <div class="appdc padding-20">待处理案件:({{apptodo}}) <span class="app-ba">此处案件为大救星APP用户报案，请尽快处理</span></div>
 
                 <div v-for="(acase,idx) in apptodolst" :key="idx">
                     <div class="clan">
@@ -27,21 +27,23 @@
                 </div>
             </div>
             <h4 class="marginl10 margint10">创建案件并启动救援</h4>
-            <h5 class="marginl10 margint-10">A、案件基本信息<span class="padding-20">案件编号：{{reportcase.caseNo}}</span><span
-                    class="padding-20 lisave">从历史案件信息中创建</span></h5>
+            <h5 class="marginl10 margint-10">A、案件基本信息<span class="padding-20 span_node">案件编号：{{reportcase.caseNo}}</span><span
+                    class="padding-20 lisave span_node" @click="centerDialogVisible=true">从历史案件信息中创建</span></h5>
             <div class="marginl10">
-                <div style="">
+                <div>
                     <table class="padding-bj pad-0-10" cellpadding="5">
                         <tr>
                             <td>
                                 报案时间:
-                                <el-date-picker type="date" placeholder="选择日期"
-                                                v-model="reportcase.reportTsExpr" style="margin-left:10px"></el-date-picker>
+                                <el-date-picker type="datetime" placeholder="选择日期"
+                                                v-model="reportcase.reportTs" class="marginl10"></el-date-picker>
+                                &nbsp;
                                 <span class="must">*</span>
                             </td>
                             <td>
                                 报案客户:
-                                <el-input placeholder="请输入报案者姓名" v-model="reportcase.reportUser" style="margin-left:10px"></el-input>
+                                <el-input placeholder="请输入报案者姓名" v-model="reportcase.reportUser" class="marginl10"></el-input>
+                                &nbsp;
                                 <span class="must">*</span>
                             </td>
                             <td></td>
@@ -49,19 +51,21 @@
                         <tr>
                             <td>
                                 报案电话:
-                                <el-input placeholder="请输入报案者联系电话" v-model="reportcase.reporterContact" style="margin-left:10px"></el-input>
+                                <el-input placeholder="请输入报案者联系电话" v-model="reportcase.reporterContact" class="marginl10"></el-input>
+                                &nbsp;
                                 <span class="must">*</span>
                             </td>
                             <td colspan="2">
                                 出险时间:
-                                <el-date-picker type="date" placeholder="出险时间" v-model="reportcase.incidentTs"
+                                <el-date-picker type="datetime" placeholder="出险时间" v-model="reportcase.incidentTs"
+                                class="marginl10"
                                 ></el-date-picker>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 案件信息来源:
-                                <el-select v-model="reportcase.caseSrc" placeholder="请选择" style="margin-left:10px">
+                                <el-select v-model="reportcase.caseSrc" placeholder="请选择" class="marginl10">
                                     <el-option v-for="item in casesrclst" :key="item" :label="item"
                                                :value="item"></el-option>
                                 </el-select>
@@ -69,7 +73,8 @@
                             </td>
                             <td>
                                 来源说明:
-                                <el-input placeholder="请输入来源说明" v-model="reportcase.caseSrcDesc" style="margin-left:10px"></el-input>
+                                <el-input placeholder="请输入来源说明" v-model="reportcase.caseSrcDesc" class="marginl10"></el-input>
+                                &nbsp;
                                 <span class="must">*</span>
                             </td>
                             <td></td>
@@ -84,15 +89,17 @@
                     <tr>
                         <td>
                             <span class="">出险人姓名:</span>
-                            <el-input placeholder="请输入出险人姓名" v-model="reportcase.name" style="margin-left:10px"></el-input>
+                            <el-input placeholder="请输入出险人姓名" v-model="reportcase.victimName" class="marginl10"></el-input>
+                            &nbsp;
                             <span class="must">*</span>
                         </td>
                         <td>
                             <span class="">性别:</span>
-                            <el-select v-model="reportcase.genderExpr" @change="genderselect" placeholder="请选择" style="margin-left:10px">
+                            <el-select v-model="reportcase.genderExpr" @change="genderselect" placeholder="请选择" class="marginl10 w100">
                                 <el-option v-for="item in genderlst" :key="item.value" :label="item.label"
                                            :value="item.value"></el-option>
                             </el-select>
+                            &nbsp;
                             <span class="must">*</span>
                         </td>
                         <td></td>
@@ -100,49 +107,56 @@
                     <tr>
                         <td>
                             <span class="">出险人证件:</span>
-                            <el-input placeholder="请输入出险人证件" v-model="reportcase.idNo" style="margin-left:10px"></el-input>
+                            <el-input placeholder="请输入出险人证件" v-model="reportcase.idNo" class="marginl10"></el-input>
+                            &nbsp;
                             <span class="must">*</span>
-                            <el-button type="primary" size="mini" @click="getinsurance()">查询保单</el-button>
+                            &nbsp;
+                            <el-button type="primary" size="small" @click="getinsurance()">查询保单</el-button>
                         </td>
                         <td>
                             <span class="">保单号码:</span>
-                            <el-input placeholder="请输入保单号码" v-model="reportcase.insurancePolicyNo" style="margin-left:10px"></el-input>
+                            <el-input placeholder="请输入保单号码" v-model="reportcase.insurancePolicyNo" class="marginl10"></el-input>
+                            &nbsp;
                             <span class="must">*</span>
-                            <el-button type="primary" size="mini" @click="showinsurance()">保单详情</el-button>
+                            &nbsp;
+                            <el-button type="primary" size="small" @click="showinsurance()">保单详情</el-button>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <td colspan="2">
                             <span class="">所属保险公司:</span>
-                            <el-select v-model="reportcase.insuranceCompanyId" style="width:213px;margin-left:10px" placeholder="保险公司">
+                            <el-select v-model="reportcase.insuranceCompanyId" class="marginl10 w213" placeholder="保险公司">
                                 <el-option v-for="item in companies" :key="item.insti.id" :label="item.insti.name"
                                            :value="item.insti.id"></el-option>
                             </el-select>
-                            <span class="must" v-if="tcm[reportcase.insuranceCompanyId]!=null&&tcm[reportcase.insuranceCompanyId].inContract!=1">* <span style="font-size:10px;">当前保险公司不在合作期内，请知晓</span></span>
+                            <span class="must" v-if="tcm[reportcase.insuranceCompanyId]!=null&&tcm[reportcase.insuranceCompanyId].inContract!=1">* <span class="f10">当前保险公司不在合作期内，请知晓</span></span>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2">
                             <span class="">出险地:</span>
-                            <el-select v-model="reportcase.siteabroadExpr" @change="caseabroad()" style="width:75px;"
+                            <el-select v-model="reportcase.siteabroadExpr" @change="caseabroad()" class="w75" 
                                        placeholder="境内">
                                 <el-option v-for="item in abroad" :key="item" :label="item"
                                            :value="item"></el-option>
                             </el-select>
                             <span class="must" v-if="reportcase.siteabroadExpr=='境外'">*</span>
                             <el-select v-model="reportcase.nation" v-if="reportcase.siteabroadExpr=='境外'"
-                                       @change="loadcounties()" style="width:120px;" placeholder="请选择国家">
+                                       @change="loadcounties()" class="w120"  placeholder="请选择国家">
                                 <el-option v-for="item in countries" :key="item.value" :label="item.label"
                                            :value="item.value"></el-option>
                             </el-select>
+                            
                             <span class="must">*</span>
-                            <el-select v-model="reportcase.city"  style="width:130px;" placeholder="请选择地区">
+                            <el-select v-model="reportcase.city" class="w130" placeholder="请选择地区">
                                 <el-option v-for="item in counties" :key="item.cityCode" :label="item.cityName"
                                            :value="item.cityCode"></el-option>
                             </el-select>
+                            
                             <span class="must">*</span>
-                            <el-input placeholder="其他详细地址" v-model="reportcase.addr" style="width:303px;"></el-input>
+                            <el-input placeholder="其他详细地址" v-model="reportcase.addr" class="w303"></el-input>
+                            
                             <span class="must">*</span>
                         </td>
                         <td></td>
@@ -154,47 +168,53 @@
                                 <el-option v-for="item in accidentTypes" :key="item" :label="item"
                                            :value="item"></el-option>
                             </el-select>
+                            &nbsp;
                             <span class="must">*</span>
                         </td>
                         <td></td>
                     </tr>
+                    <tr>
+                      <td>
+                         <span class="back-wc">受伤部位:</span>
+                         <el-input placeholder="如有请填写" v-model="reportcase.injuredPart" class="w140" ></el-input>
+                      </td>
+                    </tr>
+
                 </table>
             </div>
-            <div class="jsk">
-                <span class="back-wc">受伤部位:</span>
-                <el-input placeholder="如有请填写" v-model="reportcase.injuredPart" style="width:140px;"></el-input>
-            </div>
-            <div class="jsk">
+            <div class="p1026 h50">
                 <span class="back-wc">天气灾害:</span>
                 <el-radio-group v-model="reportcase.weatherIncident" size="mini">
-                    <el-radio label="1" border>是</el-radio>
-                    <el-radio label="2" border>否</el-radio>
+                    <el-radio :label="1" border>是</el-radio>
+                    <el-radio :label="2" border>否</el-radio>
                 </el-radio-group>
-                <div v-if="reportcase.weatherIncident == 1" style="display: inline-block;">
+                <div v-if="reportcase.weatherIncident == 1" style="display: inline-block;" class="h50">
+                    &nbsp;
                     <span class="must">*</span>
-                    <span class="back-wc" style="padding-left:40px;">灾害事故标签:</span>
-                    <el-select placeholder="气象灾害" v-model="reportcase.weatherTag" style="width:140px;">
+                    <span class="back-wc padding-40">灾害事故标签:</span>
+                    <el-select placeholder="气象灾害" v-model="reportcase.weatherTag" class="w140" >
                         <el-option v-for="item in disasters" :key="item" :label="item"
-                                   :value="item"></el-option>
+                                  :value="item"></el-option>
                     </el-select>
+                    &nbsp;
                     <span class="must">*</span>
                 </div>
             </div>
-            <div class="jsk">
+            <div class="p1026">
                 <span class="back-wc" style="vertical-align: top;">事故经过:</span>
-                <el-input type="textarea" placeholder="请输入内容" v-model="reportcase.desc" style="width: 88%;"></el-input>
+                <el-input type="textarea" placeholder="请输入内容" v-model="reportcase.incidentDesc" class="w88100"></el-input>
             </div>
             <div style="text-align: center;margin-top:20px;padding-bottom:20px;">
-                <el-button type="primary" style="width: 200px;" @click="submitcase">创立案件</el-button>
+                <el-button type="primary" class="w200" @click="submitcase">创立案件</el-button>
             </div>
         </div>
 
         <el-dialog title="从历史案件导入" :visible.sync="centerDialogVisible" center>
             <span class="back-wc">从案件编号导入:</span>
-            <el-input placeholder="请输入案件编号" style="width:140px;"></el-input>
-            <el-date-picker type="date" placeholder="系统控件" style="width:140px;float:right"></el-date-picker>
-            <span class="back-wc" style="float:right;margin-top:5px;">按日期选择:</span>
-            <el-table :data="gridData" style="margin-top:15px;" border>
+            <el-input placeholder="请输入案件编号" class="w140" ></el-input>
+            <el-date-picker type="date" placeholder="系统控件" class="w140" style="float:right"></el-date-picker>
+            <span class="back-wc mgt5" style="float:right;">按日期选择:</span>
+            <el-table :data="gridData" class="mgt15"  border>
                 <el-table-column property="xu" label="序号" min-width="30"></el-table-column>
                 <el-table-column property="code" label="案件编号" min-width="50"></el-table-column>
                 <el-table-column property="address" label="发生地点" min-width="80"></el-table-column>
@@ -227,10 +247,11 @@
 
 <script>
 import strutils from "./js/strutils.js";
-
+import { Message } from "element-ui";
 export default {
   data() {
     return {
+      typeId: this.$route.query.typeId,
       apptodo: 0,
       apptodolst: [],
       token: this.$route.params.token,
@@ -257,30 +278,33 @@ export default {
         caseSrc: "",
         caseNo: "",
         caseInsured: -1,
-        siteabroadExpr:'境内',
+        siteabroadExpr: "境内",
         nation: "+86",
         city: "",
         addr: "",
         weatherIncident: 2,
         weatherTag: "气象灾害",
         accidentType: "意外伤害",
-        name: "",
+        victimName: "",
         genderExpr: "",
         insurancePolicyNo: "",
         idNo: "",
-        insuranceCompanyId:1,
+        insuranceCompanyId: 1,
         injuredPart: "",
-        desc: "",
-        regulatorId:1
+        incidentDesc: "",
+        regulatorId: 1,
+        incidentType: 1
       },
       policy: null,
-      companies: [{
-        insti:{
-          name:'江泰救援',
-          id:'1'
-        },
-        inContract:1,
-      }],
+      companies: [
+        {
+          insti: {
+            name: "江泰救援",
+            id: "1"
+          },
+          inContract: 1
+        }
+      ],
 
       casesrclst: [
         "一键救命",
@@ -545,12 +569,15 @@ export default {
         { label: "斯威士兰", value: "+268" }
       ],
       counties: [],
-      disasters:["气象灾害","海洋灾害","洪水灾害","地质灾害","其他"],
+      disasters: ["气象灾害", "海洋灾害", "洪水灾害", "地质灾害", "其他"],
       accidentTypes: ["意外伤害", "突发疾病", "财产损失"],
-      tcm:[null,{
-          name:'江泰救援',
-          id:'1'
-        }],
+      tcm: [
+        null,
+        {
+          name: "江泰救援",
+          id: "1"
+        }
+      ]
     };
   },
   mounted: function() {
@@ -558,12 +585,12 @@ export default {
     this.loadcounties();
     this.loadAppCases();
   },
-  methods: { 
-    genderselect(){
-      if(this.reportcase.genderExpr=='女'){
-        this.reportcase.gender=2;
-      }else{
-        this.reportcase.gender=1;
+  methods: {
+    genderselect() {
+      if (this.reportcase.genderExpr == "女") {
+        this.reportcase.gender = 2;
+      } else {
+        this.reportcase.gender = 1;
       }
     },
 
@@ -581,61 +608,59 @@ export default {
         }
         if (ow != null) {
           var o = ow.obj;
-          z.reportcase.id=o.id;
+          z.reportcase.id = o.id;
           z.reportcase.reportUser = o.reportUser;
-          if(o.reportTs!=null)
-             z.reportcase.reportTs = o.reportTs;
+          if (o.reportTs != null) z.reportcase.reportTs = o.reportTs;
           z.reportcase.reporterContact = o.reporterContact;
-          if(o.incidentTs!=null)
-             z.reportcase.incidentTs = o.incidentTs;
+          if (o.incidentTs != null) z.reportcase.incidentTs = o.incidentTs;
           z.reportcase.caseSrc = o.caseSrc;
           z.reportcase.caseNo = o.caseNo;
           z.reportcase.caseInsured = o.caseInsured;
-          if(ow.generalLocation!=null){
-            var loc=ow.generalLocation;
-            z.reportcase.siteabroadExpr= loc.nation == "+86"?"境内":"境外";
-            z.reportcase.nation =loc.nation;
-            z.reportcase.city =loc.city;
-            z.reportcase.addr =loc.addr;
-          }else{
-            z.reportcase.siteabroadExpr= '';
-            z.reportcase.nation ='';
-            z.reportcase.city ='';
-            z.reportcase.addr ='';
+          if (ow.generalLocation != null) {
+            var loc = ow.generalLocation;
+            z.reportcase.siteabroadExpr = loc.nation == "+86" ? "境内" : "境外";
+            z.reportcase.nation = loc.nation;
+            z.reportcase.city = loc.city;
+            z.reportcase.addr = loc.addr;
+          } else {
+            z.reportcase.siteabroadExpr = "";
+            z.reportcase.nation = "";
+            z.reportcase.city = "";
+            z.reportcase.addr = "";
           }
 
           z.reportcase.weatherIncident = o.weatherIncident;
           z.reportcase.weatherTag = o.weatherTag;
           z.reportcase.accidentType = o.accidentType;
-         
-          if(ow.victimList!=null&&ow.victimList.length>0){
-              var vict=ow.victimList[0].obj;
-              z.reportcase.victimName =vict.victimName;
-              z.reportcase.genderExpr = vict.gender == 1 ? "男" : "女";
-              z.reportcase.gender = vict.gender;
-              z.reportcase.insurancePolicyNo =vict.insurancePolicyNo;
-              z.reportcase.idNo = vict.idNo;
-              if(vict.insuranceCompanyId!=null){
-                 z.reportcase.insuranceCompanyId =vict.insuranceCompanyId;
-              }else{
-                 z.reportcase.insuranceCompanyId=1;
-              }
-          }else{
-              z.reportcase.victimName ='';
-              z.reportcase.genderExpr = '';
-              z.reportcase.gender = '';
-              z.reportcase.insurancePolicyNo ='';
-              z.reportcase.idNo = '';
-              z.reportcase.insuranceCompanyId=1;
+
+          if (ow.victimList != null && ow.victimList.length > 0) {
+            var vict = ow.victimList[0].obj;
+            z.reportcase.victimName = vict.victimName;
+            z.reportcase.genderExpr = vict.gender == 1 ? "男" : "女";
+            z.reportcase.gender = vict.gender;
+            z.reportcase.insurancePolicyNo = vict.insurancePolicyNo;
+            z.reportcase.idNo = vict.idNo;
+            if (vict.insuranceCompanyId != null) {
+              z.reportcase.insuranceCompanyId = vict.insuranceCompanyId;
+            } else {
+              z.reportcase.insuranceCompanyId = 1;
+            }
+          } else {
+            z.reportcase.victimName = "";
+            z.reportcase.genderExpr = "";
+            z.reportcase.gender = "";
+            z.reportcase.insurancePolicyNo = "";
+            z.reportcase.idNo = "";
+            z.reportcase.insuranceCompanyId = 1;
           }
           z.reportcase.regulatorId = z.reportcase.insuranceCompanyId;
           z.reportcase.injuredPart = o.injuredPart;
-          z.reportcase.desc = o.desc;
+          z.reportcase.incidentDesc = o.incidentDesc;
         }
       }
     },
     loadcounties() {
-      console.log("load counties.")
+      console.log("load counties.");
       var z = this;
       var cmd = new Object();
       cmd.url = "http://api.test.dajiuxing.com.cn/rescue/case/counties";
@@ -648,20 +673,20 @@ export default {
       s2c(cmd);
     },
 
-    loadcompanies(){
-      var z=this;
+    loadcompanies() {
+      var z = this;
       var cmd = new Object();
       cmd.url = "http://api.test.dajiuxing.com.cn/rescue/user/list_regulator";
       cmd.data = new Object();
       cmd.data.token = this.token;
       cmd.succ = function(r) {
         z.companies = r;
-        var ntcm=new Object;
-        for(var i=0;i<r.length;++i){
-          var nt=r[i];
-          ntcm[nt.insti.id]=nt;
+        var ntcm = new Object();
+        for (var i = 0; i < r.length; ++i) {
+          var nt = r[i];
+          ntcm[nt.insti.id] = nt;
         }
-        z.tcm=ntcm;
+        z.tcm = ntcm;
       };
       s2c(cmd);
     },
@@ -677,9 +702,10 @@ export default {
           z.policy = r;
           z.reportcase.insurancePolicyNo = r.docNo;
           z.reportcase.caseInsured = 1;
-          z.reportcase.victimName=r.name;
-          if(r.companyId!=null){
-            z.reportcase.insuranceCompanyId=r.companyId;
+          z.reportcase.victimName = r.name;
+          if (r.regulatorId != null) {
+            z.reportcase.insuranceCompanyId = r.regulatorId;
+            z.reportcase.regulatorId = r.regulatorId;
           }
         }
       };
@@ -692,11 +718,11 @@ export default {
     },
 
     caseabroad() {
-      if (this.reportcase.siteabroadExpr == '境内') {
+      if (this.reportcase.siteabroadExpr == "境内") {
         this.reportcase.nation = "+86";
         this.loadcounties();
-      }else{
-        this.reportcase.nation='';
+      } else {
+        this.reportcase.nation = "";
       }
     },
 
@@ -712,7 +738,7 @@ export default {
       cmd.succ = function(r) {
         z.apptodo = r.length;
         var rr = [];
-        for (var i = r.length-1,j=0; i >=0 && j < 2; --i,++j) {
+        for (var i = r.length - 1, j = 0; i >= 0 && j < 2; --i, ++j) {
           var o1 = r[i];
           o1.checked = false;
           rr[j] = o1;
@@ -721,23 +747,77 @@ export default {
       };
       s2c(cmd);
     },
+    successTo() {
+      this.$router.push({
+        name: "ComAwait",
+        params: {
+          token: this.token
+        },
+        query: {
+          typeId: this.typeId
+        }
+      });
+    },
     submitcase() {
       var z = this;
+      console.log("reportcase:" + JSON.stringify(this.reportcase));
+      if (stil.judgeNull(this.reportcase.reportTs)) {
+        Message.error("报案时间不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.reportUser)) {
+        Message.error("报案客户不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.reporterContact)) {
+        Message.error("报案电话不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.incidentTs)) {
+        Message.error("出险时间不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.caseSrc)) {
+        Message.error("请选择案件信息来源");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.caseSrcDesc)) {
+        Message.error("来源说明不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.victimName)) {
+        Message.error("出险人姓名不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.genderExpr)) {
+        Message.error("请选择出险人性别");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.idNo)) {
+        Message.error("出险人证件不能为空");
+        return;
+      }
+      if (stil.judgeNull(this.reportcase.insurancePolicyNo)) {
+        Message.error("保单号码不能为空");
+        return;
+      }
+      if (
+        stil.judgeNull(this.reportcase.nation) ||
+        stil.judgeNull(this.reportcase.city) ||
+        stil.judgeNull(this.reportcase.addr)
+      ) {
+        Message.error("出险地不能为空");
+        return;
+      }
+      if (this.typeId) this.reportcase.incidentType = this.typeId;
       var cmd = new Object();
       cmd.url = "http://api.test.dajiuxing.com.cn/rescue/case/create";
       cmd.data = new Object();
       cmd.data = this.reportcase;
       cmd.data.token = this.token;
       cmd.succ = function(r) {
-        if(r!=null){
-          console.log("创立案件成功");
-          this.$router.push({
-          name: "ComAwait",
-          params: {
-            token: tihs.token
-          }
-      });
-        }
+        console.log("创立案件成功");
+        z.successTo();
       };
       s2c(cmd);
     },
@@ -770,8 +850,7 @@ function forpst(obj) {
   var postdata = "";
   for (var i = 0; i < ks.length; ++i) {
     var d = obj[ks[i]];
-    if(d==null)
-      continue;
+    if (d == null) continue;
     if (d.constructor == Array) {
       for (var j = 0; j < d.length; ++j) {
         postdata += ks[i] + "=" + encodeURIComponent(d[j]);
@@ -779,7 +858,7 @@ function forpst(obj) {
           postdata += "&";
         }
       }
-    } else if(d.constructor==Date){
+    } else if (d.constructor == Date) {
       postdata += ks[i] + "=" + d.getTime();
     } else {
       postdata += ks[i] + "=" + encodeURIComponent(d);
@@ -820,71 +899,38 @@ function s2c(cmd) {
 
 function e2t(errcode) {
   errcode = "ERR_" + errcode;
-  if ("ERR_11000" == errcode) return "标签保存失败";
-  if ("ERR_12000" == errcode) return "没有可以审核的动态";
-  if ("ERR_12002" == errcode) return "你没有审核动态的权限";
-  if ("ERR_13001" == errcode) return "对方还没有来得及回应你上次的邀请";
-  if ("ERR_14004" == errcode) return "导航信息查询失败";
-  if ("ERR_15002" == errcode) return "投保人证件错误";
-  if ("ERR_15003" == errcode) return "被保人证件错误";
-  if ("ERR_15004" == errcode) return "投保人出生日期错误";
-  if ("ERR_15005" == errcode) return "被保人出生日期错误";
-  if ("ERR_15006" == errcode) return "用户找不到";
-  if ("ERR_15007" == errcode) return "更新失败";
-  if ("ERR_15101" == errcode) return "重复点赞";
-  if ("ERR_15102" == errcode) return "评论过快";
-  if ("ERR_15103" == errcode) return "重复关注";
-  if ("ERR_15201" == errcode) return "找不到此分享记录";
-  if ("ERR_100105" == errcode) return "用户身份证件号码已绑定";
-  if ("ERR_100100" == errcode) return "登录无效";
-  if ("ERR_200001" == errcode) return "数据在传递过程中出错了";
-  if ("ERR_200002" == errcode) return "不是正确的手机号或者邮箱";
-  if ("ERR_200003" == errcode) return "用户已经冻结了";
-  if ("ERR_200004" == errcode) return "用户已经存在了";
-  if ("ERR_200005" == errcode) return "注册失败了，再试试吧";
-  if ("ERR_200006" == errcode) return "密码太短了";
-  if ("ERR_200007" == errcode) return "密码不能为空";
-  if ("ERR_200008" == errcode) return "密码不能超过20位";
-  if ("ERR_200009" == errcode)
-    return "密码由数字、英文字母、特殊字符组成的6-20位字符串，不包括汉字及全角字符";
-  if ("ERR_200010" == errcode) return "图片验证码错误";
-  if ("ERR_200011" == errcode) return "注册花的时间太长了，请再试试吧";
-  if ("ERR_200012" == errcode) return "发送短信验证码频率过快";
-  if ("ERR_200013" == errcode) return "发送短信验证码次数超过每小时上限";
-  if ("ERR_200014" == errcode)
-    return "这个手机发送的验证码太多了，明天再试试吧";
-  if ("ERR_200015" == errcode) return "短信验证码发送失败";
-  if ("ERR_200017" == errcode) return "验证码已失效，请重新获取";
-  if ("ERR_200018" == errcode) return "验证码不正确";
-  if ("ERR_200019" == errcode) return "登录错误次数过多，请输入验证码";
-  if ("ERR_200021" == errcode) return "网络错误";
-  if ("ERR_200022" == errcode) return "注册账号不是有效的手机号";
-  if ("ERR_200023" == errcode) return "账号已经锁定了";
-  if ("ERR_200024" == errcode) return "需要完善密码";
-  if ("ERR_200025" == errcode) return "输入密码错误次数过多";
-  if ("ERR_200026" == errcode) return "密码错误";
-  if ("ERR_200027" == errcode) return "修改密码失败了";
-  if ("ERR_200029" == errcode) return "手机号已经绑定";
-  if ("ERR_200031" == errcode) return "对方没有绑定手机号，无法约会";
-  if ("ERR_200032" == errcode) return "注册名包括敏感词";
-  if ("ERR_200033" == errcode) return "昵称太长了";
-  if ("ERR_200034" == errcode) return "用户身份证件号码未绑定";
-  if ("ERR_10502_3" == errcode) return "取消订单失败";
-  if ("ERR_10502_4" == errcode) return "退款失败";
-  if ("ERR_10502_12" == errcode) return "抢单失败";
-  if ("ERR_10502_6" == errcode) return "确认服务完成失败";
-  if ("ERR_10502_7" == errcode) return "确认服务完成失败";
-  if ("ERR_10502_8" == errcode) return "评价订单失败";
-  if ("ERR_10502_11" == errcode) return "启动机构救援失败";
-  if ("ERR_10502_13" == errcode) return "变更状态为抵达失败";
-  if ("ERR_10502_5" == errcode) return "确认服务开始失败";
+  if ("ERR_100001" == errcode) return "参数异常，请重新提交";
+  if ("ERR_101000" == errcode) return "登录过期，请重新登录";
+  if ("ERR_102000" == errcode) return "用户类型错误";
+  if ("ERR_102002" == errcode) return "找不到此机构";
+  if ("ERR_102003" == errcode) return "合约已失效";
+  if ("ERR_102004" == errcode) return "案件状态错误，无法更新";
+  if ("ERR_102005" == errcode) return "案件更新失败";
+  if ("ERR_102006" == errcode) return "找不到此机构";
+  if ("ERR_102007" == errcode) return "机构保存错误";
+  if ("ERR_102008" == errcode) return "找不到此机构合约";
+  if ("ERR_102009" == errcode) return "找不到此机构收费方式";
+  if ("ERR_102010" == errcode) return "合约保存错误";
+  if ("ERR_102011" == errcode) return "找不到此用户";
+  if ("ERR_102012" == errcode) return "此案件已创立";
+  if ("ERR_101001" == errcode) return "找不到此案件";
+  if ("ERR_101002" == errcode) return "找不到方案";
+  if ("ERR_101003" == errcode) return "您没有操作权限，请联系管理员";
+  if ("ERR_102000" == errcode) return "找不到当前操作状态";
+  if ("ERR_101004" == errcode) return "找不到案件出险人";
+  if ("ERR_101010" == errcode) return "找不到此方案对应的服务清单";
+  if ("ERR_101005" == errcode) return "此案件未推送机构";
+  if ("ERR_101006" == errcode) return "救援机构尚未提交方案";
+  if ("ERR_101007" == errcode) return "此案已审核，不能修改";
+  if ("ERR_101008" == errcode) return "请勿重新提交方案";
+  if ("ERR_101009" == errcode) return "找不到此上传资源，无法修改";
   if ("ERR_100000" == errcode) return "未知错误";
   return errcode;
 }
 </script>
 
 
-<style>
+<style scoped >
 @import url("./style.css");
 /* @import url("./js/elementUI/index.css"); */
 input.el-input__inner {
@@ -917,5 +963,52 @@ td {
 .lisave {
   font-size: 10px;
   color: #399cff;
+}
+.w140 {
+  width: 140px;
+}
+.w213 {
+  width: 213px;
+}
+.w120 {
+  width: 120px;
+}
+.f10 {
+  font-size: 10px;
+}
+.w75 {
+  width: 75px;
+}
+.w130 {
+  width: 130px;
+}
+.w303 {
+  width: 303px;
+}
+.w88100 {
+  width: 88%;
+}
+.w200 {
+  width: 200px;
+}
+.mgt5 {
+  margin-top: 5px;
+}
+.mgt15 {
+  margin-top: 15px;
+}
+.p1026 {
+  padding: 10px 26px;
+}
+.h50 {
+  height: 50px;
+  line-height: 50px;
+}
+.span_node {
+  font-weight: normal;
+  font-size: 14px;
+}
+.w100{
+  width: 100px;
 }
 </style>

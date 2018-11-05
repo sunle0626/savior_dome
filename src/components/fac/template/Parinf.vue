@@ -141,14 +141,16 @@ a {
 .data_wrap {
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 40px;
+  padding: 0 40px;
 }
 .data_wrap ul {
   width: 100%;
+  height: 250px;
 }
 .data_wrap ul li {
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
 }
 .data_wrap ul li:last-child textarea {
   width: 80%;
@@ -157,6 +159,7 @@ a {
   border: 1px solid #d9ddde;
   border-radius: 5px;
   font-size: 15px;
+  margin-top: 15px;
 }
 .data_wrap ul li:last-child span,
 .data_wrap ul li:last-child textarea {

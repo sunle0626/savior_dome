@@ -7,10 +7,10 @@
         default-active="/fac/index" router>
         <router-link :to="{name:'FacIndex',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>
         <div class="nav_box">
-        <router-link :to="{name:'Await',params:{token:token}}">门急诊案件管理</router-link>
-        <router-link class="ha" :to="{name:'Await',params:{token:token}}">等待方案报价案件</router-link>
-        <router-link class="ha" :to="{name:'Offer',params:{token:token}}">等待授权中</router-link>
-        <router-link class="ha" :to="{name:'Rescue',params:{token:token}}">救援中案件管理</router-link>
+        <router-link :to="{name:'Await',params:{token:token},query:{typeId:typeId}}">门急诊案件管理</router-link>
+        <router-link class="ha" :to="{name:'Await',params:{token:token},query:{typeId:typeId}}">等待方案报价案件</router-link>
+        <router-link class="ha" :to="{name:'Offer',params:{token:token},query:{typeId:typeId}}">等待授权中</router-link>
+        <router-link class="ha" :to="{name:'Rescue',params:{token:token},query:{typeId:typeId}}">救援中案件管理</router-link>
         </div>
         </el-menu>
         </el-aside>
@@ -25,8 +25,13 @@
 export default {
   data() {
     return {
-      token: this.$route.params.token||JSON.parse(window.localStorage.getItem("data")).data,
-      insti: this.$route.params.insti||JSON.parse(window.localStorage.getItem("insti"))
+      token:
+        this.$route.params.token ||
+        JSON.parse(window.localStorage.getItem("data")).data,
+      insti:
+        this.$route.params.insti ||
+        JSON.parse(window.localStorage.getItem("insti")),
+      typeId: this.$route.query.typeId
     };
   },
   methods: {
@@ -34,6 +39,9 @@ export default {
   },
   mounted() {
     console.log(this.$route.params);
+  },
+  updated() {
+    this.typeId = this.$route.query.typeId;
   }
 };
 </script>
@@ -60,26 +68,26 @@ a {
 }
 .case_wrap {
   box-sizing: border-box;
-  padding: 0 180px;
-  background: #f6f6f6;
+  padding: 0 8% 40px;
+  background: #f7f8fb;
 }
 .nav_box {
   background: #fff;
 }
 .nav_box a:first-child {
   border: 1px solid #fff;
-  background: #f6f6f6;
+  background: #f7f8fb;
   padding-left: 20px;
-  color: #000332;
+  color: #333;
   font-size: 16px;
 }
 .el-aside {
   margin-right: 30px;
   margin-top: 30px;
-  background: #f6f6f6;
+  background: #f7f8fb;
 }
 .el-menu {
-  background: #f6f6f6;
+  background: #f7f8fb;
   border: 0;
 }
 .el-main {
@@ -97,7 +105,7 @@ a {
   background: #00abfa;
   color: #fff;
 }
-.ha.up {
+.ha.router-link-exact-active.router-link-active {
   background: #00abfa;
   color: #fff;
 }

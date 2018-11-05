@@ -6,47 +6,47 @@
             <el-table-column
                 prop="number"
                 label="序号"
-                width="50%">
+                min-width="50%">
             </el-table-column>
             <el-table-column
                 prop="casenumber"
                 label="案件编号"
-                width="50%">
+                min-width="80">
             </el-table-column>
             <el-table-column
                 prop="address"
                 label="发生地点"
-                width="100%">
+                min-width="100%">
             </el-table-column>
             <el-table-column
                 prop="username"
                 label="用户姓名"
-                width="50%">
+                min-width="50%">
             </el-table-column>
             <el-table-column
                 prop="phone"
                 label="用户手机号"
-                width="70%">
+                min-width="70%">
             </el-table-column>
             <el-table-column
                 prop="papers"
                 label="证件信息"
-                width="70%">
+                min-width="70%">
             </el-table-column>
             <el-table-column
                 prop="sex"
                 label="性别"
-                width="40%">
+                min-width="40%">
             </el-table-column>
             <el-table-column
                 prop="time"
                 label="出险时间"
-                width="90%">
+                min-width="90%">
             </el-table-column>
             <el-table-column
                 prop="par"
                 label="用户保险详情"
-                width="70%">
+                min-width="70%">
                 <template slot-scope="scope">
                    <el-button  type="text" size="small" v-show="scope.row.isshow"  @click="toUrl(scope.row.insuranceUrl)">保险详情</el-button>  
                     <el-button  type="text" size="small" v-show="!scope.row.isshow">无</el-button> 
@@ -55,22 +55,12 @@
             <el-table-column
                 prop="plan"
                 label="当前进度"
-                width="80%">
-            </el-table-column>
-            <el-table-column
-                prop="node"
-                label="当前节点"
-                width="60%">
-            </el-table-column>
-            <el-table-column
-                prop="get_time"
-                label="到达时间"
-                width="90%">
+                min-width="80%">
             </el-table-column>
             <el-table-column
                 prop="el"
                 label="其他"
-                width="90%">
+                min-width="90%">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="close(scope.$index)">关闭当前案件</el-button>
                 </template>
@@ -78,7 +68,7 @@
             <el-table-column
                 prop="op"
                 label="操作"
-                width="90%">
+                min-width="90%">
                 <template slot-scope="scope">
                     <el-button  type="text" size="small" @click="tostatr(scope.$index)">启动救援</el-button>
                     <el-button  type="text" size="small" @click="topar(scope.$index)">案件详情</el-button>
@@ -93,12 +83,9 @@ import qs from "qs";
 import { Message } from "element-ui";
 import err from "../../../static/error2msg.js";
 export default {
-  props: ["token", "st_time", "en_time", "sereen"],
+  props: ["token", "st_time", "en_time", "sereen","typeId"],
   data() {
     return {
-      typeid:
-        this.$route.params.typeId ||
-        JSON.parse(window.localStorage.getItem("typeid")).id,
       tableData: [],
       obj: [],
       victimList: []
@@ -116,6 +103,9 @@ export default {
         params: {
           token: this.token,
           caseid: this.obj[index].id
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     },
@@ -130,6 +120,9 @@ export default {
           obj: that.obj,
           victimList: that.victimList,
           index
+        },
+        query: {
+          typeId:this.typeId
         }
       });
     },
@@ -187,7 +180,7 @@ export default {
           method: "POST",
           body: `token=${this.token ||
             JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=${this.typeid}&status=100&startTs=${stTime}&endTs=${enTime}`,
+              .obj}&typeId=${this.typeId}&status=100&startTs=${stTime}&endTs=${enTime}`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -218,7 +211,7 @@ export default {
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username: v.victimList[0].obj.victimName, //姓名
                     phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
@@ -226,7 +219,6 @@ export default {
                     time: that.time(v.obj.incidentTs), //出险时间
                     par: "等待启动救援", //状态
                     plan: "等待启动救援",
-                    node: "等待报价",
                     get_time: that.time(v.obj.incidentTs),
                     op: "查看并操作"
                   });
@@ -242,7 +234,7 @@ export default {
           method: "POST",
           body: `token=${this.token ||
             JSON.parse(window.localStorage.getItem("tokon"))
-              .obj}&typeId=1&status=100`,
+              .obj}&typeId=${this.typeId}&status=100`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
@@ -272,15 +264,14 @@ export default {
                   that.tableData.push({
                     number: n, //序号
                     casenumber: v.obj.caseNo, //案件编号
-                    address: v.generalLocation.addr, //地址
+                    address: v.generalLocation?v.generalLocation.addr:'', //地址
                     username: v.victimList[0].obj.victimName, //姓名
                     phone: v.obj.reporterContact, //联系方式
                     papers: v.victimList[0].obj.idNo, //身份证号
                     sex: sex, //性别
                     time: that.time(v.obj.incidentTs), //出险时间
-                    par: "等待救援公司报价中", //状态
-                    plan: "等待救援公司报价中",
-                    node: "等待报价",
+                    par: "等待启动救援", //状态
+                    plan: "等待启动救援",
                     get_time: that.time(v.obj.incidentTs),
                     op: "查看并操作"
                   });
@@ -327,4 +318,7 @@ export default {
 </script>
 
 <style scoped>
+.el-button+.el-button{
+  margin: 0;
+}
 </style>

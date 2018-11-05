@@ -4,7 +4,7 @@
             <img src="../../../static/images/com_images/logo.png" alt="">
             <div class="tit">
                 <p>大救星救援平台</p>
-                <p>DajJiuing Rescue Platform</p>
+                <p>Dajiuxing Assistance Platform</p>
             </div>
         </div>
         <div class="header_user">
@@ -110,11 +110,12 @@ export default {
   height: 100%;
   line-height: 65px;
   float: left;
+  margin-left: 120px; 
 }
 .header_user div,
 .header_set div {
   float: left;
-  margin-left: 35px;
+  margin-left: 25px;
 }
 .header_user div {
   color: #666666;
@@ -164,7 +165,7 @@ export default {
   .header_user div,
   .header_set div {
     float: left;
-    margin-left: 10px;
+    margin-left: 20px;
   }
 }
 @media screen and (min-width: 1024px) and (max-width: 1280px) {

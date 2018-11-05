@@ -10,7 +10,7 @@
             <div class="req_box">
                 <b>救援方案</b>
                 <div class="acc_box">
-                    <p>附件<span>*请上传救援方案附件</span></p>
+                    <p><img class="fj_box" src="../../../../static/images/fj.png" alt="">附件<span>*请上传救援方案附件</span></p>
                     <ul>
                         <li v-for="(v,ind) in acc_list" :key="ind">
                             <img :src="v.url" alt="">
@@ -104,7 +104,7 @@
             :visible.sync="flag"
             width="30%"
             center>
-            <p>确认提交后，不可修改，是否确认提交</p>
+            <p style="text-align:center">确认提交后，不可修改，是否确认提交</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="flag = false">修改一下</el-button>
                 <el-button type="primary" @click="flag = false;back()">确 定</el-button>
@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     back() {
-      this.$router.push("/reg/caseindex/offer");
+      this.$router.push("/reg/caseindex/offer?typeId="+this.$route.query.typeId);
     }
   }
 };

@@ -2,7 +2,7 @@
     <div>
         <caseVue :insti="insti" :token="token"/>
         <manageVue :insti="insti" :token="token"/>
-        <borardVue/>
+        <!-- <borardVue/> -->
         <funVue/>
     </div>
 </template>

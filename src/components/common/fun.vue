@@ -15,16 +15,17 @@
 </template>
 
 <script>
-export default {
-};
+export default {};
 </script>
 
 <style scoped>
 .fun_box {
-  margin-top: 25px;
+  margin-top: 10px;
   box-sizing: border-box;
-  padding: 0 180px;
+  padding: 20px 180px;
   float: left;
+  width: 100%;
+  background: #fff;
 }
 .fun_box h2 {
   font-size: 20px;
