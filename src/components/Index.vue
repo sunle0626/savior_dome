@@ -8,13 +8,13 @@
                 </div>
                 <div class="nav_right">
                     <ul>
-                        <li class="pointer_box">
+                        <li @click="index()" class="pointer_box pick_box">
                             首页
                         </li>
-                        <li class="pointer_box">
+                        <li @click="dowapp()"  class="pointer_box">
                             大救星APP
                         </li>
-                        <li class="pointer_box">
+                        <li @click="contact()" class="pointer_box">
                             合作咨询
                         </li>
                         <li class="pointer_box">
@@ -33,7 +33,7 @@
                     <h2>
                         大救星云平台
                     </h2>
-                    <p>有求必应，全球救援服务第一平台</p>
+                    <p>有求必救，全球救援服务第一平台</p>
                 </div>
             <div class="points_box">
                 <ul>
@@ -57,7 +57,7 @@
                     </li>
                     <li>
                         <div class="points_list_box">
-                            <p>费用更清晰了</p>
+                            <p>费用更清晰明了</p>
                             <p>机构救援成本管理便捷方便，可导出全年及月度账单，监管单位更清晰费用节点</p>
                         </div>
                     </li>
@@ -118,6 +118,7 @@
                 <div class="middle_details">
                     <ul>
                         <li class="pointer_box">
+                            <div></div>
                             <h3>Medical Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_08.png" alt="">
@@ -125,6 +126,7 @@
                             <p>医疗救援</p>
                         </li>
                         <li class="pointer_box">
+                            <div></div>
                             <h3>Natural Disaster Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_09.png" alt="">
@@ -132,6 +134,7 @@
                             <p>灾害救援</p>
                         </li>
                         <li class="pointer_box">
+                            <div></div>
                             <h3>Public Security Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_10.png" alt="">
@@ -139,6 +142,7 @@
                             <p>治安救援</p>
                         </li>
                         <li class="pointer_box">
+                            <div></div>
                             <h3>Roadside Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_06.png" alt="">
@@ -146,6 +150,7 @@
                             <p>道路救援</p>
                         </li>
                         <li class="pointer_box">
+                            <div></div>
                             <h3>Travel Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_07.png" alt="">
@@ -166,7 +171,7 @@
                 <div class="bottom_scheme">
                     <img src="../../static/images/arrow_left.png" alt="">
                     <ul class="scheme_list">
-                        <li class="pointer_box">
+                        <li @click="insurer()" class="pointer_box">
                             <img src="../../static/images/insurance_commpany.png" alt="">
                             <div>
                                 <h3>保险公司</h3>
@@ -176,7 +181,7 @@
                                 <span>点击查看</span>
                             </div>
                         </li>
-                        <li class="pointer_box">
+                        <li @click="TravelAgency()" class="pointer_box">
                             <img src="../../static/images/travel_agency.png" alt="">
                             <div>
                                 <h3>旅行社</h3>
@@ -186,7 +191,7 @@
                                 <span>点击查看</span>
                             </div>
                         </li>
-                        <li class="pointer_box">
+                        <li @click="Scenicspot()" class="pointer_box">
                             <img src="../../static/images/scenic_spots.png" alt="">
                             <div>
                                 <h3>景区景点</h3>
@@ -196,7 +201,7 @@
                                 <span>点击查看</span>
                             </div>
                         </li>
-                        <li class="pointer_box">
+                        <li @click="overseas()" class="pointer_box">
                             <img src="../../static/images/foreign_enterprises.png" alt="">
                             <div>
                                 <h3>驻外企业</h3>
@@ -219,9 +224,9 @@
                     <p class="pointer_box btn" @click="login(1)">指挥中心入口</p>
                 </div>
                 <p class="txt pointer_box">机构版APP下载</p>
-                <p class="txt pointer_box">合作查询</p>
-                <p class="txt pointer_box">意见反馈</p>
-                <p class="txt pointer_box">关于大救星</p>
+                <p @click="contact()" class="txt pointer_box">合作查询</p>
+                <p @click="feedback()" class="txt pointer_box">意见反馈</p>
+                <p @click="aboutus()" class="txt pointer_box">关于大救星</p>
                 <div class="rq_one">
                     <p>下载大救星</p>
                     <img src="../../static/images/rq_code_dow.png" alt="">
@@ -247,20 +252,22 @@
             </form>
           </div>  
         </div>
-        <!-- <button @click="errer()">点击这里弹出提示函框</button>
-        <PublicControlErrer :flag='Errerflag' :content='Errercontent' :t='time'/> -->
     </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
-import PublicControlErrer from "./PublicControl/Public_control_errer.vue";
+import "isomorphic-fetch";
+import constants from "./util/constants.js";
+import Promise from "promise-polyfill";
+
+if (!window.Promise) {
+  window.Promise = Promise;
+}
 export default {
-  components: {
-    PublicControlErrer
-  },
   data() {
     return {
+      routerobj: {},
       flag: true,
       usertype: "",
       user: "",
@@ -272,10 +279,50 @@ export default {
     };
   },
   methods: {
-    errer() {
-      this.Errerflag = true;
-      this.Errercontent = "这就是一个普通的报错";
-      this.time = new Date() * 1;
+    overseas(){
+        this.$router.push({
+            name:'overseas'
+        })
+    },
+    Scenicspot(){
+        this.$router.push({
+            name:'Scenicspot'
+        })
+    },
+    TravelAgency(){
+        this.$router.push({
+            name:'TravelAgency'
+        })
+    },
+    insurer(){
+        this.$router.push({
+            name:'insurer'
+        })
+    },
+    feedback() {
+      this.$router.push({
+        name: "feedback"
+      });
+    },
+    aboutus() {
+      this.$router.push({
+        name: "aboutus"
+      });
+    },
+    dowapp() {
+      this.$router.push({
+        name: "dowapp"
+      });
+    },
+    index() {
+      this.$router.push({
+        name: "Index"
+      });
+    },
+    contact() {
+      this.$router.push({
+        name: "contact"
+      });
     },
     removelogin() {
       let login_box = document.querySelector(".login_box");
@@ -294,8 +341,10 @@ export default {
       }
     },
     login(v) {
-            console.log(v)
+      console.log(v);
       let login_box = document.querySelector(".login_box");
+      let login_list = document.querySelector(".login");
+      login_list.style.display = "none";
       login_box.style.display = "block";
       this.usertype = v;
     },
@@ -315,7 +364,7 @@ export default {
         // 0 救援机构 fac
         // 1 指挥中心
         // 2 监管机构
-        fetch("http://api.test.dajiuxing.com.cn/rescue/user/login", {
+        fetch(constants.domain + "rescue/user/login", {
           method: "POST",
           body: `username=${this.user}&pwd=${this.pwd}`,
           mode: "cors",
@@ -326,9 +375,8 @@ export default {
           })
           .then(function(data) {
             if (data.code === 0) {
-                console.log(that.usertype)
+              console.log(that.usertype);
               if (Number(data.obj.user.type) == Number(that.usertype)) {
-                  
                 if (that.usertype == 0) {
                   Message({
                     message: "救援机构登录成功",
@@ -340,6 +388,14 @@ export default {
                       data: data.obj.token
                     })
                   );
+
+                  window.localStorage.setItem(
+                    "usertype",
+                    JSON.stringify({
+                      data: data.obj.user.type
+                    })
+                  );
+
                   window.localStorage.setItem(
                     "insti",
                     JSON.stringify(data.obj.user.insti)
@@ -363,6 +419,12 @@ export default {
                     })
                   );
                   window.localStorage.setItem(
+                    "usertype",
+                    JSON.stringify({
+                      data: data.obj.user.type
+                    })
+                  );
+                  window.localStorage.setItem(
                     "insti",
                     JSON.stringify(data.obj.user.insti)
                   );
@@ -382,6 +444,12 @@ export default {
                     "data",
                     JSON.stringify({
                       data: data.obj.token
+                    })
+                  );
+                  window.localStorage.setItem(
+                    "usertype",
+                    JSON.stringify({
+                      data: data.obj.user.type
                     })
                   );
                   window.localStorage.setItem(
@@ -423,4 +491,7 @@ export default {
 </script>
 <style>
 @import "../css/index.css";
+.pick_box{
+    color: #00abf9;
+}
 </style>

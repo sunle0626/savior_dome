@@ -1,0 +1,86 @@
+.manage_box {
+    margin-top: 5vw;
+    box-sizing: border-box;
+  }
+  .manage_box h2 {
+    font-size: 1.24vw;
+    font-weight: 500;
+    text-align: start;
+    padding: 2vw 9.375vw 1vw;
+    background: #fff;
+  }
+  .manage_case_box {
+    margin-top: 1.25vw;
+    border: 0.0625vw solid #00abfa;
+  }
+  .manage_case_box ul,
+  .manage_case_box ul li {
+    width: 100%;
+  }
+  .manage_case_box ul li {
+    height: 2.5vw;
+    line-height: 2.5vw;
+  }
+  .manage_case_box ul li b {
+    float: right;
+    background: #00abfa;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.8vw;
+    height: 2.5vw;
+    line-height: 2.5vw;
+    padding: 0 1.5625vw;
+  }
+  .manage_case_box ul li span {
+    font-size: 1vw;
+    float: left;
+  }
+  .manage_case_box ul li span {
+    margin-left: 2vw;
+  }
+  .manage_case_box ul li span:first-child {
+    margin-left: 0.8vw;
+    font-size: 1.25vw;
+  }
+  .manage_case_box ul li span.op {
+    color: #ff7200;
+  }
+  .flow_box {
+    text-align: start;
+    margin-top: 1.875vw;
+  }
+  .flow_box p {
+    font-size: 1.125vw;;
+    font-weight: 400;
+  }
+  .step_box {
+    margin-top: 1.5vw;
+    line-height: 1.5vw;
+    font-size: 0.9375vw;
+    margin-bottom: 1.5vw;
+  }
+  /* 步骤条、表格样式暂时无法修改，有空回来改 */
+  .time_box {
+    height: 4vw;
+    font-size: 1vw;
+    line-height: 4vw;
+    color: #444;
+    background: #fff;
+    padding-left: 0.75vw;
+    border-bottom: 0.0625vw solid #eee;
+  }
+  .time_box span {
+    color: #ff7200;
+  }
+  .no {
+    line-height: 5vw;
+    color: #333;
+  }
+  .manage_list_box {
+    background: #fff;
+    padding: 1vw 9.375vw 2vw;
+    margin-top: 1vw;
+  }
+  .manage_list_box:first-child {
+    margin-top: 0;
+  }

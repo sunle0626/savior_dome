@@ -1,14 +1,12 @@
 <template>
     <div>
         <headerVue :insti="insti"/>
-        <keep-alive>
           <router-view/>
-        </keep-alive>
     </div>
 </template>
 
 <script>
-import headerVue from "./common_com/header.vue";
+import headerVue from "./cmd_center/header.vue";
 export default {
   data() {
     return {

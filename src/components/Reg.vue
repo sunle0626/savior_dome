@@ -1,14 +1,12 @@
 <template>
     <div>
         <headerVue :insti="insti"/>
-        <keep-alive>
           <router-view/>
-        </keep-alive>
     </div>
 </template>
 
 <script>
-import headerVue from "./common_reg/header.vue";
+import headerVue from "./regulator/header.vue";
 export default {
   data() {
     return {
@@ -17,7 +15,7 @@ export default {
         JSON.parse(window.localStorage.getItem("data")).data,
       insti:
         this.$route.params.insti ||
-        JSON.parse(window.localStorage.getItem("insti"))
+        JSON.parse(window.localStorage.getItem("insti")),
     };
   },
   components: {

@@ -1,15 +1,14 @@
 <template>
     <div>
         <headerVue :insti="insti"/>
-        <keep-alive>
           <router-view/>
-        </keep-alive>
     </div>
 </template>
 
 <script>
-import headerVue from "./common/header.vue";
+import headerVue from "./fac/header.vue";
 import IndexVue from "./fac/Index.vue";
+import constants from './util/constants.js';
 export default {
   data() {
     return {

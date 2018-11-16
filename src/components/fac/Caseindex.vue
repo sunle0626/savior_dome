@@ -7,10 +7,12 @@
         default-active="/fac/index" router>
         <router-link :to="{name:'FacIndex',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>
         <div class="nav_box">
-        <router-link :to="{name:'Await',params:{token:token},query:{typeId:typeId}}">门急诊案件管理</router-link>
+        <router-link  class="up" :to="{name:'Await',params:{token:token},query:{typeId:typeId}}">{{typeName}}管理</router-link>
+        <!-- <router-link :to="{name:'FacIndex',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link> -->
         <router-link class="ha" :to="{name:'Await',params:{token:token},query:{typeId:typeId}}">等待方案报价案件</router-link>
         <router-link class="ha" :to="{name:'Offer',params:{token:token},query:{typeId:typeId}}">等待授权中</router-link>
         <router-link class="ha" :to="{name:'Rescue',params:{token:token},query:{typeId:typeId}}">救援中案件管理</router-link>
+        <router-link class="ha" :to="{name:'Close',params:{token:token},query:{typeId:typeId}}">报价已关闭案件</router-link>
         </div>
         </el-menu>
         </el-aside>
@@ -22,6 +24,13 @@
 </template>
 
 <script>
+import "isomorphic-fetch";
+import constants from "../util/constants.js";
+import Promise from "promise-polyfill";
+
+if (!window.Promise) {
+  window.Promise = Promise;
+}
 export default {
   data() {
     return {
@@ -31,37 +40,64 @@ export default {
       insti:
         this.$route.params.insti ||
         JSON.parse(window.localStorage.getItem("insti")),
-      typeId: this.$route.query.typeId
+      typeId: this.$route.query.typeId,
+      typeName: ""
     };
   },
   methods: {
-    back() {}
+    //     noup(){
+    //       let up = document.querySelector('.up');
+    //       if(up){
+    // up.className='ha'
+    //       }
+    //     },
   },
   mounted() {
-    console.log(this.$route.params);
+    let that = this;
+    fetch(constants.domain + "rescue/service_plan/get_service", {
+      method: "POST",
+      body: `token=${this.token ||
+        JSON.parse(window.localStorage.getItem("data")).data}&id=${
+        this.typeId
+      }`,
+      mode: "cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        if (data.code == 0) {
+          that.typeName = data.obj.name;
+        } else {
+          console.log("center case index getService error:" + data.code);
+        }
+      });
   },
   updated() {
     this.typeId = this.$route.query.typeId;
+    this.name = this.$route.query.name;
   }
 };
 </script>
 
 <style scoped>
-a {
+@import url(../../css/caseindex.css);
+/* a {
   text-decoration: none;
   color: #666666;
   display: block;
-  height: 40px;
-  line-height: 40px;
+  height: 2.3vw;
+  line-height: 2.3vw;
   text-align: left;
-  padding-left: 30px;
+  padding-left: 1.6vw;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 0.72vw;
 }
 .b_index {
-  margin-bottom: 20px;
+  
   background: #fff;
-  font-size: 16px;
+  font-size: 0.9vw;
   text-align: center;
   padding: 0;
   color: #00abfa;
@@ -73,15 +109,15 @@ a {
 }
 .nav_box {
   background: #fff;
-}
-.nav_box a:first-child {
+} */
+/* .nav_box a:first-child {
   border: 1px solid #fff;
   background: #f7f8fb;
-  padding-left: 20px;
+  padding-left: 1vw;
   color: #333;
-  font-size: 16px;
-}
-.el-aside {
+  font-size: 1vw;
+} */
+/* .el-aside {
   margin-right: 30px;
   margin-top: 30px;
   background: #f7f8fb;
@@ -108,5 +144,5 @@ a {
 .ha.router-link-exact-active.router-link-active {
   background: #00abfa;
   color: #fff;
-}
+} */
 </style>

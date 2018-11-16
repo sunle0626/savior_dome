@@ -1,0 +1,65 @@
+a {
+    text-decoration: none;
+    color: #666666;
+    display: block;
+    height: 2.3vw;
+    line-height: 2.3vw;
+    text-align: left;
+    padding-left: 1.6vw;
+    box-sizing: border-box;
+    font-size: 1vw;
+  }
+  .b_index {
+    margin-bottom: 1vw;
+    line-height: 3vw;
+    height: 3vw;
+    background: #fff;
+    font-size: 1vw;
+    text-align: center;
+    padding: 0;
+    color: #00abfa;
+  }
+  .case_wrap {
+    box-sizing: border-box;
+    padding: 0 8% 2.5vw;
+    background: #f7f8fb;
+  }
+  .nav_box {
+    background: #fff;
+  }
+  .nav_box a.up {
+    border: 0.0625vw solid #fff;
+    background: #f7f8fb;
+    padding-left: 1vw;
+    color: #333;
+    font-size: 1.1vw;
+  }
+  .el-aside {
+    margin-right: 1.875vw;
+    margin-top: 1.875vw;
+    background: #f7f8fb;
+  }
+  .el-menu {
+    background: #f7f8fb;
+    border: 0;
+  }
+  .el-main {
+    background-color: #fff;
+    margin-top: 1.875vw;
+    color: #333;
+    text-align: center;
+    padding-bottom: 3.125vw;
+  }
+  .case_box {
+    background: #00abfa;
+    color: #fff;
+  }
+  .ha:hover {
+    background: #fff;
+    color: #00abfa;
+  }
+  .ha.router-link-exact-active.router-link-active,
+  .ha.router-link-active {
+    background: #00abfa;
+    color: #fff;
+  }

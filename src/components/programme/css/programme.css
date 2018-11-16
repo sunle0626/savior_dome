@@ -1,0 +1,334 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {margin:0;padding:0;} 
+table {border-collapse:collapse;border-spacing:0;} 
+fieldset,img {border:0} 
+address,caption,cite,code,dfn,em,strong,th,var {font-style:normal;font-weight:normal} 
+ol,ul {list-style:none;text-align: start} 
+caption,th {text-align:left} 
+h1,h2,h3,h4,h5,h6 {font-size:100%;font-weight:normal;text-align: start}
+p{text-align: start}
+q:before,q:after {content:''} 
+abbr,acronym { border:0}
+.pointer_box{
+    cursor:pointer;
+}
+.header{
+    width: 100%;
+}
+.header>img{
+    width: 100%;
+}
+.header .nav {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    font-size: 1.1vw;
+    color: #fff
+}
+.header .nav .nav_left {
+    float: left;
+    margin-left: 12.5vw;
+    margin-top: 0.3125vw;
+}
+.header .nav .nav_left img{
+    width: 8.3vw;
+}
+.header .nav .nav_right {
+    margin-top: 1.56vw;
+    width: 20vw;
+    float: right;
+    margin-right: 3vw;
+}
+.header .nav_right li {
+    float: left;
+    margin-left: 0.78vw;
+}
+.header .nav_right li:last-child{
+    position: relative;
+}
+.footer{
+    position: relative;
+    width: 100%;
+    height: 22.8vw;
+    background: #f8f8f8;
+    color: #000
+}
+.con_box{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 4vw 15vw 0 15vw;
+    display: flex;
+    font-size: 1vw;
+    justify-content: space-around;
+}
+.con_box>div,.con_box>p{
+    float: left;
+}
+.con_box .nav_box{
+    line-height: 4vw
+}
+.con_box .txt{
+    line-height: 4vw;
+    margin-left:  3.9vw;
+    height: 4vw;
+}
+.con_box .rq_one,.con_box .rq_two{
+    text-align: center;
+}
+.con_box .rq_one p,.con_box .rq_two p{
+    line-height: 4vw;
+    text-align: center;
+}   
+.footer_bottom{
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0.5vw;
+    font-size: 1vw;
+}
+.main{
+    background: #fff;
+}
+.dbox{
+    position: absolute;
+    top: 13.28125vw;
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+}
+.dbox p{
+    text-align: center;
+    font-size: 2.6vw;
+    color: #fff;
+    font-weight: 400;
+}
+.points_box {
+    position: relative;
+    color: #fff;
+    margin-top:-11.68vw;
+    width: 100%;
+    height:11.5vw;
+    background: rgba(0, 0, 0, 0.5);
+}
+.points_box h3{
+    text-align: center;
+    line-height: 2.7vw;
+    padding-top: 2.46vw;
+    font-size: 1.46vw;
+}
+.points_box p{
+    text-align: center;
+    box-sizing: border-box;
+    line-height: 1.45vw;
+    padding:0.5vw 21.3vw;
+    font-size: 1.04vw;
+}
+.login { 
+    position: absolute;
+    width: 9vw;
+    height: 9vw;
+    display: none;
+    top: 30px;
+    right: -3vw;
+    border: 1px solid #163da0;
+    background: #0e183c;
+    border-radius: 5px;
+    color: #000;
+    overflow: hidden;
+}
+.login li{
+    margin: 0;
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+    line-height: 3vw;
+    font-size: 1vw;
+    color: #fff;
+    border-bottom: 1px solid #163da0;
+}
+.login li:last-child{
+    border-bottom: 0;
+}
+.login li:hover{
+    color: #00abf9
+}
+.login_box{
+    display: none;
+    position: fixed;
+    top: 50%;
+    margin-top: -15.35vw;
+    left: 50%;
+    margin-left: -32vw;
+    bottom: 0;
+    right: 0;
+    background: url(../../../../static/images/login_back.jpg) no-repeat;
+    background-size: 100% 100%;
+    height: 30.7vw;
+    width: 64vw;
+    border: 1px solid #163da0;
+    border-radius: 5px;
+}
+.login_area{
+    position: absolute;
+    background: url(../../../../static/images/login_login.png) no-repeat;
+    background-size: 100% 100%;
+    width: 17.18vw;
+    height: 12vw;
+    right: 7.3vw;
+    top: 10.4vw;
+
+}
+.login_box h2{
+    text-align: center;
+    width: 100%;
+    line-height: 2.6vw;
+    color: #00abf9;
+}
+.login_box > h2{
+    position: absolute;
+    width: 17.18vw;
+    right:  7.3vw;
+    top: 7.3vw;
+    font-size: 1.14vw;
+}
+.login_area > h2{
+    font-size: 0.8vw;
+    line-height: 2.9vw;
+    color: #3b86c0;
+}
+.login_box .login_div{
+    text-align:center;
+    color: #000;
+    width: 100%;
+}
+.login_div p{
+    font-size: 0.93vw;
+    width: 100%;
+    text-align: center;
+    height: 1.35vw;
+    margin-bottom: 0.93vw;
+}
+.login_div p input{
+    display: block;
+    margin: 0 auto;
+    height: 1.25vw;
+    width: 11.8vw;
+    font-size: 0.8vw;
+    border:1px solid #3e5694;
+    padding-left: 0.625vw;;
+    line-height: 1.25vw;
+    background: #152651;
+    color: #fff;
+}
+.login_div p input::-webkit-input-placeholder{
+        color: #3b86c0;
+}
+.login_div p input::-moz-placeholder{  
+        color: #3b86c0;        
+}
+.login_div p input:-ms-input-placeholder{ 
+        color: #3b86c0;        
+}
+.login_div span{
+    margin: 1.04vw 1.04vw 0 1.04vw;
+    display: inline-block;
+    background: #0e183c;
+    border: 1px solid #00abf9;
+    color: #00abf9;
+    width: 5.56vw;
+    height: 1.45vw;
+    font-size: 0.8vw;
+    line-height: 1.56vw;
+    cursor: pointer;
+}
+.login_div span.btn_login.div_btn{
+    background: #00abf9;
+    color: #fff;
+}
+.pointer_box:hover{
+    color: #00abf9
+}
+.main .title{
+    font-size: 1.46vw;
+    text-align: center;
+    padding-top: 4.8vw;
+    color: #333333;
+}
+.main .list{
+    padding: 4.8vw 23.75vw;
+    display: flex;
+    justify-content: space-between;
+}
+.main .list li{
+    text-align: center;
+    width: 15.562vw;
+    height: 13.65vw;
+    border:0.052vw solid #d6d6d6;
+}
+.main .list li img{
+    margin-top: 2.1875vw;
+}
+.main .list li h4{
+    text-align: center;
+    margin-top: 0.5vw;
+    font-size: 1.146vw;
+    line-height: 2.1vw;
+    font-weight: 600;
+    color: #333;
+}
+.main .list li p{
+    text-align: center;
+    padding: 0 3.5vw;
+    font-size: 0.9375vw;
+    color: #666;
+}
+.btn_node{
+    padding:0 0 4.8vw;
+    text-align: center;
+}
+.btn_node button{
+    border: 0.052vw solid #00abf9;
+    color: #00abf9;
+    width: 14.635vw;
+    height: 2.5vw;
+    background: #fff;
+    border-radius: 0.26042vw;
+}
+.input {
+    width: 31.25vw;
+    padding: 0 8.4vw;
+    height: 3vw;
+    margin-top: 1vw;
+    font-size: 16px;
+}
+.textarea {
+    width: 31.25vw;
+    padding: 0 8.4vw;
+    height: 5vw;
+    margin-top: 1vw;
+}
+.textarea .el-textarea {
+    width: 70%;
+    float: right;
+}
+.input .el-input {
+    width: 70%;
+    float: right;
+}
+.p_node{
+    width: 100%;
+    text-align: center;
+}
+.img_node{
+    margin: 2vw auto;
+}
+.el-button--primary{
+    width: 17.5vw;
+    height: 3.125vw;
+    background: #00abfa;
+    font-size: 1.3125vw;
+    color: #fff;
+}
+.dialog-footer{
+    padding: 10px 20px 10px;
+}

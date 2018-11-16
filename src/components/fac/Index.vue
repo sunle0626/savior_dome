@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background: #f2f2f2">
         <caseVue :insti="insti" :token="token"/>
         <manageVue :insti="insti" :token="token"/>
         <!-- <borardVue/> -->
@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import caseVue from "../common/case.vue";
-import manageVue from "../common/manage.vue";
-import borardVue from "../common/bulletin_borard.vue";
-import funVue from "../common/fun.vue";
+import caseVue from "./case.vue";
+import manageVue from "./manage.vue";
+import borardVue from "./bulletin_borard.vue";
+import funVue from "./fun.vue";
 import qs from "qs";
 export default {
   data() {
@@ -32,17 +32,7 @@ export default {
   },
   mounted() {
     //   /1.0/rescue/case/all_ongoing_case
-    console.log(this.token);
-    this.axios
-      .post(
-        "http://api.test.dajiuxing.com.cn/rescue/case/all_ongoing_case",
-        qs.stringify({
-          token: this.token
-        })
-      )
-      .then(res => {
-        console.log(res);
-      });
+    
     ///1.0/rescue/service_plan/level_service
   }
 };

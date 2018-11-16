@@ -4,54 +4,72 @@ import Index from '@/components/Index'
 import Fac from '@/components/Fac.vue'
 import FacIndex from '../components/fac/Index.vue'
 import Caseindex from '../components/fac/Caseindex.vue'
-import Await from '../components/fac/template/await.vue'
-import Offer from '../components/fac/template/Offer.vue'
-import Rescue from '../components/fac/template/rescue.vue'
-import Par from '../components/fac/template/Par.vue'
-import Inf from '../components/fac/template/inf.vue'
-import Lookinf from '../components/fac/template/Lookinf.vue'
-import Alter from '../components/fac/template/alter.vue'
-import Resstep from '../components/fac/template/resstep.vue'
-import Parcase from '../components/fac/template/Parcase.vue'
-import Parinf from '../components/fac/template/Parinf.vue'
+import Await from '../components/fac/await.vue'
+import Offer from '../components/fac/Offer.vue'
+import Rescue from '../components/fac/rescue.vue'
+import Par from '../components/fac/Par.vue'
+import Inf from '../components/fac/inf.vue'
+import Lookinf from '../components/fac/Lookinf.vue'
+import Alter from '../components/fac/alter.vue'
+import Close from '../components/fac/close.vue';
+import Resstep from '../components/fac/resstep.vue'
+import Parcase from '../components/par/Parcase.vue'
+import Parinf from '../components/par/Parinf.vue'
 
+import Finish from '../components/finish/finish.vue'
+import FinishIndex from '../components/finish/FinishIndex.vue'
+import FinishPar from '../components/finish/finishpar.vue'
 
 import Reg from '@/components/Reg.vue'
-import RegIndex from '../components/reg/Index.vue'
-import RegCaseindex from '../components/reg/Caseindex.vue'
-import RegAwait from '../components/reg/template/await.vue'
-import RegOffer from '../components/reg/template/Offer.vue'
-import RegRescue from '../components/reg/template/rescue.vue'
-import RegPar from '../components/reg/template/Par.vue'
-import RegInf from '../components/reg/template/inf.vue'
-import RegLookinf from '../components/reg/template/Lookinf.vue'
-import RegAlter from '../components/reg/template/alter.vue'
-import RegResstep from '../components/reg/template/resstep.vue'
-import RegParcase from '../components/reg/template/Parcase.vue'
-import RegParinf from '../components/reg/template/Parinf.vue'
-import Regdr from '@/components/reg/template/dr.vue'
+import RegIndex from '../components/regulator/Index.vue'
+import RegCaseindex from '../components/regulator/Caseindex.vue'
+import RegAwait from '../components/regulator/await.vue'
+import RegOffer from '../components/regulator/Offer.vue'
+import RegRescue from '../components/regulator/rescue.vue'
+import RegPar from '../components/regulator/Par.vue'
+import RegLookinf from '../components/regulator/Lookinf.vue'
+import RegResstep from '../components/regulator/resstep.vue'
+// import RegParcase from '../components/par/Parcase.vue'
+import RegParinf from '../components/regulator/Parinf.vue'
+import Regdr from '@/components/regulator/dr.vue'
 
 import Com from '@/components/com.vue'
-import ComIndex from '@/components/com/Index.vue'
-import ComCaseindex from '../components/com/Caseindex.vue'
-import Comset from '@/components/com/set.vue'
-import pact from '@/components/com/pact.vue'
-import serve from '@/components/com/serve.vue'
-import add from '@/components/com/add.vue'
-import dr from '@/components/com/dr.vue'
-import appcase from '@/components/com/appcase.vue'
-import ComAwait from '@/components/com/template/await.vue'
-import ComOffer from '../components/com/template/Offer.vue'
-import ComRescue from '../components/com/template/rescue.vue'
-import ComPar from '../components/com/template/Par.vue'
-import ComInf from '../components/com/template/inf.vue'
-import ComLookinf from '../components/com/template/Lookinf.vue'
-import ComAlter from '../components/com/template/alter.vue'
-import ComResstep from '../components/com/template/resstep.vue'
-import ComParcase from '../components/com/template/Parcase.vue'
-import ComParinf from '../components/com/template/Parinf.vue'
-import helpStart from '../components/com/helpStart.vue'
-import helpCompany from '../components/com/helpCompany.vue'
+import ComIndex from '@/components/cmd_center/Index.vue'
+import ComCaseindex from '../components/cmd_center/Caseindex.vue'
+import Comset from '@/components/cmd_center/set.vue'
+import pact from '@/components/cmd_center/pact.vue'
+import serve from '@/components/cmd_center/serve.vue'
+import add from '@/components/cmd_center/add.vue'
+import appcase from '@/components/cmd_center/appcase.vue'
+import ComAwait from '@/components/cmd_center/await.vue'
+import ComOffer from '@/components/cmd_center/Offer.vue'
+import ComRescue from '@/components/cmd_center/rescue.vue'
+import ComPar from '@/components/cmd_center/Par.vue'
+import ComLookinf from '@/components/cmd_center/Lookinf.vue'
+import ComResstep from '@/components/cmd_center/resstep.vue'
+// import ComParcase from '@/components/par/Parcase.vue'
+// import ComParinf from '@/components/par/Parinf.vue'
+import helpStart from '@/components/cmd_center/helpStart.vue'
+import helpCompany from '@/components/cmd_center/helpCompany.vue'
+
+import aboutus from '@/components/aboutus.vue'
+import contact from '@/components/contact.vue'
+import dowapp from '@/components/dowapp.vue'
+import feedback from '@/components/feedback.vue'
+import league from '@/components/league.vue'
+import news from '@/components/news.vue'
+import stars from '@/components/stars.vue'
+
+import newsDetail from '@/components/news/newsDetail.vue'
+import newsDetail2 from '@/components/news/newsDetail2.vue'
+import newsDetail4 from '@/components/news/newsDetail4.vue'
+import newsDetail5 from '@/components/news/newsDetail5.vue'
+import newsDetail3 from '@/components/news/newsDetail3.vue'
+
+import insurer from '@/components/programme/insurer.vue'
+import TravelAgency from '@/components/programme/TravelAgency.vue'
+import Scenicspot from '@/components/programme/Scenicspot.vue'
+import overseas from '@/components/programme/overseas.vue'
 
 Vue.use(Router)
 
@@ -62,6 +80,74 @@ export default new Router({
             name: 'Index',
             component: Index
         }, {
+            path: '/aboutus',
+            name: 'aboutus',
+            component: aboutus
+        }, {
+            path: '/contact',
+            name: 'contact',
+            component: contact
+        }, {
+            path: '/dowapp',
+            name: 'dowapp',
+            component: dowapp
+        }, {
+            path: '/feedback',
+            name: 'feedback',
+            component: feedback
+        }, {
+            path: '/league',
+            name: 'league',
+            component: league
+        }, {
+            path: '/news',
+            name: 'news',
+            component: news,
+        },
+        {
+            path: '/newsDetail',
+            name: 'newsDetail',
+            component: newsDetail,
+        }, ,
+        {
+            path: '/newsDetail2',
+            name: 'newsDetail2',
+            component: newsDetail2,
+        }, {
+            path: '/newsDetail4',
+            name: 'newsDetail4',
+            component: newsDetail4,
+        }, {
+            path: '/newsDetail5',
+            name: 'newsDetail5',
+            component: newsDetail5,
+        }, {
+            path: '/newsDetail3',
+            name: 'newsDetail3',
+            component: newsDetail3,
+        }, {
+            path: '/stars',
+            name: 'stars',
+            component: stars
+        },
+        {
+            path: '/insurer',
+            name: 'insurer',
+            component: insurer
+        }, {
+            path: '/TravelAgency',
+            name: 'TravelAgency',
+            component: TravelAgency
+        },{
+            path:'/Scenicspot',
+            name:'Scenicspot',
+            component:Scenicspot
+        },{
+            path:'overseas',
+            name:'overseas',
+            component:overseas
+        },
+        {
             path: '/fac',
             name: 'Fac',
             component: Fac,
@@ -70,6 +156,34 @@ export default new Router({
                     path: 'index',
                     name: 'FacIndex',
                     component: FacIndex,
+                },
+                {
+                    path: 'finshindex',
+                    name: 'FinishIndex',
+                    component: FinishIndex,
+                    children: [
+                        {
+                            path: 'finish',
+                            name: 'Finish',
+                            component: Finish,
+                        },
+                        {
+                            path: 'finishpar',
+                            name: 'FinishPar',
+                            component: FinishPar,
+                            children: [
+                                {
+                                    path: 'finishparcase',
+                                    name: 'Finishparcase',
+                                    component: Parcase
+                                }, {
+                                    path: 'finishparinf',
+                                    name: 'Finishparinf',
+                                    component: Parinf
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     path: 'caseindex',
@@ -90,6 +204,11 @@ export default new Router({
                             path: 'rescue',
                             name: 'Rescue',
                             component: Rescue,
+                        },
+                        {
+                            path: 'close',
+                            name: 'Close',
+                            component: Close,
                         },
                         {
                             path: 'inf',
@@ -131,7 +250,7 @@ export default new Router({
                 }
             ]
         }, {
-            path: '/reg',
+            path: '/regulator',
             name: 'Reg',
             component: Reg,
             children: [
@@ -139,6 +258,34 @@ export default new Router({
                     path: 'index',
                     name: 'RegIndex',
                     component: RegIndex,
+                },
+                {
+                    path: 'finshindex',
+                    name: 'RegFinishIndex',
+                    component: FinishIndex,
+                    children: [
+                        {
+                            path: 'finish',
+                            name: 'RegFinish',
+                            component: Finish,
+                        },
+                        {
+                            path: 'finishpar',
+                            name: 'RegFinishPar',
+                            component: FinishPar,
+                            children: [
+                                {
+                                    path: 'finishparcase',
+                                    name: 'RegFinishparcase',
+                                    component: Parcase
+                                }, {
+                                    path: 'finishparinf',
+                                    name: 'RegFinishparinf',
+                                    component: Parinf
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     path: 'caseindex',
@@ -166,19 +313,9 @@ export default new Router({
                             component: RegRescue,
                         },
                         {
-                            path: 'inf',
-                            name: 'RegInf',
-                            component: RegInf,
-                        },
-                        {
                             path: 'lookinf',
                             name: 'Reglookinf',
                             component: RegLookinf,
-                        },
-                        {
-                            path: 'alter',
-                            name: 'Regalter',
-                            component: RegAlter
                         },
                         {
                             path: 'resstep',
@@ -193,7 +330,7 @@ export default new Router({
                                 {
                                     path: 'parcase',
                                     name: 'Regparcase',
-                                    component: RegParcase
+                                    component: Parcase
                                 }, {
                                     path: 'parinf',
                                     name: 'Regparinf',
@@ -205,7 +342,7 @@ export default new Router({
                 }
             ]
         }, {
-            path: '/com',
+            path: '/cmd_center',
             name: 'Com',
             component: Com,
             children: [
@@ -213,6 +350,34 @@ export default new Router({
                     path: 'Index',
                     name: 'ComIndex',
                     component: ComIndex
+                },
+                {
+                    path: 'finshindex',
+                    name: 'ComFinishIndex',
+                    component: FinishIndex,
+                    children: [
+                        {
+                            path: 'finish',
+                            name: 'ComFinish',
+                            component: Finish,
+                        },
+                        {
+                            path: 'finishpar',
+                            name: 'ComFinishPar',
+                            component: FinishPar,
+                            children: [
+                                {
+                                    path: 'finishparcase',
+                                    name: 'ComFinishparcase',
+                                    component: Parcase
+                                }, {
+                                    path: 'finishparinf',
+                                    name: 'ComFinishparinf',
+                                    component: Parinf
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     path: 'caseindex',
@@ -239,19 +404,9 @@ export default new Router({
                             component: ComRescue,
                         },
                         {
-                            path: 'inf',
-                            name: 'ComInf',
-                            component: ComInf,
-                        },
-                        {
                             path: 'lookinf',
                             name: 'Comlookinf',
                             component: ComLookinf,
-                        },
-                        {
-                            path: 'alter',
-                            name: 'Comalter',
-                            component: ComAlter
                         },
                         {
                             path: 'resstep',
@@ -259,14 +414,14 @@ export default new Router({
                             component: ComResstep
                         },
                         {
-                            path:"helpStart",
-                            name:'helpStart',
-                            component:helpStart
+                            path: "helpStart",
+                            name: 'helpStart',
+                            component: helpStart
                         },
                         {
-                            path:'helpCompany',
-                            name:'helpCompany',
-                            component:helpCompany
+                            path: 'helpCompany',
+                            name: 'helpCompany',
+                            component: helpCompany
                         },
                         {
                             path: 'par',
@@ -275,12 +430,12 @@ export default new Router({
                             children: [
                                 {
                                     path: 'parcase',
-                                    name: 'Comparcase',
-                                    component: ComParcase
+                                    name: 'ComParcase',
+                                    component: Parcase
                                 }, {
                                     path: 'parinf',
-                                    name: 'Comparinf',
-                                    component: ComParinf
+                                    name: 'ComParinf',
+                                    component: Parinf
                                 }
                             ]
                         }
@@ -302,10 +457,6 @@ export default new Router({
                             path: 'add',
                             name: 'add',
                             component: add
-                        }, {
-                            path: 'dr',
-                            name: 'dr',
-                            component: dr
                         }
                     ]
                 }]

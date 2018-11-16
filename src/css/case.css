@@ -1,0 +1,87 @@
+.case_box {
+    width: 100%;
+    background: #f2f2f2;
+    padding-top: 1vw;
+  }
+  .top_box {
+    height: 5vw;
+    line-height: 5vw;
+  }
+  .wel_box {
+    float: left;
+    margin-left: 9.375vw;
+    font-size: 1.14vw;
+    color: #666;
+  }
+  .view_box {
+    float: right;
+    margin-right: 9.375vw;
+    font-size: 1.14vw;
+    color: #666;
+  }
+  .view_box b:first-child {
+    font-weight: 500;
+    color: #000;
+    font-size: 1.125vw;
+    margin-left: 0.625vw;
+  }
+  .view_box b:last-child {
+    font-weight: 500;
+    font-size: 1.125vw;
+    color: #ff8e32;
+    margin-right: 0.625vw;
+  }
+  .view_box small {
+    display: inline-block;
+    height: 1.625vw;
+    width: 5.625vw;
+    line-height: 1.625vw;
+    border-radius: 0.9375vw;
+    color: #fff;
+    background: #ff8e32;
+    font-size: 0.875vw;
+  }
+  .bottom_box {
+    width: 100%;
+  }
+  .bottom_ul {
+    width: 81.25vw;
+    /* height: 15vw; */
+    margin-left: 9.375vw;
+    margin-right:9.375vw;
+    padding-top: 2.5vw;
+    display: flex;
+    justify-content: space-around;
+  }
+  .bottom_ul li {
+    position: relative;
+    width: 20%;
+    float: left;
+    text-align:center;
+  }
+  .bottom_ul li img{
+    width: 5.5vw;
+  }
+  .bottom_ul li h3 {
+    font-size: 1.2vw;
+    margin-top: 0.625vw;
+    font-weight: 500;
+    color: #333;
+  }
+  .bottom_ul li p {
+    box-sizing: border-box;
+    margin-top: 0.625vw;
+    font-size: 0.9vw;
+    padding: 0 0.7vw;
+    height: 7vw;
+    /* text-indent: 2em;; */
+    text-align: start;
+    overflow: hidden;
+    color: #999;
+  }
+  .bottom_ul li b {
+    color: #ff7200;
+    font-size: 1vw;
+    display: inline-block;
+    text-decoration: underline;
+  }
