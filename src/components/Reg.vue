@@ -2,11 +2,13 @@
     <div>
         <headerVue :insti="insti"/>
           <router-view/>
+          <Messagebox :token="token"/>
     </div>
 </template>
 
 <script>
 import headerVue from "./regulator/header.vue";
+import Messagebox from "./Tips_box/message_box.vue";
 export default {
   data() {
     return {
@@ -19,7 +21,8 @@ export default {
     };
   },
   components: {
-    headerVue
+    headerVue,
+    Messagebox
   },
   mounted() {
     // let insti = this.insti;

@@ -215,7 +215,7 @@ export default {
                   address: v.generalLocation ? v.generalLocation.addr : "", //地址
                   username: constants.strHidden(v.victimList[0].obj.victimName,1), //姓名
                   phone: constants.strHidden(v.obj.reporterContact), //联系方式
-                  papers: v.victimList[0].obj.idNo, //身份证号
+                  papers: constants.strHidden(v.victimList[0].obj.idNo)||"无", //身份证号
                   sex: sex, //性别
                   time: constants.time(v.obj.incidentTs), //出险时间
                   isshow: isshow, //保单
@@ -247,7 +247,7 @@ export default {
       });
     },
     toUrl(url) {
-      window.open(url);
+      //window.open(url);
     },
     
   },

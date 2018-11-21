@@ -5,7 +5,7 @@
                 <li v-for="(v,ind) in objdata" :key="ind">
                     {{v||''}}
                 </li>
-                <li>
+                <li v-if="usertype != 0">
                     <span>事故经过：</span>
                     <textarea name="pass" id="passnode" cols="30" rows="10" v-model="def" disabled="disabled">
                     </textarea>
@@ -33,17 +33,13 @@ export default {
         JSON.parse(window.localStorage.getItem("data")).data,
       caseid: this.$route.query.caseid,
       obj: {},
-      objdata: {
-        add: "出险地:",
-        type: "事故类型：风险灾害 ",
-        part: "受伤部位：腿部 ",
-        weather: "天气灾害：气象灾害 "
-      },
+      objdata: {},
       acc_list: [],
       checkList: [],
       def: "",
       bid: [],
-      inf: null
+      inf: null,
+      usertype: JSON.parse(window.localStorage.getItem("usertype")).data
     };
   },
   methods: {
@@ -72,10 +68,13 @@ export default {
               (data.obj.caseCountry || "") +
               (data.obj.caseCity || "") +
               addr,
-            type: "事故类型：" + (data.obj.obj.accidentType||""),
-            part: "受伤部位：" + (data.obj.victimList[0].obj.injuredPart||""),
-            weather: "天气灾害：" + (data.obj.obj.weatherTag || "无")
+            type: "事故类型：" + (data.obj.obj.accidentType||"")
           };
+          if(that.usertype!=0){
+            that.objdata.part = "受伤部位：" + (data.obj.victimList[0].obj.injuredPart||"");
+            that.objdata.weather = "天气灾害：" + (data.obj.obj.weatherTag || "无");
+          }
+
           that.def = data.obj.obj.incidentDesc;
       })
     fetch(constants.domain+"rescue/bidding/bidders", {
@@ -106,7 +105,6 @@ a {
 }
 .data_wrap ul {
   width: 100%;
-  height: 250px;
 }
 .data_wrap ul li {
   height: 40px;

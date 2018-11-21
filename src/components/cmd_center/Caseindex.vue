@@ -2,7 +2,7 @@
     <!-- 导航跳转有bug -->
     <div class="case_wrap">
         <el-container>
-        <el-aside width="200px">
+        <el-aside width="18%">
         <el-menu
         default-active="ComAwait" router>
         <router-link :to="{name:'ComIndex',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>

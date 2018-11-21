@@ -14,8 +14,8 @@
                     <span>{{v.contact}}</span>
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
-                    <span class="op">当前操作方：指挥中心</span>
-                    <b  @click="lookinf(v.typeId,v.caseState,v.solutionState)">查看并处理</b>
+                    <span class="op">当前操作方：{{v.op}}</span>
+                    <b lass="pointer_box"   @click="lookinf(v.typeId,v.caseState,v.solutionState)">查看并处理</b>
                 </li>
             </ul>
         </div>
@@ -88,9 +88,12 @@ export default {
   methods: {
     lookinf(tid,caseState,solutionState) {
       console.log("com manager tid:"+tid+" caseState:"+caseState+" solutionState:"+solutionState);
-      var routerName = "ComAwait";
-      if(caseState != 100){
-        routerName = "ComOffer";
+      var routerName = "ComOffer";
+      if(caseState == 100){
+        routerName = "ComAwait";
+      }
+      if(caseState == 180){
+        routerName = "ComRescue";
       }
 
       this.$router.push({
@@ -138,8 +141,6 @@ export default {
 
         data.obj.map(v => {
           var objNew = {};
-          console.log(v.obj);
-
           objNew.contact = v.obj.obj.reporterContact;
           objNew.name = v.obj.victimList[0].obj.victimName;
           objNew.typename = v.obj.incidentTypeStr;
@@ -147,7 +148,7 @@ export default {
           objNew.solutionState = v.obj.solutionState;
           objNew.typeId = v.obj.obj.incidentType;
           console.log("com manage objNew caseState:"+v.obj.obj.caseState)
-
+          objNew.op = constants.state2op(v.obj.obj.caseState);
           if (v.obj.contractType == 1) {
             objNew.contractTypeName = "大包";
           } else if (v.obj.contractType == 2) {

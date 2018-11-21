@@ -22,7 +22,7 @@
             <div class="offer_box">
               <p>
                 <span>
-                  救援机构报价：<b>${{obj.totalFee||0}}</b>
+                  救援机构总报价：<b>${{obj.totalFee||0}}</b>
                 </span>
                 <span>
                   救援费用：<b>${{obj.rescueFee||0}}</b>

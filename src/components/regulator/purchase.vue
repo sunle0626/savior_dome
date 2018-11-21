@@ -28,7 +28,6 @@ export default {
   margin-top: 1.125vw;
   box-sizing: border-box;
   padding: 1.25vw 9.375vw;
-  /* height: 100px; */
   background: #f2f2f2;
 }
 .purchase_box h3 {

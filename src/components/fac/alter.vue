@@ -335,23 +335,6 @@ export default {
               }
             });
           });
-
-          fetch(constants.domain+"rescue/case/upload_cnts", {
-          method: "POST",
-          body: `token=${that.token}&objId=${data.obj.caseId}&objType=1`,
-          mode: "cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        })
-          .then(function(res) {
-            //console.log(res);
-            return res.json();
-          })
-          .then(function(data) {
-            data.obj.map(v => {
-              v.icon="../../../static/images/eles_icon.png";
-              that.acc_list.push(v);
-            });
-          });
       });
   }
 };

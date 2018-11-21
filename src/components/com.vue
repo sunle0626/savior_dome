@@ -2,11 +2,13 @@
     <div>
         <headerVue :insti="insti"/>
           <router-view/>
+          <Messagebox :token="token"/>
     </div>
 </template>
 
 <script>
 import headerVue from "./cmd_center/header.vue";
+import Messagebox from "./Tips_box/message_box.vue";
 export default {
   data() {
     return {
@@ -20,6 +22,7 @@ export default {
   },
   components: {
     headerVue,
+    Messagebox
   },
   mounted() {
     // console.log(this.$route.params)

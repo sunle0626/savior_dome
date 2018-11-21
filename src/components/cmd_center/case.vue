@@ -144,7 +144,7 @@ export default {
       method: "POST",
       body: `token=${
         this.token
-      }&status=100&status=120&status=130&status=112&status=140&status=150&status=160&status=180`,
+      }&status=100&status=120&status=130&status=140&status=150&status=160&status=180`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })

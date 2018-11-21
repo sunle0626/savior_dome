@@ -14,8 +14,8 @@
                     <span>{{v.contact}}</span>
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
-                    <span class="op">当前操作方：救援机构</span>
-                    <b @click="lookinf(v.typeId,v.caseState,v.solutionState)">查看并处理</b>
+                    <span class="op">当前操作方：{{v.op}}</span>
+                    <b lass="pointer_box"  @click="lookinf(v.typeId,v.caseState,v.solutionState)">查看并处理</b>
                 </li>
             </ul>
         </div>
@@ -96,7 +96,7 @@ export default {
           solutionState
       );
       var routerName = "Await";
-      if ((caseState == 140 && solutionState != 0) || caseState == 150) {
+      if ((caseState == 140 && solutionState != 0) || caseState == 150 || caseState == 160) {
         routerName = "Offer";
       }
       if (caseState == 180) {
@@ -148,14 +148,14 @@ export default {
 
         data.obj.map(v => {
           var objNew = {};
-          console.log(v.obj);
-          objNew.contact = v.obj.obj.reporterContact;
-          objNew.name = v.obj.victimList[0].obj.victimName;
+          objNew.contact = constants.strHidden(v.obj.obj.reporterContact);
+          objNew.name = constants.strHidden(v.obj.victimList[0].obj.victimName,1);
           objNew.typename = v.obj.incidentTypeStr;
           objNew.caseState = v.obj.obj.caseState;
           objNew.solutionState = v.obj.solutionState;
           objNew.typeId = v.obj.obj.incidentType;
           console.log("fac manage objNew caseState:" + v.obj.obj.caseState);
+          objNew.op = constants.state2op(v.obj.obj.caseState);
           if (v.obj.contractType == 1) {
             objNew.contractTypeName = "大包";
           } else if (v.obj.contractType == 2) {

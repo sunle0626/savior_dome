@@ -182,7 +182,7 @@ export default {
       });
     fetch(constants.domain + "rescue/case/batch_case_count", {
       method: "POST",
-      body: `token=${this.token}&status=120&status=150&status=180`,
+      body: `token=${this.token}&status=120&status=130&status=140&status=150&status=180`,
       mode: "cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })

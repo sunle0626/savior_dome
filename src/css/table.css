@@ -2,14 +2,14 @@
     width: 100%;
   }
   .block .el-button{
-    padding: 6px 30px;
+    padding: 10px 40px;
 }
 .top_box h2 {
     font-size: 1.375vw;
     color: #333;
     font-weight: normal;
     text-align: left;
-    margin-bottom: 15px;
+    margin-bottom: 0.9375vw;
 }
 .top_box .time_box {
     font-size: 1vw;
@@ -21,14 +21,14 @@
     margin-left: 3.125vw;
 }
 .time_box > div:first-child {
-    margin-left: 0.625vw;
+    margin-left: 0.3125vw;
 }
 .time_box > div span {
     width: 13.75vw;
-    border: 1px solid #999;
+    border: 0.0625vw solid #999;
     color: #999;
     display: inline-block;
-    border-radius: 3px;
+    border-radius: 0.1875vw;
     height: 1.875vw;
     line-height: 1.875vw;
     margin-left: 0.625vw;

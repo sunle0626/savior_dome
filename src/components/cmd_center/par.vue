@@ -44,7 +44,8 @@ export default {
       init: null,
       obj2: null,
       typeId:this.$route.query.typeId,
-      caseid:this.$route.query.caseid
+      caseid:this.$route.query.caseid,
+      backto:this.$route.query.backto
     };
   },
   methods: {
@@ -67,9 +68,14 @@ export default {
     },
     back() {
       let that = this;
-      console.log(that.token);
+      
+      let r = "ComOffer";
+      if(this.backto !=null && this.backto == '0'){
+        r = "ComAwait";
+      }
+      console.log("backto :"+this.backto+" r:"+r);
       this.$router.push({
-        name: "ComOffer",
+        name: r,
         params: {
           token: that.token
         },
@@ -90,7 +96,8 @@ export default {
         },
         query: {
           typeId:this.typeId,
-          caseid:this.caseid
+          caseid:this.caseid,
+          backto:this.backto
         }
       });
     }

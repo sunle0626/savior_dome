@@ -117,40 +117,75 @@
                 </div>
                 <div class="middle_details">
                     <ul>
-                        <li class="pointer_box">
-                            <div></div>
+                        <li class="pointer_box" @mouseenter="dataDetails($event)" @mouseleave="hiddenDetail($event)">
+                            <div class="title_box">
+                                医疗救援
+                            </div>
+                            <div class="txt_box">
+                                <p>
+                                    从门诊住院到转运服务，覆盖全流程
+                                </p>
+                            </div>
                             <h3>Medical Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_08.png" alt="">
                             </div>
                             <p>医疗救援</p>
                         </li>
-                        <li class="pointer_box">
-                            <div></div>
+                        <li class="pointer_box" @mouseenter="dataDetails($event)" @mouseleave="hiddenDetail($event)">
+                            <div class="title_box">
+                                灾害救援
+                            </div>
+                            <div class="txt_box">
+                                <p>
+                                    发生灾难，紧急启动救援
+                                </p>
+                            </div>
                             <h3>Natural Disaster Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_09.png" alt="">
                             </div>
                             <p>灾害救援</p>
                         </li>
-                        <li class="pointer_box">
-                            <div></div>
+                        <li class="pointer_box" @mouseenter="dataDetails($event)" @mouseleave="hiddenDetail($event)">
+                            <div class="title_box">
+                                治安救援
+                            </div>
+                            <div class="txt_box">
+                                <p>
+                                    社会治安救援，为社会治安献出力量
+                                </p>
+                            </div>
                             <h3>Public Security Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_10.png" alt="">
                             </div>
                             <p>治安救援</p>
                         </li>
-                        <li class="pointer_box">
-                            <div></div>
+                        <li class="pointer_box" @mouseenter="dataDetails($event)" @mouseleave="hiddenDetail($event)">
+                            <div class="title_box">
+                                道路救援
+                            </div>                           
+                            <div class="txt_box">
+                                <p>
+                                    道路抛锚、道路故障、一键救援
+                                </p>
+                            </div>
                             <h3>Roadside Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_06.png" alt="">
                             </div>
                             <p>道路救援</p>
                         </li>
-                        <li class="pointer_box">
-                            <div></div>
+                        <li class="pointer_box" @mouseenter="dataDetails($event)" @mouseleave="hiddenDetail($event)">
+                            <div class="title_box">
+                                旅行救援
+                            </div>
+                            <div class="txt_box">
+                                <p>
+                                    旅行中突发状况，行李丢失，证件遗失，均可服务
+                                </p>
+                            </div>
                             <h3>Travel Assistance</h3>
                             <div class="img_box">
                                 <img src="../../static/images/icon_07.png" alt="">
@@ -252,11 +287,13 @@
             </form>
           </div>  
         </div>
+        <v-if='loddingflag' lodding/>
     </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
+import Lodding from "./lodding.vue";
 import "isomorphic-fetch";
 import constants from "./util/constants.js";
 import Promise from "promise-polyfill";
@@ -265,8 +302,12 @@ if (!window.Promise) {
   window.Promise = Promise;
 }
 export default {
+  components: {
+    Lodding
+  },
   data() {
     return {
+      loddingflag: true,
       routerobj: {},
       flag: true,
       usertype: "",
@@ -279,25 +320,37 @@ export default {
     };
   },
   methods: {
-    overseas(){
-        this.$router.push({
-            name:'overseas'
-        })
+    dataDetails(e) {
+      let txtbox = e.target.querySelector(".txt_box");
+      let titlebox = e.target.querySelector(".title_box");
+      txtbox.style.height = "0vw";
+      titlebox.style.height = "0vw";
     },
-    Scenicspot(){
-        this.$router.push({
-            name:'Scenicspot'
-        })
+    hiddenDetail(e) {
+      let txtbox = e.target.querySelector(".txt_box");
+      let titlebox = e.target.querySelector(".title_box");
+      txtbox.style.height = "8.4vw";
+      titlebox.style.height = "5.73vw";
     },
-    TravelAgency(){
-        this.$router.push({
-            name:'TravelAgency'
-        })
+    overseas() {
+      this.$router.push({
+        name: "overseas"
+      });
     },
-    insurer(){
-        this.$router.push({
-            name:'insurer'
-        })
+    Scenicspot() {
+      this.$router.push({
+        name: "Scenicspot"
+      });
+    },
+    TravelAgency() {
+      this.$router.push({
+        name: "TravelAgency"
+      });
+    },
+    insurer() {
+      this.$router.push({
+        name: "insurer"
+      });
     },
     feedback() {
       this.$router.push({
@@ -486,12 +539,14 @@ export default {
       }
     }
   },
-  mounted() {}
+  mounted() {
+    this.loddingflag = false;
+  }
 };
 </script>
 <style>
 @import "../css/index.css";
-.pick_box{
-    color: #00abf9;
+.pick_box {
+  color: #00abf9;
 }
 </style>

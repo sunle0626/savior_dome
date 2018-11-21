@@ -33,7 +33,7 @@
     <main class="main">
             <form> 
                <p class="user">您的身份:</p> 
-               <span class="radio_box" style=" margin-left: 3px">
+               <span class="radio_box" style=" margin-left: 0.1875vw">
                     <input type="radio" id="radio_1" name="radio">
                     <label for="radio_1"></label>
                     <em>报案人</em>
@@ -365,7 +365,7 @@ export default {
   width: 18.75vw;
   border: 0;
   font-size: 1.25vw;
-  border-radius: 4px;
+  border-radius: 0.25vw;
   border: 0.0625vw solid #ccc;
 }
 .fill_box p {
@@ -391,7 +391,7 @@ export default {
   height: 2.5vw;
   width: 24.375vw;
   border: 0;
-  border-radius: 4px;
+  border-radius: 0.25vw;
   border: 0.0625vw solid #ccc;
 }
 .text {
@@ -404,7 +404,7 @@ export default {
   line-height: 2.75vw;
 }
 .text textarea {
-  font-size: 16px;
+  font-size: 1vw;
   padding: 0.8vw;
   float: left;
   margin-left: 3vw;
@@ -412,7 +412,7 @@ export default {
   width: 37.5vw;
   height: 11.875vw;
   border: 0;
-  border-radius: 4px;
+  border-radius: 0.25vw;
   border: 0.0625vw solid #ccc;
 }
 .el-select-dropdown__item {
@@ -430,7 +430,7 @@ export default {
   width: 18.75vw;
   height: 3.4375vw;
   border: 0;
-  border-radius: 6px;
+  border-radius: 0.375vw;
   background: #00abfa;
   color: #fff;
   font-size: 1.25vw;

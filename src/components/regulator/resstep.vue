@@ -61,7 +61,7 @@
             align="center">
              <template slot-scope="scope">
                <div class="box" v-for="(item,ind) in scope.row.corr" :key="ind" >
-                <img :src="item.url" width="40" height="40" class="head_pic"/>
+                <img :src="constants.isPic(item.url)?item.url:'../../../../static/images/eles_icon.png'" width="40" height="40" class="head_pic"/>
                 <p>{{item.txt}}</p>
               </div>
               <el-button type="text" @click="centerDialogVisible=true" class="addimg">
@@ -216,73 +216,73 @@ export default {
 
 <style scoped>
 .offer_box {
-  line-height: 50px;
+  line-height: 3.125vw;
 }
 .offer_box p {
-  line-height: 50px;
-  border: 1px solid #eee;
+  line-height: 3.125vw;
+  border: 0.0625vw solid #eee;
   border-top: 0;
-  padding-left: 10px;
+  padding-left: 0.625vw;
 }
 .offer_box p small {
   display: inline-block;
-  width: 140px;
-  font-size: 16px;
+  width: 8.75vw;
+  font-size: 1vw;
 }
 .offer_box span {
-  margin-left: 35px;
+  margin-left: 2.1875vw;
   color: #333;
-  font-size: 16px;
+  font-size: 1vw;
 }
 .offer_box span b {
   color: #ff7200;
-  margin-left: 3px;
+  margin-left: 0.1875vw;
 }
 span {
-  font-size: 14px;
+  font-size: 0.875vw;
 }
 span small {
   color: #ff7200;
 }
 .acc_box .span {
-  margin-left: 10px;
+  margin-left: 0.625vw;
   color: #333;
 }
 .rspan {
   color: #df1717;
 }
 .upspan {
-  font-size: 64px;
+  font-size: 4vw;
 }
 label {
   display: block;
   float: left;
   width: 33%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 2px;
+  margin-top: 0.625vw;
+  margin-bottom: 0.625vw;
+  margin-left: 0.125vw;
 }
 label input {
-  width: 130px;
-  margin-left: 5px;
-  height: 25px;
+  width: 8.125vw;
+  margin-left: 0.3125vw;
+  height: 1.5625vw;
   border: 0;
-  border-radius: 3px;
-  border: 1px solid #ccc;
+  border-radius: 0.1875vw;
+  border: 0.0625vw solid #ccc;
 }
 .p {
   text-align: center;
 }
 .a-upload {
-  padding: 4px 10px;
-  height: 20px;
-  line-height: 20px;
+  padding: 0.25vw 0.625vw;
+  height: 1.25vw;
+  line-height: 1.25vw;
   position: relative;
   cursor: pointer;
   color: #888;
   background: #fafafa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 0.0625vw solid #ddd;
+  border-radius: 0.25vw;
   overflow: hidden;
   display: inline-block;
   *display: inline;
@@ -290,7 +290,7 @@ label input {
 }
 .a-upload input {
   position: absolute;
-  font-size: 100px;
+  font-size: 6.25vw;
   right: 0;
   top: 0;
   opacity: 0;
@@ -307,73 +307,67 @@ label input {
   text-align: left;
 }
 p {
-  line-height: 25px;
+  line-height: 1.5625vw;
 }
 .det_box {
   box-sizing: border-box;
-  padding: 10px 15px;
+  padding: 0.625vw 0.9375vw;
 }
 .det_box ul {
   width: 100%;
 }
-/* .det_box ul li {
-  width: 20%;
-  line-height: 30px;
-  margin-left: 2%;
-} */
 .back_box {
   text-align: left;
-  font-size: 14px;
-  line-height: 45px;
+  font-size: 0.875vw;
+  line-height: 2.8125vw;
   color: #666;
   cursor: pointer;
 }
 .res_box > h2 {
-  font-size: 20px;
+  font-size: 1.25vw;
   color: #333;
   font-weight: 600;
-  line-height: 45px;
+  line-height: 2.8125vw;
 }
 .box {
-  margin-left: 100px;
-  margin-top: -20px;
+  margin-left: 6.25vw;
+  margin-top: -1.25vw;
 }
 .a_box {
   position: absolute;
-  top: 330px;
+  top: 20.625vw;
   width: 50%;
-  left: 700px;
-  height: 100px;
+  left: 43.75vw;
+  height: 6.25vw;
 }
 .f_box {
   position: absolute;
-  width: 300px;
-  /* left: 280px; */
+  width: 18.75vw;
   bottom: 0;
 }
 .f_box input {
   display: block;
 }
 .acc {
-  margin-top: 80px;
+  margin-top: 5vw;
 }
 .imgbox {
-  width: 80px;
-  height: 80px;
-  border: 1px solid #ccc;
+  width: 5vw;
+  height: 5vw;
+  border: 0.0625 solid #ccc;
   display: block;
 }
 .f_box > span {
   color: #00abfa;
-  margin-left: 18px;
+  margin-left: 1.125vw;
 }
 ul {
-  height: 50px;
+  height: 3.125vw;
 }
 ul > li {
   text-align: center;
   float: left;
-  margin-left: 10px;
+  margin-left: 0.625vw;
   width: 15%;
 }
 ul > li:first-child{
@@ -385,22 +379,22 @@ ul > li p {
   text-align: center;
 }
 .up_box {
-  width: 80px;
-  height: 80px;
-  border: 1px solid #ccc;
+  width: 5vw;
+  height: 5vw;
+  border: 0.0625vw solid #ccc;
   display: block;
-  font-size: 64px;
+  font-size: 4vw;
   color: #ccc;
   text-align: center;
-  line-height: 80px;
+  line-height: 5vw;
 }
 .img_box img {
-  width: 80px;
-  height: 80px;
-  margin: 5px;
+  width: 5vw;
+  height: 5vw;
+  margin: 0.3125vw;
 }
 .img_box {
   position: absolute;
-  top: -20px;
+  top: -1.25vw;
 }
 </style>

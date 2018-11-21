@@ -409,7 +409,7 @@ export default {
   width: 18.75vw;
   height: 3.4375vw;
   border: 0;
-  border-radius: 6px;
+  border-radius: 0.375vw;
   background: #00abfa;
   color: #fff;
   font-size: 1.25vw;
@@ -432,7 +432,7 @@ export default {
   width: 56.25vw;
   height: 42.5vw;
   z-index: 998;
-  border-radius: 5px;
+  border-radius: 0.3125vw;
   border: 0.0625vw solid #d9ddde;
 }
 .remove {
@@ -491,7 +491,7 @@ export default {
   height: 2.8125vw;
   width: 28.125vw;
   border: 0;
-  border-radius: 5px;
+  border-radius: 0.3125vw;
   border: 0.0625vw solid #ccc;
   padding-left: 0.9vw;
 }
@@ -503,7 +503,7 @@ export default {
   width: 17.5vw;
   height: 3.125vw;
   border: 0;
-  border-radius: 4px;
+  border-radius: 0.25vw;
   background: #00abfa;
   font-size: 1.3125vw;
   color: #fff;

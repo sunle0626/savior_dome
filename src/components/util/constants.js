@@ -82,22 +82,23 @@ var time=function(ts) {
 
   var strHidden =function(str,len){
     if(str == null || str == undefined || str == "") return '';
+    var h = "*";
     var size = str.length;
     var r = "";
     if(len){
       if(size<=len){
         for(var i=0;i<size;i++){
-            r+="x";
+            r+=h;
         }
       }else{
         r = str.substr(0,len);
         for(var i=0;i<(size-len);i++){
-          r+="x";
+          r+=h;
         }
       }
     }else{
       for(var i=0;i<size;i++){
-        r+="x";
+        r+=h;
       }
     }
     return r;
@@ -118,4 +119,22 @@ var time=function(ts) {
     else
         return false;
   };
-export default {domain,pt2txt,time,pt2txt2,pt2txt3,isPic,strHidden}
+
+  var state2op = function (caseState,state) {
+    var op = "";
+    if (caseState == 100) { op = "指挥中心"; }
+    if (caseState == 120) { op = "监管机构"; }
+    if (caseState == 130) { op = "指挥中心"; }
+    if (caseState == 140) {
+       op = "指挥中心"; 
+       if(state!=null && state == 0){
+         op = "救援机构";
+       }
+    }
+    if (caseState == 150) { op = "监管机构"; }
+    if (caseState == 160) { op = "指挥中心"; }
+    if (caseState == 180) { op = "救援机构"; }
+
+    return op;
+};
+export default {domain,pt2txt,time,pt2txt2,pt2txt3,isPic,strHidden,state2op}

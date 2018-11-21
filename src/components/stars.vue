@@ -331,7 +331,7 @@ export default {
 }
 .what_wrap img{
     display: block;
-    margin: 10px auto;
+    margin: 0.625vw auto;
     width: 50%;
 }
 .center{

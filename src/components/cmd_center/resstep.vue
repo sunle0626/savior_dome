@@ -64,7 +64,7 @@
              <template slot-scope="scope">
                <el-button type="text" @click="centerDialogVisible = true">
                <div v-for="(item,ind) in scope.row.corr" :key="ind" >
-                  <img :src="item.url" width="40" height="40" class="head_pic"/>
+                  <img :src="constants.isPic(item.url)?item.url:'../../../../static/images/eles_icon.png'" width="40" height="40" class="head_pic"/>
                   <p>{{item.txt}}</p>
                </div>
                </el-button>

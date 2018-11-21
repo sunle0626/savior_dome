@@ -130,7 +130,8 @@ export default {
         },
         query: {
           typeId:this.typeId,
-          caseid: this.obj[index].id
+          caseid: this.obj[index].id,
+          backto:0
         }
       });
     },

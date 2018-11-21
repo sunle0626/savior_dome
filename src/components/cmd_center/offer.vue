@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top_box">
-            <h2>授权通过等待方案报价案件</h2>
+            <h2>已启动救援案件管理</h2>
             <div class="time_box">
                  <div class="block st_box">
                     起始时间
@@ -77,7 +77,7 @@
                 <!-- <span class="span_box" @click="adopt(v.bidding.solutionNo,props.row)" v-if="props.row.state==140 && v.bidding.state==1">
                   同意该公司报价转交保险授权</span> -->
                 <span class="span_box" @click="toplook(props.row.caseid,v.bidding.id)" v-if="typeof v.solution !='undefined'">报价详情</span>
-                <span class="span_box" @click="reject(v.bidding.solutionNo,props.row)" v-if="props.row.state==140&&v.bidding.state==1">
+                <span class="span_box" @click="reject(v.bidding.solutionNo,props.row)" v-if="props.row.state==140&&(v.bidding.state==1 || v.bidding.state ==0)">
                   关闭报价</span>
                 <span class="span_box" @click="exp(props.row.stateText3);expVisible=true" v-if="props.row.state==160 && v.bidding.state ==2">授权说明</span>
               </div>
@@ -423,6 +423,8 @@ export default {
         tl=tl+`&startTs=${stTime}&endTs=${enTime}`;
       } 
 
+      let nl=0;
+
       fetch(constants.domain+"rescue/case/list_case", {
           method: "POST",
           body: `token=${this.token}&typeId=${
@@ -476,8 +478,14 @@ export default {
                         op: "查看并操作",
                         insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
                         isshow: isshow,
-                        list: list
+                        list: list,
+                        w:v.obj.updateAt,
                       });
+                      nl--;  
+                      if(nl==0){
+                        console.log("sortting!!");
+                        that.tableData.sort(sortcase); 
+                      }                 
                     });
                 }
                 if (v.victimList[0].obj.gender == "1") {
@@ -495,6 +503,7 @@ export default {
                 }
                 var pt=constants.pt2txt2(v.obj.caseState);
                 if(v.obj.caseState==140||v.obj.caseState==150||v.obj.caseState==160){
+                  nl++;
                   getout(v.obj.caseState);
                 }else{
                   that.tableData.push({
@@ -514,12 +523,15 @@ export default {
                       get_time: constants.time(v.obj.incidentTs),
                       op: "查看并操作",
                       insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
+                      w:v.obj.updateAt,
                     });
+                  
+                  
                 } 
                 that.caseid = v.obj.id;
                 that.obj.push(v.obj);
                 that.victimList.push(v.victimList[0]);
-              });
+              });              
             }
           });
     }
@@ -534,11 +546,16 @@ export default {
     this.getData();
   }
 };
+
+function sortcase(a,b){
+  return b.w-a.w;
+}
+
 </script>
 
 <style scoped>
 .el-button{
-    padding: 6px 30px;
+    padding: 10px 40px;
 }
 .el-table__expanded-cell {
   padding: 0;
@@ -563,7 +580,7 @@ export default {
   margin-left: 50px;
 }
 .time_box > div:first-child {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .time_box > div span {
   width: 220px;

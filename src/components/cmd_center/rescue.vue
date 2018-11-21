@@ -114,8 +114,8 @@
 <script>
 import formVue from "./form.vue";
 import "isomorphic-fetch";
-import constants from '../util/constants.js';
-import Promise from 'promise-polyfill';
+import constants from "../util/constants.js";
+import Promise from "promise-polyfill";
 
 if (!window.Promise) {
   window.Promise = Promise;
@@ -126,9 +126,10 @@ export default {
   },
   data() {
     return {
-      typeId:this.$route.query.typeId,
+      typeId: this.$route.query.typeId,
       tableData: [],
-      token: this.$route.params.token||
+      token:
+        this.$route.params.token ||
         JSON.parse(window.localStorage.getItem("data")).data,
       shortcuts: [
         {
@@ -168,10 +169,10 @@ export default {
       this.$router.push({
         name: "Comresstep",
         params: {
-        token: this.token
+          token: this.token
         },
         query: {
-          typeId:this.typeId,
+          typeId: this.typeId,
           caseid: obj
         }
       });
@@ -197,65 +198,64 @@ export default {
       let stTime = st || this.st_time;
       let enTime = et || this.en_time;
 
-      let tl='';
+      let tl = "";
       if (stTime && enTime) {
-        tl=tl+`&startTs=${stTime}&endTs=${enTime}`;
-      } 
+        tl = tl + `&startTs=${stTime}&endTs=${enTime}`;
+      }
 
-      fetch(constants.domain+"rescue/case/list_case", {
-          method: "POST",
-          body: `token=${this.token}&typeId=${this.typeId}&status=180`+tl,
-          mode: "cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      fetch(constants.domain + "rescue/case/list_case", {
+        method: "POST",
+        body: `token=${this.token}&typeId=${this.typeId}&status=180` + tl,
+        mode: "cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      })
+        .then(function(res) {
+          return res.json();
         })
-          .then(function(res) {
-            return res.json();
-          })
-          .then(function(data) {
-            if (data.obj) {
-              var plan = "";
-              data.obj.map(v => {
-                n = n + 1;
-                if (v.victimList[0].obj.gender == "1") {
-                  sex = "男";
-                } else {
-                  sex = "女";
-                }
-                if (
-                  v.victimList[0].obj.insurancePolicyNo &&
-                  v.victimList[0].obj.insurancePolicyNo != ""
-                ) {
-                  isshow = true;
-                } else {
-                  isshow = false;
-                }
-                var pt=constants.pt2txt2(v.obj.caseState);
-                that.tableData.push({
-                  caseid: v.obj.id,
-                  number: n, //序号
-                  casenumber: v.obj.caseNo, //案件编号
-                  address: v.generalLocation?v.generalLocation.addr:'', //地址
-                  username: v.victimList[0].obj.victimName, //姓名
-                  phone: v.obj.reporterContact, //联系方式
-                  papers: v.victimList[0].obj.idNo||"无", //身份证号
-                  sex: sex, //性别
-                  time: constants.time(v.obj.incidentTs), //出险时间
-                  isshow: isshow, //保单
-                  plan: pt.phase, //进度
-                  node: pt.node, //节点
-                  get_time: constants.time(v.obj.rInstiFeedbackTs),
-                  op: "查看并操作",
-                  insuranceUrl: v.victimList[0].obj.insurancePaper, //用户保险详情链接
-                });
-                that.caseid = v.obj.id;
-                // console.log(that.obj)
-                // that.obj.push(v.obj);
-                // that.victimList.push(v.victimList[0]);
+        .then(function(data) {
+          if (data.obj) {
+            var plan = "";
+            data.obj.map(v => {
+              n = n + 1;
+              if (v.victimList[0].obj.gender == "1") {
+                sex = "男";
+              } else {
+                sex = "女";
+              }
+              if (
+                v.victimList[0].obj.insurancePolicyNo &&
+                v.victimList[0].obj.insurancePolicyNo != ""
+              ) {
+                isshow = true;
+              } else {
+                isshow = false;
+              }
+              var pt = constants.pt2txt2(v.obj.caseState);
+              that.tableData.push({
+                caseid: v.obj.id,
+                number: n, //序号
+                casenumber: v.obj.caseNo, //案件编号
+                address: v.generalLocation ? v.generalLocation.addr : "", //地址
+                username: v.victimList[0].obj.victimName, //姓名
+                phone: v.obj.reporterContact, //联系方式
+                papers: v.victimList[0].obj.idNo || "无", //身份证号
+                sex: sex, //性别
+                time: constants.time(v.obj.incidentTs), //出险时间
+                isshow: isshow, //保单
+                plan: pt.phase, //进度
+                node: pt.node, //节点
+                get_time: constants.time(v.obj.rInstiFeedbackTs),
+                op: "查看并操作",
+                insuranceUrl: v.victimList[0].obj.insurancePaper //用户保险详情链接
               });
-            }
-          });
-    },
-
+              that.caseid = v.obj.id;
+              // console.log(that.obj)
+              // that.obj.push(v.obj);
+              // that.victimList.push(v.victimList[0]);
+            });
+          }
+        });
+    }
   },
   mounted() {
     window.localStorage.setItem(
@@ -270,8 +270,8 @@ export default {
 </script>
 
 <style scoped>
-.el-button{
-    padding: 6px 30px;
+.el-button {
+  padding: 10px 40px;
 }
 .top_box {
   width: 100%;
@@ -293,7 +293,7 @@ export default {
   margin-left: 50px;
 }
 .time_box > div:first-child {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .time_box > div span {
   width: 220px;

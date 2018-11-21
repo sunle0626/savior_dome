@@ -91,7 +91,7 @@ export default {
 
 <style scoped>
 .el-button{
-    padding: 6px 30px;
+    padding: 10px 40px;
 }
 .top_box {
   width: 100%;
@@ -114,7 +114,7 @@ export default {
   margin-left: 50px;
 }
 .time_box > div:first-child {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .time_box > div span {
   width: 220px;

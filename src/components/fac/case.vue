@@ -40,8 +40,6 @@
                 </li>
             </ul>
         </div>
-        <!-- <Messagebox :obj='obj'/> -->
-        <!-- 此处调用了消息框 -->
     </div>
 </template>
 
@@ -49,16 +47,12 @@
 import "isomorphic-fetch";
 import constants from "../util/constants.js";
 import Promise from "promise-polyfill";
-// import Messagebox from "../Tips_box/message_box.vue";
 
 if (!window.Promise) {
   window.Promise = Promise;
 }
 import { Message } from "element-ui";
 export default {
-  // components: {
-  //   Messagebox
-  // },
   props: ["insti", "token"],
   data() {
     return {
@@ -146,7 +140,7 @@ export default {
         console.log(data);
         fetch(constants.domain + "rescue/case/batch_case_count", {
           method: "POST",
-          body: `token=${this.token}&status=140&status=150&status=180`,
+          body: `token=${this.token}&status=140&status=150&status=160&status=180`,
           mode: "cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })

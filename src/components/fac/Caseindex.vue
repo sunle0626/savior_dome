@@ -2,7 +2,7 @@
     <!-- 导航跳转有bug -->
     <div class="case_wrap">
         <el-container>
-        <el-aside width="15%">
+        <el-aside width="18%">
         <el-menu
         default-active="/fac/index" router>
         <router-link :to="{name:'FacIndex',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>

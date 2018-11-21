@@ -50,17 +50,6 @@
   .header_set div {
     color: #00abfa;
   }
-  /* .bottom-arrow:before {
-    content: "";
-    border: 0.4375vw solid #00abfa;
-    border-bottom: none;
-    border-right-color: transparent;
-    border-left-color: transparent;
-    position: relative;
-    top: -3.25vw;
-    left: 1.625vw;
-    border-radius: 2px;
-  } */
   .language_box {
     position: relative;
   }

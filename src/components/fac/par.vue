@@ -5,7 +5,7 @@
           返回上一页</p>
         <div class="box">
             <h2>查看并操作</h2>
-            <ParheaderVue :caseid="caseid" :token="token"/>
+            <!-- <ParheaderVue :caseid="caseid" :token="token"/> -->
             <div class="swi_box">
                 <div class="top_box">
                     <p>
@@ -19,7 +19,7 @@
                   </keep-alive>
                 </div>
                         <div class="req_box">
-           <p><b>B、救援请求</b></p>
+           <p><b>救援请求</b></p>
            <div class="box_req">
                <ul>
                    <li>

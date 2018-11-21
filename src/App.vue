@@ -3,7 +3,6 @@
         <transition name="slide-fade">
         <router-view></router-view>
         </transition>
-    <!-- <img src="../../../static/images/loader_flash_of_light.gif" alt=""> -->
   </div>
 </template>
 

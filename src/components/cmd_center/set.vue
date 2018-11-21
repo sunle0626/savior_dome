@@ -2,7 +2,7 @@
     <div>
         <div class="case_wrap">
         <el-container>
-        <el-aside width="15%">
+        <el-aside width="18%">
         <el-menu
         default-active="add" router>
         <router-link :to="{name:'Com',params:{token:token,insti:insti}}" class="b_index">返回首页</router-link>

@@ -14,7 +14,7 @@
                     <span>{{v.contact}}</span>
                     <span>{{v.typename}}</span>
                     <span>救援模式：{{v.contractTypeName}}</span>
-                    <span class="op">当前操作方：监管机构</span>
+                    <span class="op">当前操作方：{{v.op}}</span>
                     <b class="pointer_box" @click="lookinf(v.typeId,v.caseState,v.solutionState)">查看并处理</b>
                 </li>
             </ul>
@@ -95,8 +95,11 @@ export default {
     lookinf(tid,caseState,solutionState) {
       console.log("reg manager tid:"+tid+" caseState:"+caseState+" solutionState:"+solutionState);
       var routerName = "RegAwait";
-      if(caseState == 150){
+      if(caseState == 130 || caseState == 140 || caseState == 150){
         routerName = "RegOffer";
+      }
+      if(caseState == 180){
+        routerName = "RegRescue";
       }
 
       this.$router.push({
@@ -144,7 +147,6 @@ export default {
 
         data.obj.map(v => {
           var objNew = {};
-          console.log(v.obj);
 
           objNew.contact = v.obj.obj.reporterContact;
           objNew.name = v.obj.victimList[0].obj.victimName;
@@ -153,7 +155,7 @@ export default {
           objNew.solutionState = v.obj.solutionState;
           objNew.typeId = v.obj.obj.incidentType;
           console.log("reg manage objNew caseState:"+v.obj.obj.caseState)
-
+          objNew.op = constants.state2op(v.obj.obj.caseState);
           if (v.obj.contractType == 1) {
             objNew.contractTypeName = "大包";
           } else if (v.obj.contractType == 2) {
